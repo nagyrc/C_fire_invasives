@@ -9,7 +9,8 @@ setwd("data/")
 
 file_names <- list.files()
 
-#Jones data# does not currently include the pre and post burn data (Jones_burn.csv)
+#Jones data# need lat/long
+# does not currently include the pre and post burn data (Jones_burn.csv)
 Jones_soil <- as.data.frame(read_csv("Jones_soil.csv"))
 Jones_veg_only <- as.data.frame(read_csv("Jones_veg_only.csv"))
 Jones_litter_only <- as.data.frame(read_csv("Jones_litter_only.csv"))
@@ -30,4 +31,22 @@ Jones_vls <- merge(Jones_veg_litter, Jones_soil,
 Jones_vls$burned <- ifelse(Jones_vls$Burn_trt == 'B' | Jones_vls$Burn_trt == 'C', 'yes','no')
 Jones_vls$study <- "Jones et al. 2015"
 
+###
+#Weber data# need BD to calculate soil C content
+Weber <- as.data.frame(read_csv("Weber.csv"))
+head(Weber)
+#lat and long data are messed up
 
+#add fields that will be common across studies
+Weber$study <- "Weber et al. 2015"
+
+###
+#Blank data# need BD to calculate soil C content
+Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
+
+#add fields that will be common across studies
+unique(Blank$Treatment)
+Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','cheatgrass')
+Blank$study <- "Blank & Norton 2006"
+
+###
