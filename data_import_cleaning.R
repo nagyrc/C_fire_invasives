@@ -2,3 +2,5 @@
 #Dr. R. Chelsea Nagy
 #created May 11, 2018
 
+library(tidyverse)
+library(plyr)
