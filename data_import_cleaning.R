@@ -2,8 +2,8 @@
 #Dr. R. Chelsea Nagy
 #created May 11, 2018
 
-library(tidyverse)
 library(plyr)
+library(tidyverse)
 
 setwd("data/")
 
@@ -69,7 +69,23 @@ head(Stark)
 Stark$study <- "Stark et al. 2015"
 unique(Stark$VegType)
 
-#remove data from fumigated sagbrush; these were fumigated and buldozed
-Stark_keep <- 
-Stark$veg <- ifelse(Stark$VegType == 'undist sage', 'sagebrush','cheatgrass')
-unique(Stark$veg)
+#remove data from fumigated sagbrush; these were fumigated and buldozed...too different from other studies
+Stark2 <- Stark[which(Stark$VegType != "fum sage"),]
+Stark2$veg <- ifelse(Stark2$VegType == 'undist sage', 'sagebrush','cheatgrass')
+unique(Stark2$veg)
+
+unique(Stark2$`Top depth`)
+#0, 10, 20, 40
+
+Stark2$BD <- ifelse(Stark2$`Top depth` == 0, 1.36,
+                        ifelse(Stark2$`Top depth` == 10, 1.35,
+                               ifelse(Stark2$`Top depth` == 20, 1.455, 1.57)))
+
+head(Stark2)
+tail(Stark2)
+
+Stark2$orgC_perc <- Stark2$`org C (g C/kg)` / 10
+Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
+Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
+
+Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
