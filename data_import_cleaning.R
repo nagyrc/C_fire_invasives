@@ -50,3 +50,13 @@ Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 
 Blank$study <- "Blank & Norton 2006"
 
 ###
+#Norton data# 
+Norton <- as.data.frame(read_csv("Norton.csv"))
+
+unique(Norton$Trt)
+Norton$study <- "Norton et al. 2004"
+Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
+
+head(Norton)
+
+###
