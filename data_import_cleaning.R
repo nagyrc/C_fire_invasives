@@ -53,6 +53,7 @@ Blank$study <- "Blank & Norton 2006"
 #Norton data# 
 Norton <- as.data.frame(read_csv("Norton.csv"))
 
+#add fields that will be common across studies
 unique(Norton$Trt)
 Norton$study <- "Norton et al. 2004"
 Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
@@ -60,3 +61,15 @@ Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
 head(Norton)
 
 ###
+#Stark data# need lat/long
+Stark <- as.data.frame(read_csv("Stark.csv"))
+
+head(Stark)
+#add fields that will be common across studies
+Stark$study <- "Stark et al. 2015"
+unique(Stark$VegType)
+
+#remove data from fumigated sagbrush; these were fumigated and buldozed
+Stark_keep <- 
+Stark$veg <- ifelse(Stark$VegType == 'undist sage', 'sagebrush','cheatgrass')
+unique(Stark$veg)
