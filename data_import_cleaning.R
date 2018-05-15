@@ -89,3 +89,32 @@ Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
 Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
 
 Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
+
+###
+#Rau data# need soil depths
+Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
+head(Rau_inv)
+
+unique(Rau_inv$Region)
+unique(Rau_inv$Site)
+#BF, LH, MP, TP
+
+Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe.csv"))
+head(Rau_sage)
+
+unique(Rau_sage$Region)
+unique(Rau_sage$Site)
+unique(Rau_sage$Treatment)
+
+Rau <- rbind(Rau_inv, Rau_sage)
+head(Rau)
+
+#add veg category
+Rau$veg <- ifelse(Rau$Treatment == 'Invaded', 'cheatgrass','sagebrush')
+Rau$BD_estimated <- c("no")
+Rau$prescribed_burn <- c("no")
+
+#convert root and soil carbon from kg C/ ha to g C/m2
+Rau$BGB_g_m2 <- Rau$RTC/10
+
+Rau$SOC_g_m2 <- Rau$TSOC/10
