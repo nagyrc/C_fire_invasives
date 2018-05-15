@@ -94,12 +94,14 @@ Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
 #Rau data# need soil depths
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
 head(Rau_inv)
+Rau_inv$study <- c("Goergen et al. 2011")
 
 unique(Rau_inv$Region)
 unique(Rau_inv$Site)
 #BF, LH, MP, TP
 
 Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe.csv"))
+Rau_sage$study <- c("Rau et al. 2011")
 head(Rau_sage)
 
 unique(Rau_sage$Region)
@@ -110,6 +112,7 @@ Rau <- rbind(Rau_inv, Rau_sage)
 head(Rau)
 
 #add veg category
+#check with Ben on what the treatments are to make sure this veg category is correct...
 Rau$veg <- ifelse(Rau$Treatment == 'Invaded', 'cheatgrass','sagebrush')
 Rau$BD_estimated <- c("no")
 Rau$prescribed_burn <- c("no")
