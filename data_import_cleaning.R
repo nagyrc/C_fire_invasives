@@ -90,6 +90,13 @@ Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
 
 Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
 
+
+###
+#Davies data# need lat/long
+Davies <- as.data.frame(read_csv("Davies.csv"))
+Davies$veg <- c("cheatgrass")
+Davies$prescribed_burn <- ifelse(Davies$Treatement == 'ungrazed/unburned', 'no','yes')
+
 ###
 #Rau data# need soil depths
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
