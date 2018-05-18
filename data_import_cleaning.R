@@ -120,9 +120,14 @@ head(Bradley_AGB2)
 ###
 #Mahood data# need lat/long
 #need info on veg categories and burned/unburned
+#make sure Jones data is not repeated from publication
 Mahood <- as.data.frame(read_csv("Mahood.csv"))
 
 
+
+###
+#Norton et al. 2008 data# need lat/long, BD
+#Figure out treatments; they don't match the publication
 ###
 #Rau data# need soil depths
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
