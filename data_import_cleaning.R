@@ -97,6 +97,24 @@ Davies <- as.data.frame(read_csv("Davies.csv"))
 Davies$veg <- c("cheatgrass")
 Davies$prescribed_burn <- ifelse(Davies$Treatement == 'ungrazed/unburned', 'no','yes')
 
+
+###
+#Bradley data# need BD, lat/long
+Bradley_soil <- as.data.frame(read_csv("Bradley_soil.csv"))
+Bradley_AGB <- as.data.frame(read_csv("Bradley_AGB.csv"))
+head(Bradley_soil)
+head(Bradley_AGB)
+
+#remove Rye if only looking at sagebrush (Rye is desert shrub)
+Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
+Bradley_AGB2$veg <- ifelse(Bradley_AGB2$burned == 'no', 'sagebrush','cheatgrass')
+
+Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
+Bradley_soil2$veg <- ifelse(Bradley_soil2$burned == 'no', 'sagebrush','cheatgrass')
+
+head(Bradley_soil2)
+head(Bradley_AGB2)
+
 ###
 #Rau data# need soil depths
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
