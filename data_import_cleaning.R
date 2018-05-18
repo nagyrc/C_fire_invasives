@@ -108,12 +108,20 @@ head(Bradley_AGB)
 #remove Rye if only looking at sagebrush (Rye is desert shrub)
 Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
 Bradley_AGB2$veg <- ifelse(Bradley_AGB2$burned == 'no', 'sagebrush','cheatgrass')
+Bradley_AGB2$study <- c("Bradley et al. 2006")
 
 Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
 Bradley_soil2$veg <- ifelse(Bradley_soil2$burned == 'no', 'sagebrush','cheatgrass')
+Bradley_soil2$study <- c("Bradley et al. 2006")
 
 head(Bradley_soil2)
 head(Bradley_AGB2)
+
+###
+#Mahood data# need lat/long
+#need info on veg categories and burned/unburned
+Mahood <- as.data.frame(read_csv("Mahood.csv"))
+
 
 ###
 #Rau data# need soil depths
@@ -133,16 +141,22 @@ unique(Rau_sage$Region)
 unique(Rau_sage$Site)
 unique(Rau_sage$Treatment)
 
-Rau <- rbind(Rau_inv, Rau_sage)
+#check with Ben...what are the CP and FP treatments???
+Rau_sage2 <- Rau_sage[which(Rau_sage$Treatment == "CO" | Rau_sage$Treatment == "FI"),]
+unique(Rau_sage2$Treatment)
+
+Rau <- rbind(Rau_inv, Rau_sage2)
 head(Rau)
 
 #add veg category
-#check with Ben on what the treatments are to make sure this veg category is correct...
-Rau$veg <- ifelse(Rau$Treatment == 'Invaded', 'cheatgrass','sagebrush')
+#check with Ben and then update this with other treatments???
+Rau$veg <- ifelse(Rau$Treatment == 'Invaded' | Rau$Treatement == 'FI', 'cheatgrass','sagebrush')
 Rau$BD_estimated <- c("no")
 Rau$prescribed_burn <- c("no")
 
 #convert root and soil carbon from kg C/ ha to g C/m2
-Rau$BGB_g_m2 <- Rau$RTC/10
+Rau$BGB_gC_m2 <- Rau$RTC/10
 
 Rau$SOC_g_m2 <- Rau$TSOC/10
+
+head(Rau)
