@@ -120,6 +120,7 @@ head(Bradley_AGB2)
 ###
 #Mahood data# need lat/long
 #need info on veg categories and burned/unburned
+#make sure Jones data is not repeated from publication
 Mahood <- as.data.frame(read_csv("Mahood.csv"))
 
 
