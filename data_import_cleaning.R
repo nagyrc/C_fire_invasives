@@ -10,7 +10,7 @@ setwd("data/")
 
 file_names <- list.files()
 
-#Jones data# need lat/long
+#Jones data# 
 # does not currently include the pre and post burn data (Jones_burn.csv)
 Jones_soil <- as.data.frame(read_csv("Jones_soil.csv"))
 Jones_veg_only <- as.data.frame(read_csv("Jones_veg_only.csv"))
@@ -77,7 +77,7 @@ Norton$long <-Norton$longitude
 
 
 ###
-#Stark data# need lat/long
+#Stark data# 
 Stark <- as.data.frame(read_csv("Stark.csv"))
 
 head(Stark)
@@ -105,17 +105,24 @@ Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
 Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
 
 Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
+Stark2$lat <- c("39.90333333")
+Stark2$long <- c("108.40083333")
 
 
 ###
-#Davies data# need lat/long
+#Davies data# 
 Davies <- as.data.frame(read_csv("Davies.csv"))
 Davies$veg <- c("cheatgrass")
 Davies$prescribed_burn <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
+head(Davies)
+
+Davies$lat <- c("43.48333333")
+Davies$long <- c("119.71666667")
+Davies$study <- "Davies et al. 2009"
 
 
 ###
-#Bradley data# need BD, lat/long
+#Bradley data# need BD
 Bradley_soil <- as.data.frame(read_csv("Bradley_soil.csv"))
 Bradley_AGB <- as.data.frame(read_csv("Bradley_AGB.csv"))
 head(Bradley_soil)
@@ -125,26 +132,48 @@ head(Bradley_AGB)
 Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
 Bradley_AGB2$veg <- ifelse(Bradley_AGB2$burned == 'no', 'sagebrush','cheatgrass')
 Bradley_AGB2$study <- c("Bradley et al. 2006")
+Bradley_AGB2$lat <- ifelse(Bradley_AGB2$Site == 'Button' , '41.0000000','40.9900000')
+Bradley_AGB2$long <- ifelse(Bradley_AGB2$Site == 'Button' , '117.5800000','117.8600000')
 
 Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
 Bradley_soil2$veg <- ifelse(Bradley_soil2$burned == 'no', 'sagebrush','cheatgrass')
 Bradley_soil2$study <- c("Bradley et al. 2006")
+Bradley_soil2$lat <- ifelse(Bradley_soil2$Site == 'Button' , '41.0000000','40.9900000')
+Bradley_soil2$long <- ifelse(Bradley_soil2$Site == 'Button' , '117.5800000','117.8600000')
+Bradley_soil2$`Top Depth` <- c(0)
+Bradley_soil2$`Bottom Depth` <- c(10)
 
 head(Bradley_soil2)
 head(Bradley_AGB2)
+
+
+###
+#Norton et al. 2008 data# need BD
+#Figure out treatments; they don't match the publication
+#lat = 42.70777778
+#long = 108.60583333
+Norton_2008 <- as.data.frame(read_csv("Norton_2008.csv"))
+head(Norton_2008)
+
+Norton_2008b <- Norton_2008[which(Norton_2008$wet_dry == "dry"),]
+Norton_2008c <- Norton_2008b[which(Norton_2008b$grass == "Cheat"),]
+
+Norton_2008c$veg <- ifelse(Norton_2008c$`life form` == 'LS', 'sagecheat','cheatgrass')
+
+Norton_2008c$lat <- c("42.70777778")
+Norton_2008c$long <- c("108.60583333")
+
+Norton_2008c$study <- c("Norton et al. 2008")
+Norton_2008c$`Top Depth` <- c(0)
+Norton_2008c$`Bottom Depth` <- c(10)
+head(Norton_2008c)
+
 
 ###
 #Mahood data# need lat/long
 #need info on veg categories and burned/unburned
 #make sure Jones data is not repeated from publication
 Mahood <- as.data.frame(read_csv("Mahood.csv"))
-
-
-
-###
-#Norton et al. 2008 data# need lat/long, BD
-#Figure out treatments; they don't match the publication
-
 
 
 ###
