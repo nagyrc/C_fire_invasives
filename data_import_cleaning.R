@@ -4,6 +4,7 @@
 
 library(plyr)
 library(tidyverse)
+library(stringr)
 
 setwd("data/")
 
@@ -30,19 +31,30 @@ Jones_vls <- merge(Jones_veg_litter, Jones_soil,
 #add fields that will be common across studies
 Jones_vls$burned <- ifelse(Jones_vls$Burn_trt == 'B' | Jones_vls$Burn_trt == 'C', 'yes','no')
 Jones_vls$study <- "Jones et al. 2015"
+head(Jones_vls)
+
+Jones_vls$lat1 <- ifelse(Jones_vls$Site == 'E' , '4564313','4598553')
+Jones_vls$long1 <- ifelse(Jones_vls$Site == 'E' , '466314','436294')
+Jones_vls$lat <- ifelse(Jones_vls$Site == 'E' , '41.229507','41.536094')
+Jones_vls$long <- ifelse(Jones_vls$Site == 'E' , '-117.4019367','-117.7637079')
 
 ###
 #Weber data# need BD to calculate soil C content
 Weber <- as.data.frame(read_csv("Weber.csv"))
 head(Weber)
 #lat and long data are messed up
-
+Weber$lat <- c("42.853")
+Weber$long <- c("-112.402")
 #add fields that will be common across studies
 Weber$study <- "Weber et al. 2015"
 
 ###
 #Blank data# need BD to calculate soil C content
 Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
+head(Blank)
+
+Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
+Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
 
 #add fields that will be common across studies
 unique(Blank$Treatment)
@@ -59,6 +71,10 @@ Norton$study <- "Norton et al. 2004"
 Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
 
 head(Norton)
+
+Norton$lat <- Norton$latitude
+Norton$long <-Norton$longitude
+
 
 ###
 #Stark data# need lat/long
@@ -95,7 +111,7 @@ Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
 #Davies data# need lat/long
 Davies <- as.data.frame(read_csv("Davies.csv"))
 Davies$veg <- c("cheatgrass")
-Davies$prescribed_burn <- ifelse(Davies$Treatement == 'ungrazed/unburned', 'no','yes')
+Davies$prescribed_burn <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
 
 
 ###
@@ -128,6 +144,9 @@ Mahood <- as.data.frame(read_csv("Mahood.csv"))
 ###
 #Norton et al. 2008 data# need lat/long, BD
 #Figure out treatments; they don't match the publication
+
+
+
 ###
 #Rau data# need soil depths
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
