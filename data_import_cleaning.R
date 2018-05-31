@@ -110,7 +110,7 @@ Stark2$long <- c("108.40083333")
 
 
 ###
-#Davies data# 
+#Davies data# Need %C
 Davies <- as.data.frame(read_csv("Davies.csv"))
 Davies$veg <- c("cheatgrass")
 Davies$prescribed_burn <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
