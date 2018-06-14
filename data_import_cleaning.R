@@ -222,9 +222,13 @@ head(Rau)
 #data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
 soil <- raster(paste0("muid.e00"))
 str(soil)
-#dataonly <- soil@data
-
 attributes(soil)
+
+dataonly <- soil@data
+
+#trying to pull out an info table
+data2 <- soil@data@MUID.LAYER
+#Error: no slot of name "MUID.LAYER" for this object of class ".SingleLayerData"
 
 crs(soil)
 #+proj=aea +lat_1=0 +lat_2=29.5 +lat_0=45.5 +lon_0=0 +x_0=0 +y_0=-96
@@ -233,3 +237,4 @@ crs(soil)
 
 #not sure what this is plotting
 plot(soil[[1]])
+plot(soil[[]])
