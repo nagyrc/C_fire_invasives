@@ -5,6 +5,8 @@
 library(plyr)
 library(tidyverse)
 library(stringr)
+library(sf)
+library(raster)
 
 setwd("data/")
 
@@ -213,3 +215,20 @@ Rau$BGB_gC_m2 <- Rau$RTC/10
 Rau$SOC_g_m2 <- Rau$TSOC/10
 
 head(Rau)
+
+
+###
+#bring in bulk density spatial data
+#data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
+soil <- raster(paste0("muid.e00"))
+str(soil)
+#dataonly <- soil@data
+
+attributes(soil)
+
+crs(soil)
+#+proj=aea +lat_1=0 +lat_2=29.5 +lat_0=45.5 +lon_0=0 +x_0=0 +y_0=-96
+#+datum=NAD27 +units=m +no_defs +ellps=clrk66
+#+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat 
+
+plot(soil[1])
