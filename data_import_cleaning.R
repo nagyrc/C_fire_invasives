@@ -231,4 +231,5 @@ crs(soil)
 #+datum=NAD27 +units=m +no_defs +ellps=clrk66
 #+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat 
 
-plot(soil[1])
+#not sure what this is plotting
+plot(soil[[1]])
