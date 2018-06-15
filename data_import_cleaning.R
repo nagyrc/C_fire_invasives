@@ -172,11 +172,18 @@ head(Norton_2008c)
 
 
 ###
-#Mahood data# need lat/long
-#need info on veg categories and burned/unburned
+#Mahood data# need info on veg categories and burned/unburned
 #make sure Jones data is not repeated from publication
-Mahood <- as.data.frame(read_csv("Mahood.csv"))
+Mahood1 <- as.data.frame(read_csv("Mahood1.csv"))
 
+#bring in lat/long for ff plots
+Mahoodll <- as.data.frame(read_csv("Mahood_ff_plot_locations.csv"))
+
+#join lat/long for ffplots
+Mahood1ll <- left_join(Mahood1, Mahoodll, by = "plot")
+
+
+Mahood2 <- as.data.frame(read_csv("Mahood2.csv"))
 
 ###
 #Rau data# need soil depths
