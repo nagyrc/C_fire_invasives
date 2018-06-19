@@ -161,12 +161,12 @@ kpNorton$pr_burned <- c("no")
 kpNorton$seeded <- c("no")
 
 
-#stopped here Tuesday
+
 ###
 #Stark data# need to append burn info for 1 site
+#the study states that the veg here has not burned
 Stark <- as.data.frame(read_csv("Stark.csv"))
 
-head(Stark)
 #add fields that will be common across studies
 Stark$study <- "Stark et al. 2015"
 unique(Stark$VegType)
@@ -175,32 +175,41 @@ unique(Stark$VegType)
 #however, I believe cheatgrass was fumigated too (24 yrs ago)
 Stark2 <- Stark[which(Stark$VegType != "fum sage"),]
 Stark2$veg <- ifelse(Stark2$VegType == 'undist sage', 'sagebrush','cheatgrass')
-unique(Stark2$veg)
+#unique(Stark2$veg)
 
-unique(Stark2$`Top depth`)
+#unique(Stark2$`Top depth`)
 #0, 10, 20, 40
 
 #BD provided from another Stark study 
-Stark2$BD <- ifelse(Stark2$`Top depth` == 0, 1.36,
+Stark2$BD_g_cm3 <- ifelse(Stark2$`Top depth` == 0, 1.36,
                         ifelse(Stark2$`Top depth` == 10, 1.35,
                                ifelse(Stark2$`Top depth` == 20, 1.455, 1.57)))
 Stark2$`BD estimated` <- c("other")
 
-Stark2$soil%C <- Stark2$`org C (g C/kg)` / 10
+Stark2$soil_percC <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-Stark2$soilC_g_cm2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
+Stark2$soilC_g_cm2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick/10
 
-#the study states that the veg here has not burned
-Stark2$burn <- c("no")
+Stark2$pr_burned <- c("no")
 Stark2$lat <- c("39.90333333")
 Stark2$long <- c("-108.40083333")
-Stark2$seeded <- ifelse(Stark$veg == 'sage', 'no','maybe')
-
+Stark2$seeded <- ifelse(Stark2$veg == 'sage', 'no','maybe')
 
 head(Stark2)
-tail(Stark2)
+
+colnames(Stark2)[colnames(Stark2) == 'Plot'] <- 'plot'
+colnames(Stark2)[colnames(Stark2) == 'Block'] <- 'block'
+colnames(Stark2)[colnames(Stark2) == 'BD estimated'] <- 'BD_estimated'
+colnames(Stark2)[colnames(Stark2) == 'soil_percC'] <- 'soil%C'
+colnames(Stark2)[colnames(Stark2) == 'Top depth'] <- 'topdepth_cm'
+colnames(Stark2)[colnames(Stark2) == 'Bottom depth'] <- 'bottomdepth_cm'
+
+kpStark <- Stark2[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_cm2","pr_burned","lat","long","seeded")]
+head(kpStark)
 
 
+
+#stopped here Tuesday for realz
 ###
 #Davies data# Need %C
 Davies <- as.data.frame(read_csv("Davies.csv"))
