@@ -40,6 +40,7 @@ Jones_vls$long1 <- ifelse(Jones_vls$Site == 'E' , '466314','436294')
 Jones_vls$lat <- ifelse(Jones_vls$Site == 'E' , '41.229507','41.536094')
 Jones_vls$long <- ifelse(Jones_vls$Site == 'E' , '-117.4019367','-117.7637079')
 
+
 ###
 #Weber data# need BD to calculate soil C content
 Weber <- as.data.frame(read_csv("Weber.csv"))
@@ -49,6 +50,7 @@ Weber$lat <- c("42.853")
 Weber$long <- c("-112.402")
 #add fields that will be common across studies
 Weber$study <- "Weber et al. 2015"
+
 
 ###
 #Blank data# need BD to calculate soil C content
@@ -63,6 +65,7 @@ unique(Blank$Treatment)
 Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','cheatgrass')
 Blank$study <- "Blank & Norton 2006"
 
+
 ###
 #Norton data# 
 Norton <- as.data.frame(read_csv("Norton.csv"))
@@ -75,7 +78,7 @@ Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
 head(Norton)
 
 Norton$lat <- Norton$latitude
-Norton$long <-Norton$longitude
+Norton$long <- Norton$longitude
 
 
 ###
@@ -172,18 +175,37 @@ head(Norton_2008c)
 
 
 ###
-#Mahood data# need info on veg categories and burned/unburned
+#Mahood data# need info on veg categories and burned/unburned and bottom depth sampled
 #make sure Jones data is not repeated from publication
 Mahood1 <- as.data.frame(read_csv("Mahood1.csv"))
 
-#bring in lat/long for ff plots
+#bring in lat/long for ff plots to merge in next step
 Mahoodll <- as.data.frame(read_csv("Mahood_ff_plot_locations.csv"))
 
 #join lat/long for ffplots
 Mahood1ll <- left_join(Mahood1, Mahoodll, by = "plot")
 
+head(Mahood1ll)
+#decide on threshold for "cheatgrass dominance"
+#use mean of this data for cheatgrass %C?
+summary(Mahood1ll$cheatgrass_cover)
+#min cheat % cover = 0.333; max cheat % cover = 57.22
+
+Mahood1ll$study <- c("Mahood et al. unpub1")
 
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv"))
+head(Mahood2)
+#use mean of this data for cheatgrass %C?
+#need burned/unburned category here
+#need cheatgrass or sage designation here...based on %?
+
+summary(Mahood2$AIG)
+#min AIG % cover = 0.00; max AIG % cover = 17.500
+summary(Mahood2$Shrub)
+#min shrub % cover = 0.00; max shrub % cover = 22.20
+
+Mahood2$study <- c("Mahood et al. unpub2")
+
 
 ###
 #Rau data# need soil depths
