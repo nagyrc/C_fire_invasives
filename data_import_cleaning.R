@@ -12,7 +12,7 @@ setwd("data/")
 
 file_names <- list.files()
 
-#Jones data# 
+#Jones data# burns were prescibed burns; do not need to append burn data
 # does not currently include the pre and post burn data (Jones_burn.csv)
 Jones_soil <- as.data.frame(read_csv("Jones_soil.csv"))
 Jones_veg_only <- as.data.frame(read_csv("Jones_veg_only.csv"))
@@ -40,9 +40,12 @@ Jones_vls$long1 <- ifelse(Jones_vls$Site == 'E' , '466314','436294')
 Jones_vls$lat <- ifelse(Jones_vls$Site == 'E' , '41.229507','41.536094')
 Jones_vls$long <- ifelse(Jones_vls$Site == 'E' , '-117.4019367','-117.7637079')
 
+head(Jones_vls)
+
+
 
 ###
-#Weber data# need BD to calculate soil C content
+#Weber data# need BD to calculate soil C content; need to append burn info
 Weber <- as.data.frame(read_csv("Weber.csv"))
 head(Weber)
 #lat and long data are messed up
@@ -52,8 +55,9 @@ Weber$long <- c("-112.402")
 Weber$study <- "Weber et al. 2015"
 
 
+
 ###
-#Blank data# need BD to calculate soil C content
+#Blank data# need BD to calculate soil C content; need to append burn info
 Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
 head(Blank)
 
@@ -66,8 +70,9 @@ Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 
 Blank$study <- "Blank & Norton 2006"
 
 
+
 ###
-#Norton data# 
+#Norton data# need to append burn info
 Norton <- as.data.frame(read_csv("Norton.csv"))
 
 #add fields that will be common across studies
@@ -98,12 +103,10 @@ unique(Stark2$veg)
 unique(Stark2$`Top depth`)
 #0, 10, 20, 40
 
+#BD provided from another Stark study 
 Stark2$BD <- ifelse(Stark2$`Top depth` == 0, 1.36,
                         ifelse(Stark2$`Top depth` == 10, 1.35,
                                ifelse(Stark2$`Top depth` == 20, 1.455, 1.57)))
-
-head(Stark2)
-tail(Stark2)
 
 Stark2$orgC_perc <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
@@ -112,6 +115,9 @@ Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
 Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
 Stark2$lat <- c("39.90333333")
 Stark2$long <- c("108.40083333")
+
+head(Stark2)
+tail(Stark2)
 
 
 ###
