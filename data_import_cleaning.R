@@ -161,7 +161,7 @@ kpNorton$pr_burned <- c("no")
 kpNorton$seeded <- c("no")
 
 
-
+#stopped here Tuesday
 ###
 #Stark data# need to append burn info for 1 site
 Stark <- as.data.frame(read_csv("Stark.csv"))
