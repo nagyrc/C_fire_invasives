@@ -48,12 +48,12 @@ colnames(Jones_vls)[colnames(Jones_vls) == 'prescribed burn'] <- 'pr_burned'
 colnames(Jones_vls)[colnames(Jones_vls) == 'BD estimated'] <- 'BD_estimated'
 colnames(Jones_vls)[colnames(Jones_vls) == '%C'] <- 'soil%C'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Soil C (g/m2)'] <- 'soilC_g_m2'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Bulk density (g/cm3)'] <- 'BD_g_m3'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Bulk density (g/cm3)'] <- 'BD_g_cm3'
 colnames(Jones_vls)[colnames(Jones_vls) == 'top depth'] <- 'topdepth_cm'
 colnames(Jones_vls)[colnames(Jones_vls) == 'bottom depth'] <- 'bottomdepth_cm'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Litter_C_g_m2'] <- 'litterC_g_m2'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Total_Vegetation_C_g_m2'] <- 'AGBC_g_m2'
-colnames(Jones_vls)[colnames(Jones_vls) == 'BD_g_m3'] <- 'BD_g_cm3'
+#colnames(Jones_vls)[colnames(Jones_vls) == 'BD_g_m3'] <- 'BD_g_cm3'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Year'] <- 'yr_samp'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Barrel'] <- 'barrel'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Site'] <- 'site'
@@ -99,7 +99,6 @@ head(kpWeber)
 ###
 #Blank data# need BD to calculate soil C content; need to append burn info for diff sites
 Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
-head(Blank)
 
 Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
 Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
@@ -109,6 +108,23 @@ unique(Blank$Treatment)
 Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','cheatgrass')
 Blank$study <- "Blank & Norton 2006"
 
+head(Blank)
+
+colnames(Blank)[colnames(Blank) == 'Site'] <- 'site'
+colnames(Blank)[colnames(Blank) == 'Treatment'] <- 'treatment'
+colnames(Blank)[colnames(Blank) == 'Rep'] <- 'rep'
+colnames(Blank)[colnames(Blank) == '% C'] <- 'soil%C'
+colnames(Blank)[colnames(Blank) == 'Top depth'] <- 'topdepth_cm'
+colnames(Blank)[colnames(Blank) == 'Bottom depth'] <- 'bottomdepth_cm'
+colnames(Blank)[colnames(Blank) == 'BD estimated'] <- 'BD_estimated'
+
+Blank$thick <- Blank$bottomdepth_cm - Weber$topdepth_cm
+Blank$pr_burned <- c("no")
+Blank$seeded <- c("no")
+
+kpBlank <- Blank[,c("site","treatment","rep","soil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded")]
+head(kpBlank)
+
 
 
 ###
@@ -116,15 +132,34 @@ Blank$study <- "Blank & Norton 2006"
 Norton <- as.data.frame(read_csv("Norton.csv"))
 
 #add fields that will be common across studies
-unique(Norton$Trt)
+#unique(Norton$Trt)
 Norton$study <- "Norton et al. 2004"
 Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
 
+#Norton$lat <- Norton$latitude
+#Norton$long <- Norton$longitude
+#unique(Norton$lat)
+
+colnames(Norton)[colnames(Norton) == 'Site'] <- 'site'
+colnames(Norton)[colnames(Norton) == 'Trt'] <- 'treatment'
+colnames(Norton)[colnames(Norton) == 'Top Depth'] <- 'topdepth_cm'
+colnames(Norton)[colnames(Norton) == 'Bottom Depth'] <- 'bottomdepth_cm'
+colnames(Norton)[colnames(Norton) == 'Bulk Density'] <- 'BD_g_cm3'
+colnames(Norton)[colnames(Norton) == 'Organic C %'] <- 'soil%C'
+colnames(Norton)[colnames(Norton) == 'g OC/m2'] <- 'soilC_g_m2'
+colnames(Norton)[colnames(Norton) == 'Thickness'] <- 'thick'
+colnames(Norton)[colnames(Norton) == 'latitude'] <- 'lat'
+colnames(Norton)[colnames(Norton) == 'longitude'] <- 'long'
+colnames(Norton)[colnames(Norton) == 'BD estimated'] <- 'BD_estimated'
+
 head(Norton)
 
-Norton$lat <- Norton$latitude
-Norton$long <- Norton$longitude
-unique(Norton$lat)
+kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","soil%C","soilC_g_m2","BD_estimated","lat","long","study","veg")]
+head(kpNorton)
+
+kpNorton$pr_burned <- c("no")
+kpNorton$seeded <- c("no")
+
 
 
 ###
