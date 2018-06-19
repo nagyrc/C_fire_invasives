@@ -55,12 +55,16 @@ colnames(Jones_vls)[colnames(Jones_vls) == 'Litter_C_g_m2'] <- 'litterC_g_m2'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Total_Vegetation_C_g_m2'] <- 'AGBC_g_m2'
 colnames(Jones_vls)[colnames(Jones_vls) == 'BD_g_m3'] <- 'BD_g_cm3'
 colnames(Jones_vls)[colnames(Jones_vls) == 'Year'] <- 'yr_samp'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Barrel'] <- 'barrel'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Site'] <- 'site'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Burn_trt'] <- 'burn_trt'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Rep'] <- 'rep'
 
 Jones_vls$thick <- Jones_vls$bottomdepth_cm - Jones_vls$topdepth_cm
 head(Jones_vls)
 
 
-kpJones <- Jones_vls[,c("Barrel", "Site", "Burn_trt","Rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","seeded","pr_burned","study","lat","long","thick")]
+kpJones <- Jones_vls[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","seeded","pr_burned","study","lat","long","thick")]
 head(kpJones)
 
 
@@ -81,10 +85,16 @@ colnames(Weber)[colnames(Weber) == 'BD estimated'] <- 'BD_estimated'
 colnames(Weber)[colnames(Weber) == 'top depth'] <- 'topdepth_cm'
 colnames(Weber)[colnames(Weber) == 'bottom depth'] <- 'bottomdepth_cm'
 colnames(Weber)[colnames(Weber) == '% C'] <- 'soil%C'
+colnames(Weber)[colnames(Weber) == 'Sample'] <- 'sample'
 
 Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
 
 head(Weber)
+
+kpWeber <- Weber[,c("sample","treatment","soil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick")]
+head(kpWeber)
+
+
 
 ###
 #Blank data# need BD to calculate soil C content; need to append burn info for diff sites
