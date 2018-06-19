@@ -12,7 +12,7 @@ setwd("data/")
 
 file_names <- list.files()
 
-#Jones data# burns were prescibed burns; do not need to append burn data
+#Jones data# burns were prescibed burns; do not need to append burn data since prescribed
 # does not currently include the pre and post burn data (Jones_burn.csv)
 Jones_soil <- as.data.frame(read_csv("Jones_soil.csv"))
 Jones_veg_only <- as.data.frame(read_csv("Jones_veg_only.csv"))
@@ -26,38 +26,68 @@ head(Jones_litter_only)
 Jones_veg_litter <- merge(Jones_veg_only, Jones_litter_only, 
                           by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"))
 
+#rm(Jones_vls)
 #merge veg_litter and soil dataframes
 Jones_vls <- merge(Jones_veg_litter, Jones_soil, 
                           by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"))
 
+#unique(Jones_vls$Burn_trt)
 #add fields that will be common across studies
-Jones_vls$burned <- ifelse(Jones_vls$Burn_trt == 'B' | Jones_vls$Burn_trt == 'C', 'yes','no')
+#Jones_vls$pr_burned <- ifelse(Jones_vls$Burn_trt == 'B' | Jones_vls$Burn_trt == 'C', 'yes','no')
 Jones_vls$study <- "Jones et al. 2015"
-head(Jones_vls)
 
 Jones_vls$lat1 <- ifelse(Jones_vls$Site == 'E' , '4564313','4598553')
 Jones_vls$long1 <- ifelse(Jones_vls$Site == 'E' , '466314','436294')
 Jones_vls$lat <- ifelse(Jones_vls$Site == 'E' , '41.229507','41.536094')
 Jones_vls$long <- ifelse(Jones_vls$Site == 'E' , '-117.4019367','-117.7637079')
+#Jones_vls$seeded <- Jones_vls$`cheatgrass seeded`
+#colnames(trSamp) <- "newname2"
+#colnames(df)[colnames(df) == 'oldName'] <- 'newName'
+colnames(Jones_vls)[colnames(Jones_vls) == 'cheatgrass seeded'] <- 'seeded'
+colnames(Jones_vls)[colnames(Jones_vls) == 'prescribed burn'] <- 'pr_burned'
+colnames(Jones_vls)[colnames(Jones_vls) == 'BD estimated'] <- 'BD_estimated'
+colnames(Jones_vls)[colnames(Jones_vls) == '%C'] <- 'soil%C'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Soil C (g/m2)'] <- 'soilC_g_m2'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Bulk density (g/cm3)'] <- 'BD_g_m3'
+colnames(Jones_vls)[colnames(Jones_vls) == 'top depth'] <- 'topdepth_cm'
+colnames(Jones_vls)[colnames(Jones_vls) == 'bottom depth'] <- 'bottomdepth_cm'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Litter_C_g_m2'] <- 'litterC_g_m2'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Total_Vegetation_C_g_m2'] <- 'AGBC_g_m2'
+colnames(Jones_vls)[colnames(Jones_vls) == 'BD_g_m3'] <- 'BD_g_cm3'
+colnames(Jones_vls)[colnames(Jones_vls) == 'Year'] <- 'yr_samp'
 
+Jones_vls$thick <- Jones_vls$bottomdepth_cm - Jones_vls$topdepth_cm
 head(Jones_vls)
+
+
+kpJones <- Jones_vls[,c("Barrel", "Site", "Burn_trt","Rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","seeded","pr_burned","study","lat","long","thick")]
+head(kpJones)
 
 
 
 ###
-#Weber data# need BD to calculate soil C content; need to append burn info
+#Weber data# need BD to calculate soil C content; need to append burn info (one lat/long only)
 Weber <- as.data.frame(read_csv("Weber.csv"))
-head(Weber)
+
 #lat and long data are messed up
 Weber$lat <- c("42.853")
 Weber$long <- c("-112.402")
 #add fields that will be common across studies
 Weber$study <- "Weber et al. 2015"
+Weber$seeded <- c("no") 
+Weber$pr_burned <- c("no")
 
+colnames(Weber)[colnames(Weber) == 'BD estimated'] <- 'BD_estimated'
+colnames(Weber)[colnames(Weber) == 'top depth'] <- 'topdepth_cm'
+colnames(Weber)[colnames(Weber) == 'bottom depth'] <- 'bottomdepth_cm'
+colnames(Weber)[colnames(Weber) == '% C'] <- 'soil%C'
 
+Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
+
+head(Weber)
 
 ###
-#Blank data# need BD to calculate soil C content; need to append burn info
+#Blank data# need BD to calculate soil C content; need to append burn info for diff sites
 Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
 head(Blank)
 
@@ -72,7 +102,7 @@ Blank$study <- "Blank & Norton 2006"
 
 
 ###
-#Norton data# need to append burn info
+#Norton data# need to append burn info for 7 sites
 Norton <- as.data.frame(read_csv("Norton.csv"))
 
 #add fields that will be common across studies
@@ -84,10 +114,11 @@ head(Norton)
 
 Norton$lat <- Norton$latitude
 Norton$long <- Norton$longitude
+unique(Norton$lat)
 
 
 ###
-#Stark data# 
+#Stark data# need to append burn info for 1 site
 Stark <- as.data.frame(read_csv("Stark.csv"))
 
 head(Stark)
@@ -96,6 +127,7 @@ Stark$study <- "Stark et al. 2015"
 unique(Stark$VegType)
 
 #remove data from fumigated sagbrush; these were fumigated and buldozed...too different from other studies
+#however, I believe cheatgrass was fumigated too (24 yrs ago)
 Stark2 <- Stark[which(Stark$VegType != "fum sage"),]
 Stark2$veg <- ifelse(Stark2$VegType == 'undist sage', 'sagebrush','cheatgrass')
 unique(Stark2$veg)
@@ -107,14 +139,18 @@ unique(Stark2$`Top depth`)
 Stark2$BD <- ifelse(Stark2$`Top depth` == 0, 1.36,
                         ifelse(Stark2$`Top depth` == 10, 1.35,
                                ifelse(Stark2$`Top depth` == 20, 1.455, 1.57)))
+Stark2$`BD estimated` <- c("other")
 
 Stark2$orgC_perc <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
 Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
 
-Stark2$burn <- ifelse(Stark2$veg == "cheatgrass", "yes", "no")
+#the study states that the veg here has not burned
+Stark2$burn <- c("no")
 Stark2$lat <- c("39.90333333")
-Stark2$long <- c("108.40083333")
+Stark2$long <- c("-108.40083333")
+Stark2$seeded <- ifelse(Stark$veg == 'sage', 'no','maybe')
+
 
 head(Stark2)
 tail(Stark2)
