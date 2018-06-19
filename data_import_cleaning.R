@@ -186,9 +186,9 @@ Stark2$BD <- ifelse(Stark2$`Top depth` == 0, 1.36,
                                ifelse(Stark2$`Top depth` == 20, 1.455, 1.57)))
 Stark2$`BD estimated` <- c("other")
 
-Stark2$orgC_perc <- Stark2$`org C (g C/kg)` / 10
+Stark2$soil%C <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-Stark2$orgC_gC_m2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
+Stark2$soilC_g_cm2 <- Stark2$BD*Stark2$orgC_perc*Stark2$thick/10
 
 #the study states that the veg here has not burned
 Stark2$burn <- c("no")
