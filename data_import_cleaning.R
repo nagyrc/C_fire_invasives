@@ -209,17 +209,32 @@ head(kpStark)
 
 
 
-#stopped here Tuesday for realz
+
 ###
 #Davies data# Need %C
+#prescribed burn was in 1993
+#no other burn from 1936-2007 besides prescribed burn
 Davies <- as.data.frame(read_csv("Davies.csv"))
 Davies$veg <- c("cheatgrass")
-Davies$prescribed_burn <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
-head(Davies)
+Davies$pr_burned <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
 
 Davies$lat <- c("43.48333333")
 Davies$long <- c("119.71666667")
 Davies$study <- "Davies et al. 2009"
+
+colnames(Davies)[colnames(Davies) == 'Treatment'] <- 'treatment'
+colnames(Davies)[colnames(Davies) == 'Year'] <- 'yr_samp'
+
+Davies$biomass_g_m2 <- Davies$`Cheatgrass biomass (kg/ha)`/10
+Davies$seeded <- c("no")
+
+
+head(Davies)
+
+kpDavies <- Davies[,c("treatment","block","yr_samp","veg","pr_burned","lat","long","study","biomass_g_m2","seeded")]
+head(kpDavies)
+
+
 
 
 ###
