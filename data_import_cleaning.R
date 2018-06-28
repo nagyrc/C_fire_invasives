@@ -219,7 +219,7 @@ Davies$veg <- c("cheatgrass")
 Davies$pr_burned <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
 
 Davies$lat <- c("43.48333333")
-Davies$long <- c("119.71666667")
+Davies$long <- c("-119.71666667")
 Davies$study <- "Davies et al. 2009"
 
 colnames(Davies)[colnames(Davies) == 'Treatment'] <- 'treatment'
@@ -249,20 +249,22 @@ Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
 Bradley_AGB2$veg <- ifelse(Bradley_AGB2$burned == 'no', 'sagebrush','cheatgrass')
 Bradley_AGB2$study <- c("Bradley et al. 2006")
 Bradley_AGB2$lat <- ifelse(Bradley_AGB2$Site == 'Button' , '41.0000000','40.9900000')
-Bradley_AGB2$long <- ifelse(Bradley_AGB2$Site == 'Button' , '117.5800000','117.8600000')
+Bradley_AGB2$long <- ifelse(Bradley_AGB2$Site == 'Button' , '-117.5800000','-117.8600000')
 Bradley_AGB2$pr_burned <- c("no")
 Bradley_AGB2$yr_samp <- c(2004)
+Bradley_AGB2$seeded <- c("no")
 
 Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
 Bradley_soil2$veg <- ifelse(Bradley_soil2$burned == 'no', 'sagebrush','cheatgrass')
 Bradley_soil2$study <- c("Bradley et al. 2006")
 Bradley_soil2$lat <- ifelse(Bradley_soil2$Site == 'Button' , '41.0000000','40.9900000')
-Bradley_soil2$long <- ifelse(Bradley_soil2$Site == 'Button' , '117.5800000','117.8600000')
+Bradley_soil2$long <- ifelse(Bradley_soil2$Site == 'Button' , '-117.5800000','-117.8600000')
 Bradley_soil2$`Top Depth` <- c(0)
 Bradley_soil2$`Bottom Depth` <- c(10)
 Bradley_soil2$pr_burned <- c("no")
 Bradley_soil2$yr_samp <- c(2004)
 Bradley_soil2$thick <- Bradley_soil2$`Bottom Depth` - Bradley_soil2$`Top Depth`
+Bradley_soil2$seeded <- c("no")
 
 colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Carbon_perc'] <- 'soil%C'
 colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Site'] <- 'site'
@@ -275,19 +277,18 @@ colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'Site'] <- 'site'
 colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
 
 
-head(Bradley_soil2)
-head(Bradley_AGB2)
-
 kpBradleysoil <- Bradley_soil2
-kpBradleyveg <- Bradley_AGB2[,c("site","burned","AGBC_g_m2","veg","study","lat","long","pr_burned","yr_samp")]
+kpBradleyveg <- Bradley_AGB2[,c("site","burned","AGBC_g_m2","veg","study","lat","long","pr_burned","yr_samp","seeded")]
 
+head(kpBradleysoil)
+head(kpBradleyveg)
 
 
 ###
 #Norton et al. 2008 data# need BD
 #Figure out treatments; they don't match the publication
 #lat = 42.70777778
-#long = 108.60583333
+#long = -108.60583333
 Norton_2008 <- as.data.frame(read_csv("Norton_2008.csv"))
 head(Norton_2008)
 
@@ -297,12 +298,26 @@ Norton_2008c <- Norton_2008b[which(Norton_2008b$grass == "Cheat"),]
 Norton_2008c$veg <- ifelse(Norton_2008c$`life form` == 'LS', 'sagecheat','cheatgrass')
 
 Norton_2008c$lat <- c("42.70777778")
-Norton_2008c$long <- c("108.60583333")
+Norton_2008c$long <- c("-108.60583333")
 
 Norton_2008c$study <- c("Norton et al. 2008")
 Norton_2008c$`Top Depth` <- c(0)
 Norton_2008c$`Bottom Depth` <- c(10)
+Norton_2008c$thick <- Norton_2008c$`Bottom Depth` - Norton_2008c$`Top Depth`
+Norton_2008c$seeded <- c("no")
+Norton_2008c$yr_samp <- c(2003)
+
+colnames(Norton_2008c)[colnames(Norton_2008c) == 'Top Depth'] <- 'topdepth_cm'
+colnames(Norton_2008c)[colnames(Norton_2008c) == 'Bottom Depth'] <- 'bottomdepth_cm'
+colnames(Norton_2008c)[colnames(Norton_2008c) == 'TOC_perc'] <- 'soil%C'
+colnames(Norton_2008c)[colnames(Norton_2008c) == 'life form'] <- 'life_form'
+
+
 head(Norton_2008c)
+
+kpNorton2008 <- Norton_2008c[,c("life_form","rep","soil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp")]
+head(kpNorton2008)
+
 
 
 ###
