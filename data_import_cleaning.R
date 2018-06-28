@@ -468,30 +468,6 @@ head(Rau)
 
 
 
-###
-#bring in bulk density spatial data
-#data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
-soil <- raster(paste0("muid.e00"))
-str(soil)
-attributes(soil)
-
-dataonly <- soil@data
-
-#trying to pull out an info table
-data2 <- soil@data@MUID.LAYER
-#Error: no slot of name "MUID.LAYER" for this object of class ".SingleLayerData"
-
-crs(soil)
-#+proj=aea +lat_1=0 +lat_2=29.5 +lat_0=45.5 +lon_0=0 +x_0=0 +y_0=-96
-#+datum=NAD27 +units=m +no_defs +ellps=clrk66
-#+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat 
-
-#not sure what this is plotting
-plot(soil[[1]])
-plot(soil[[]])
-
-
-
 
 ###
 #merge dataframes together
@@ -525,3 +501,29 @@ bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 
 alldata <- bind10
+
+
+
+
+###
+###
+#bring in bulk density spatial data
+#data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
+soil <- raster(paste0("muid.e00"))
+str(soil)
+attributes(soil)
+
+dataonly <- soil@data
+
+#trying to pull out an info table
+data2 <- soil@data@MUID.LAYER
+#Error: no slot of name "MUID.LAYER" for this object of class ".SingleLayerData"
+
+crs(soil)
+#+proj=aea +lat_1=0 +lat_2=29.5 +lat_0=45.5 +lon_0=0 +x_0=0 +y_0=-96
+#+datum=NAD27 +units=m +no_defs +ellps=clrk66
+#+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat 
+
+#not sure what this is plotting
+plot(soil[[1]])
+plot(soil[[]])
