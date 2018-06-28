@@ -348,6 +348,7 @@ Mahood1ll$thick <- Mahood1ll$bottomdepth_cm - Mahood1ll$topdepth_cm
 
 #check this with Adam
 Mahood1ll$veg <- ifelse(Mahood1ll$native_shrub_cover > 0, 'sagecheat','cheatgrass')
+Mahood1ll$BD_estimated <- c("no")
 
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'Elevation'] <- 'elevation'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'soil%C'
@@ -358,7 +359,7 @@ colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'soilC_g_m2'
 head(Mahood1ll)
 
 
-kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","soil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","soilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg")]
+kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","soil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","soilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated")]
 head(kpMahood1)
 
 
@@ -383,13 +384,28 @@ Mahood2$veg <- ifelse(Mahood2$Shrub > 0, 'sagecheat','cheatgrass')
 
 Mahood2$study <- c("Mahood et al. unpub2")
 
+colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
 colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
 colnames(Mahood2)[colnames(Mahood2) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
 colnames(Mahood2)[colnames(Mahood2) == 'SOIL_TC'] <- 'soil%C'
+colnames(Mahood2)[colnames(Mahood2) == 'TC_LIT'] <- 'litter%C'
+colnames(Mahood2)[colnames(Mahood2) == 'latitude'] <- 'lat'
+colnames(Mahood2)[colnames(Mahood2) == 'longitude'] <- 'long'
 
-
+Mahood2$topdepth_cm <- c(0)
+Mahood2$bottomdepth_cm <- c(10)
+Mahood2$thick <- Mahood2$bottomdepth_cm - Mahood2$topdepth_cm
+Mahood2$soilC_g_m2 <- Mahood2$`soil%C`*Mahood2$BD_g_cm3*Mahood2$thick
+Mahood2$seeded <- c("no")
+Mahood2$pr_burned <- c("no")
+Mahood2$BD_estimated <- c("no")
 
 head(Mahood2)
+
+#ask Adam what 'Litter' column is...% covered by litter?  or litter weight (g)
+#if it is litter weight, add it to this keep line
+kpMahood2 <- Mahood2[,c("sample","litter%C","soil%C","BD_g_cm3", "plot","lat","long","elevation","veg","study","topdepth_cm","bottomdepth_cm","thick","soilC_g_m2","seeded","pr_burned","BD_estimated")]
+head(kpMahood2)
 
 
 ###
@@ -479,4 +495,33 @@ plot(soil[[]])
 
 ###
 #merge dataframes together
+#add Rau here
+list_studies <- list(kpJones, kpWeber, kpBlank, kpNorton, kpStark, kpDavies, kpBradleysoil, kpBradleyveg, kpNorton2008, kpMahood1, kpMahood2)
 
+###
+rbind.all.columns <- function(x, y) {
+  
+  x.diff <- setdiff(colnames(x), colnames(y))
+  y.diff <- setdiff(colnames(y), colnames(x))
+  
+  x[, c(as.character(y.diff))] <- NA
+  
+  y[, c(as.character(x.diff))] <- NA
+  
+  return(rbind(x, y))
+}
+
+
+#need to add Rau dataframes here
+bind1 <- rbind.all.columns(kpJones, kpWeber)
+bind2 <- rbind.all.columns(bind1, kpBlank)
+bind3 <- rbind.all.columns(bind2, kpNorton)
+bind4 <- rbind.all.columns(bind3, kpStark)
+bind5 <- rbind.all.columns(bind4, kpDavies)
+bind6 <- rbind.all.columns(bind5, kpBradleysoil)
+bind7 <- rbind.all.columns(bind6, kpBradleyveg)
+bind8 <- rbind.all.columns(bind7, kpNorton2008)
+bind9 <- rbind.all.columns(bind8, kpMahood1)
+bind10 <- rbind.all.columns(bind9, kpMahood2)
+
+alldata <- bind10
