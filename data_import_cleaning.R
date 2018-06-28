@@ -250,6 +250,8 @@ Bradley_AGB2$veg <- ifelse(Bradley_AGB2$burned == 'no', 'sagebrush','cheatgrass'
 Bradley_AGB2$study <- c("Bradley et al. 2006")
 Bradley_AGB2$lat <- ifelse(Bradley_AGB2$Site == 'Button' , '41.0000000','40.9900000')
 Bradley_AGB2$long <- ifelse(Bradley_AGB2$Site == 'Button' , '117.5800000','117.8600000')
+Bradley_AGB2$pr_burned <- c("no")
+Bradley_AGB2$yr_samp <- c(2004)
 
 Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
 Bradley_soil2$veg <- ifelse(Bradley_soil2$burned == 'no', 'sagebrush','cheatgrass')
@@ -258,9 +260,27 @@ Bradley_soil2$lat <- ifelse(Bradley_soil2$Site == 'Button' , '41.0000000','40.99
 Bradley_soil2$long <- ifelse(Bradley_soil2$Site == 'Button' , '117.5800000','117.8600000')
 Bradley_soil2$`Top Depth` <- c(0)
 Bradley_soil2$`Bottom Depth` <- c(10)
+Bradley_soil2$pr_burned <- c("no")
+Bradley_soil2$yr_samp <- c(2004)
+Bradley_soil2$thick <- Bradley_soil2$`Bottom Depth` - Bradley_soil2$`Top Depth`
+
+colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Carbon_perc'] <- 'soil%C'
+colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Site'] <- 'site'
+colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Sample_Name'] <- 'sample'
+colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Top Depth'] <- 'topdepth_cm'
+colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Bottom Depth'] <- 'bottomdepth_cm'
+
+
+colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'Site'] <- 'site'
+colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
+
 
 head(Bradley_soil2)
 head(Bradley_AGB2)
+
+kpBradleysoil <- Bradley_soil2
+kpBradleyveg <- Bradley_AGB2[,c("site","burned","AGBC_g_m2","veg","study","lat","long","pr_burned","yr_samp")]
+
 
 
 ###
