@@ -13,7 +13,7 @@ setwd("data/")
 file_names <- list.files()
 
 #Jones data# burns were prescibed burns; do not need to append burn data since prescribed
-# does not currently include the pre and post burn data (Jones_burn.csv)
+#does not currently include the pre and post burn data (Jones_burn.csv)
 Jones_soil <- as.data.frame(read_csv("Jones_soil.csv"))
 Jones_veg_only <- as.data.frame(read_csv("Jones_veg_only.csv"))
 Jones_litter_only <- as.data.frame(read_csv("Jones_litter_only.csv"))
@@ -211,7 +211,7 @@ head(kpStark)
 
 
 ###
-#Davies data# Need %C
+#Davies data# 
 #prescribed burn was in 1993
 #no other burn from 1936-2007 besides prescribed burn
 Davies <- as.data.frame(read_csv("Davies.csv"))
@@ -238,7 +238,7 @@ head(kpDavies)
 
 
 ###
-#Bradley data# need BD
+#Bradley data# need BD 
 Bradley_soil <- as.data.frame(read_csv("Bradley_soil.csv"))
 Bradley_AGB <- as.data.frame(read_csv("Bradley_AGB.csv"))
 head(Bradley_soil)
@@ -286,7 +286,6 @@ head(kpBradleyveg)
 
 ###
 #Norton et al. 2008 data# need BD
-#Figure out treatments; they don't match the publication
 #lat = 42.70777778
 #long = -108.60583333
 Norton_2008 <- as.data.frame(read_csv("Norton_2008.csv"))
@@ -338,6 +337,47 @@ summary(Mahood1ll$cheatgrass_cover)
 #min cheat % cover = 0.333; max cheat % cover = 57.22
 
 Mahood1ll$study <- c("Mahood et al. unpub1")
+Mahood1ll$seeded <- c("no")
+Mahood1ll$pr_burned <- c("no")
+#check this year with Adam
+Mahood1ll$yr_samp <- c(2017)
+Mahood1ll$burned <- ifelse(Mahood1ll$burn_status == 'burned', 'yes','no')
+Mahood1ll$topdepth_cm <- c(0)
+Mahood1ll$bottomdepth_cm <- c(10)
+Mahood1ll$thick <- Mahood1ll$bottomdepth_cm - Mahood1ll$topdepth_cm
+
+#check this with Adam
+Mahood1ll$veg <- ifelse(Mahood1ll$native_shrub_cover > 0, 'sagecheat','cheatgrass')
+
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'Elevation'] <- 'elevation'
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'soil%C'
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'soilC_g_m2'
+
+
+head(Mahood1ll)
+
+
+kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","soil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","soilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg")]
+head(kpMahood1)
+
+
+
+###
+#make cheatgrass %C an object to use later
+cheat_percC <- Mahood1ll$cheatgrass_TC_pct
+cheat_percC
+meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
+#42.6007
+###
+
+###
+#apply mean %C 
+kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
+###
+
+
+
 
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv"))
 head(Mahood2)
@@ -392,6 +432,7 @@ Rau$SOC_g_m2 <- Rau$TSOC/10
 head(Rau)
 
 
+
 ###
 #bring in bulk density spatial data
 #data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
@@ -413,3 +454,10 @@ crs(soil)
 #not sure what this is plotting
 plot(soil[[1]])
 plot(soil[[]])
+
+
+
+
+###
+#merge dataframes together
+
