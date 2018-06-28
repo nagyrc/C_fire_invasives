@@ -363,24 +363,11 @@ head(kpMahood1)
 
 
 
-###
-#make cheatgrass %C an object to use later
-cheat_percC <- Mahood1ll$cheatgrass_TC_pct
-cheat_percC
-meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
-#42.6007
-###
-
-###
-#apply mean %C 
-kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
-###
 
 
 
 
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv"))
-head(Mahood2)
 #use mean of this data for cheatgrass %C?
 #need burned/unburned category here
 #need cheatgrass or sage designation here...based on %?
@@ -390,7 +377,39 @@ summary(Mahood2$AIG)
 summary(Mahood2$Shrub)
 #min shrub % cover = 0.00; max shrub % cover = 22.20
 
+#check this with Adam
+Mahood2$veg <- ifelse(Mahood2$Shrub > 0, 'sagecheat','cheatgrass')
+
+
 Mahood2$study <- c("Mahood et al. unpub2")
+
+colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
+colnames(Mahood2)[colnames(Mahood2) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
+colnames(Mahood2)[colnames(Mahood2) == 'SOIL_TC'] <- 'soil%C'
+
+
+
+head(Mahood2)
+
+
+###
+#make cheatgrass %C an object to use later
+cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
+cheat_percC2 <- Mahood2$TC_BRTE
+meancheat_percC1 <- mean(cheat_percC1, na.rm = TRUE)
+#42.6007
+meancheat_percC2 <- mean(cheat_percC2, na.rm = TRUE)
+#42.6645
+
+cheat_percC <- c(cheat_percC1,cheat_percC2)
+meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
+#42.6447
+###
+
+###
+#apply mean %C 
+kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
+###
 
 
 ###
