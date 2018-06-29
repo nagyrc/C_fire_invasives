@@ -188,7 +188,7 @@ Stark2$`BD estimated` <- c("other")
 
 Stark2$soil_percC <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-Stark2$soilC_g_cm2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick/10
+Stark2$soilC_g_m2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick*100
 
 Stark2$pr_burned <- c("no")
 Stark2$lat <- c("39.90333333")
@@ -204,7 +204,7 @@ colnames(Stark2)[colnames(Stark2) == 'soil_percC'] <- 'soil%C'
 colnames(Stark2)[colnames(Stark2) == 'Top depth'] <- 'topdepth_cm'
 colnames(Stark2)[colnames(Stark2) == 'Bottom depth'] <- 'bottomdepth_cm'
 
-kpStark <- Stark2[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_cm2","pr_burned","lat","long","seeded")]
+kpStark <- Stark2[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_m2","pr_burned","lat","long","seeded")]
 head(kpStark)
 
 
@@ -401,7 +401,7 @@ Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 Mahood2BDll$topdepth_cm <- c(0)
 Mahood2BDll$bottomdepth_cm <- c(10)
 Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
-Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick
+Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
 Mahood2BDll$seeded <- c("no")
 Mahood2BDll$pr_burned <- c("no")
 Mahood2BDll$BD_estimated <- c("no")
