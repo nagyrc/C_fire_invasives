@@ -435,13 +435,17 @@ kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
 ###
 
 
+
+
 ###
 #Rau data# need soil depths
+#check with Ben on treatments
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
-head(Rau_inv)
 Rau_inv$study <- c("Goergen et al. 2011")
+head(Rau_inv)
 
 unique(Rau_inv$Region)
+#SW
 unique(Rau_inv$Site)
 #BF, LH, MP, TP
 
@@ -460,20 +464,30 @@ unique(Rau_sage2$Treatment)
 Rau <- rbind(Rau_inv, Rau_sage2)
 head(Rau)
 
+
 #add veg category
 #check with Ben and then update this with other treatments???
-Rau$veg <- ifelse(Rau$Treatment == 'Invaded' | Rau$Treatement == 'FI', 'cheatgrass','sagebrush')
+Rau$veg <- ifelse(Rau$Treatment == 'Invaded' | Rau$Treatment == 'FI', 'cheatgrass','sagebrush')
 Rau$BD_estimated <- c("no")
-Rau$pr_burn <- c("no")
+Rau$pr_burned <- c("no")
 
 #convert root and soil carbon from kg C/ ha to g C/m2
-Rau$BGB_gC_m2 <- Rau$RTC/10
+Rau$BGBC_g_m2 <- Rau$RTC/10
+Rau$soilC_g_m2 <- Rau$TSOC/10
 
-Rau$SOC_g_m2 <- Rau$TSOC/10
+
+colnames(Rau)[colnames(Rau) == 'Region'] <- 'region'
+colnames(Rau)[colnames(Rau) == 'Site'] <- 'site'
+colnames(Rau)[colnames(Rau) == 'Lat'] <- 'lat'
+colnames(Rau)[colnames(Rau) == 'Long'] <- 'long'
+colnames(Rau)[colnames(Rau) == 'Treatment'] <- 'treatment'
+colnames(Rau)[colnames(Rau) == 'Subplot'] <- 'subplot'
+colnames(Rau)[colnames(Rau) == 'Elevation'] <- 'elevation'
 
 head(Rau)
 
-
+kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2")]
+head(kpRau)
 
 
 ###
@@ -506,8 +520,9 @@ bind7 <- rbind.all.columns(bind6, kpBradleyveg)
 bind8 <- rbind.all.columns(bind7, kpNorton2008)
 bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
+bind11 <- rbind.all.columns(bind10, kpRau)
 
-alldata <- bind10
+alldata <- bind11
 
 
 
