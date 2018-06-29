@@ -323,6 +323,7 @@ head(kpNorton2008)
 #Mahood data# need info on veg categories and burned/unburned and bottom depth sampled
 #make sure Jones data is not repeated from publication
 Mahood1 <- as.data.frame(read_csv("Mahood1.csv"))
+head(Mahood1)
 
 #bring in lat/long for ff plots to merge in next step
 Mahoodll <- as.data.frame(read_csv("Mahood_ff_plot_locations.csv"))
@@ -372,7 +373,6 @@ head(kpMahood1)
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
 
 Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
-
 Mahood2$study <- c("Mahood et al. unpub2")
 
 #colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
@@ -383,12 +383,9 @@ colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
 
 #bring in other file for BD of each site
 MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
-head(MahoodBD)
-head(Mahood2)
 
 #join BD data
 Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
-head(Mahood2BD)
 
 colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site_number'] <- 'site'
 colnames(Mahood2BD)[colnames(Mahood2BD) == 'Transect'] <- 'transect'
@@ -400,7 +397,6 @@ Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
 
 #join lat, long data
 Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
-head(Mahood2BDll)
 
 Mahood2BDll$topdepth_cm <- c(0)
 Mahood2BDll$bottomdepth_cm <- c(10)
@@ -415,7 +411,7 @@ colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
 
 head(Mahood2BDll)
 
-kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "plot", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated")]
+kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated")]
 head(kpMahood2)
 
 
