@@ -31,6 +31,7 @@ alldata %>%
   ggplot(aes(y = soilC_g_m2, x = study)) +
   geom_bar(stat = "identity")
 #huge variation, this will tell me what datasets to check for those who have soil data
+#check calculations in Mahood1
 
 qplot(alldata$soilC_g_m2, geom = "histogram", color = alldata$study)
 
