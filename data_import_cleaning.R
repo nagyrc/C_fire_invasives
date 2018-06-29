@@ -442,7 +442,6 @@ kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
 #check with Ben on treatments
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
 Rau_inv$study <- c("Goergen et al. 2011")
-head(Rau_inv)
 
 unique(Rau_inv$Region)
 #SW
@@ -451,7 +450,6 @@ unique(Rau_inv$Site)
 
 Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe.csv"))
 Rau_sage$study <- c("Rau et al. 2011")
-head(Rau_sage)
 
 unique(Rau_sage$Region)
 unique(Rau_sage$Site)
@@ -462,7 +460,6 @@ Rau_sage2 <- Rau_sage[which(Rau_sage$Treatment == "CO" | Rau_sage$Treatment == "
 unique(Rau_sage2$Treatment)
 
 Rau <- rbind(Rau_inv, Rau_sage2)
-head(Rau)
 
 
 #add veg category
@@ -493,7 +490,7 @@ head(kpRau)
 ###
 #merge dataframes together
 #add Rau here
-list_studies <- list(kpJones, kpWeber, kpBlank, kpNorton, kpStark, kpDavies, kpBradleysoil, kpBradleyveg, kpNorton2008, kpMahood1, kpMahood2)
+list_studies <- list(kpJones, kpWeber, kpBlank, kpNorton, kpStark, kpDavies, kpBradleysoil, kpBradleyveg, kpNorton2008, kpMahood1, kpMahood2, kpRau)
 
 ###
 rbind.all.columns <- function(x, y) {
@@ -509,7 +506,7 @@ rbind.all.columns <- function(x, y) {
 }
 
 
-#need to add Rau dataframes here
+#merge all data frames
 bind1 <- rbind.all.columns(kpJones, kpWeber)
 bind2 <- rbind.all.columns(bind1, kpBlank)
 bind3 <- rbind.all.columns(bind2, kpNorton)
