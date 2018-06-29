@@ -520,7 +520,7 @@ bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
 
 alldata <- bind11
-
+head(alldata)
 
 
 
