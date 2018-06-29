@@ -522,7 +522,7 @@ bind11 <- rbind.all.columns(bind10, kpRau)
 alldata <- bind11
 head(alldata)
 
-
+write.csv(alldata, file = "alldata.csv")
 
 ###
 ###
