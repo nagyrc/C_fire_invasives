@@ -367,51 +367,52 @@ head(kpMahood1)
 
 
 
-
-Mahood2 <- as.data.frame(read_csv("Mahood2.csv"))
-#use mean of this data for cheatgrass %C?
+#need lat, long info for these plots
 #need burned/unburned category here
-#need cheatgrass or sage designation here...based on %?
+Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
 
-summary(Mahood2$AIG)
-#min AIG % cover = 0.00; max AIG % cover = 17.500
-summary(Mahood2$Shrub)
-#min shrub % cover = 0.00; max shrub % cover = 22.20
-
-#check this with Adam
-Mahood2$veg <- ifelse(Mahood2$Shrub > 0, 'sagecheat','cheatgrass')
-
-
-Mahood2$study <- c("Mahood et al. unpub2")
-
-colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
-colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
-colnames(Mahood2)[colnames(Mahood2) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
-colnames(Mahood2)[colnames(Mahood2) == 'SOIL_TC'] <- 'soil%C'
-colnames(Mahood2)[colnames(Mahood2) == 'TC_LIT'] <- 'litter%C'
-colnames(Mahood2)[colnames(Mahood2) == 'latitude'] <- 'lat'
-colnames(Mahood2)[colnames(Mahood2) == 'longitude'] <- 'long'
-
-Mahood2$topdepth_cm <- c(0)
-Mahood2$bottomdepth_cm <- c(10)
-Mahood2$thick <- Mahood2$bottomdepth_cm - Mahood2$topdepth_cm
-Mahood2$soilC_g_m2 <- Mahood2$`soil%C`*Mahood2$BD_g_cm3*Mahood2$thick
-Mahood2$seeded <- c("no")
-Mahood2$pr_burned <- c("no")
-Mahood2$BD_estimated <- c("no")
+Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
 
 head(Mahood2)
+Mahood2$study <- c("Mahood et al. unpub2")
 
-#ask Adam what 'Litter' column is...% covered by litter?  or litter weight (g)
-#if it is litter weight, add it to this keep line
-kpMahood2 <- Mahood2[,c("sample","litter%C","soil%C","BD_g_cm3", "plot","lat","long","elevation","veg","study","topdepth_cm","bottomdepth_cm","thick","soilC_g_m2","seeded","pr_burned","BD_estimated")]
+#colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
+#colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
+colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%C'
+colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
+colnames(Mahood2)[colnames(Mahood2) == 'Site_number'] <- 'site'
+colnames(Mahood2)[colnames(Mahood2) == 'Transect'] <- 'transect'
+colnames(Mahood2)[colnames(Mahood2) == 'Site Type'] <- 'site_type'
+
+
+#bring in other file for BD, lat, long of each site
+MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
+head(MahoodBD)
+
+#join BD data
+Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
+head(Mahood2BD)
+
+colnames(Mahood2BD)[colnames(Mahood2BD) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
+
+Mahood2BD$topdepth_cm <- c(0)
+Mahood2BD$bottomdepth_cm <- c(10)
+Mahood2BD$thick <- Mahood2BD$bottomdepth_cm - Mahood2BD$topdepth_cm
+Mahood2BD$soilC_g_m2 <- Mahood2BD$`soil%C`*Mahood2BD$BD_g_cm3*Mahood2BD$thick
+Mahood2BD$seeded <- c("no")
+Mahood2BD$pr_burned <- c("no")
+Mahood2BD$BD_estimated <- c("no")
+
+head(Mahood2BD)
+
+kpMahood2 <- Mahood2BD[,c("sample","litter%C","soil%C","BD_g_cm3", "plot","lat","long","elevation","veg","study","topdepth_cm","bottomdepth_cm","thick","soilC_g_m2","seeded","pr_burned","BD_estimated")]
 head(kpMahood2)
 
 
 ###
 #make cheatgrass %C an object to use later
 cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
-cheat_percC2 <- Mahood2$TC_BRTE
+cheat_percC2 <- Mahood2$Bromus_TC_pct
 meancheat_percC1 <- mean(cheat_percC1, na.rm = TRUE)
 #42.6007
 meancheat_percC2 <- mean(cheat_percC2, na.rm = TRUE)
@@ -457,7 +458,7 @@ head(Rau)
 #check with Ben and then update this with other treatments???
 Rau$veg <- ifelse(Rau$Treatment == 'Invaded' | Rau$Treatement == 'FI', 'cheatgrass','sagebrush')
 Rau$BD_estimated <- c("no")
-Rau$prescribed_burn <- c("no")
+Rau$pr_burn <- c("no")
 
 #convert root and soil carbon from kg C/ ha to g C/m2
 Rau$BGB_gC_m2 <- Rau$RTC/10
