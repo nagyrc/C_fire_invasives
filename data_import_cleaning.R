@@ -409,9 +409,12 @@ Mahood2BDll$BD_estimated <- c("no")
 colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
 colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
 
+#check this year with Adam
+Mahood2BDll$yr_samp <- c(2017)
+
 head(Mahood2BDll)
 
-kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated")]
+kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated","yr_samp")]
 head(kpMahood2)
 
 
@@ -442,6 +445,8 @@ kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
 #check with Ben on treatments
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
 Rau_inv$study <- c("Goergen et al. 2011")
+#check this year with Ben
+Rau_inv$yr_samp <- c(2008)
 
 unique(Rau_inv$Region)
 #SW
@@ -450,6 +455,9 @@ unique(Rau_inv$Site)
 
 Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe.csv"))
 Rau_sage$study <- c("Rau et al. 2011")
+
+#check this year with Ben
+Rau_sage$yr_samp <- c(2011)
 
 unique(Rau_sage$Region)
 unique(Rau_sage$Site)
@@ -483,7 +491,7 @@ colnames(Rau)[colnames(Rau) == 'Elevation'] <- 'elevation'
 
 head(Rau)
 
-kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2")]
+kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2","yr_samp")]
 head(kpRau)
 
 
