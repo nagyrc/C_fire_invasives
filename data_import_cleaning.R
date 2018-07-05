@@ -532,6 +532,15 @@ head(alldata)
 
 write.csv(alldata, file = "alldata.csv")
 
+
+
+
+###
+#bring in means
+studymeans <- as.data.frame(read_csv("cheatgrass_soil_carbon_means.csv"))
+
+
+
 ###
 ###
 #bring in bulk density spatial data
