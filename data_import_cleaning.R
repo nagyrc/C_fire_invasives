@@ -537,7 +537,7 @@ write.csv(alldata, file = "alldata.csv")
 
 ###
 #bring in means
-studymeans <- as.data.frame(read_csv("cheatgrass_soil_carbon_means.csv"))
+studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 
 
