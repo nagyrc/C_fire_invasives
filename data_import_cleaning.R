@@ -540,7 +540,6 @@ write.csv(alldata, file = "alldata.csv")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 
-
 ###
 ###
 #bring in bulk density spatial data
