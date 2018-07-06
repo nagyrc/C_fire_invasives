@@ -157,6 +157,9 @@ head(Norton)
 kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","soil%C","soilC_g_m2","BD_estimated","lat","long","study","veg")]
 head(kpNorton)
 
+Norton$check <- Norton$`soil%C` * Norton$thick * Norton$BD_g_cm3 * 100
+Norton
+
 kpNorton$pr_burned <- c("no")
 kpNorton$seeded <- c("no")
 

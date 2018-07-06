@@ -15,10 +15,10 @@ alldata <- as.data.frame(read_csv("alldata.csv"))
 
 summary(alldata$AGBC_g_m2)
 #why is there a zero???
-#679 NAs
+#695 NAs
 
 summary(alldata$soilC_g_m2)
-#513 NAs
+#494 NAs
 #need to check the units! huge variation
 
 #need to remove NAs...tried na.rm, na.omit, na.exclude
