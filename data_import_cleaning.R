@@ -434,7 +434,7 @@ meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
 
 ###
 #apply mean %C 
-kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC
+kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
 ###
 
 
@@ -527,10 +527,6 @@ bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
 
-alldata <- bind11
-head(alldata)
-
-write.csv(alldata, file = "alldata.csv")
 
 
 
@@ -538,6 +534,19 @@ write.csv(alldata, file = "alldata.csv")
 ###
 #bring in means
 studymeans <- as.data.frame(read_csv("study_means.csv"))
+
+studymeans$AGBC_g_m2 <- studymeans$AGB_g_m2 * meancheat_percC / 100
+studymeans$AGBC_g_m2_SE <- studymeans$AGB_g_m2_SE * meancheat_percC / 100
+
+head(studymeans)
+
+bind12 <- rbind.all.columns(bind11, studymeans)
+
+alldata <- bind12
+head(alldata)
+
+write.csv(alldata, file = "alldata.csv")
+
 
 
 ###
