@@ -529,9 +529,10 @@ Ogle$yr_samp <- c("1996-1997")
 Ogle$site <- c("Wind Cave National Park")
 Ogle$cheat_cover <- ifelse(Ogle$cat == 1, "<5", ifelse(Ogle$cat == 2, "5-15", ">15"))
 Ogle$BD_estimated <- c("no")  
-
+Ogle$study <- c("Ogle et al. 2004")
 Ogle
 
+kpOgle <- Ogle[,c("plot", "soil%C", "BD_g_cm3", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "BD_estimated", "lat", "long", "native_veg", "veg","cheat_cover", "yr_samp", "site", "study")]
 
 
 
@@ -562,6 +563,7 @@ bind8 <- rbind.all.columns(bind7, kpNorton2008)
 bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
+bind12 <- rbind.all.columns(bind11, kpOgle)
 
 
 
@@ -576,9 +578,9 @@ studymeans$AGBC_g_m2_SE <- studymeans$AGB_g_m2_SE * meancheat_percC / 100
 
 head(studymeans)
 
-bind12 <- rbind.all.columns(bind11, studymeans)
+bind13 <- rbind.all.columns(bind12, studymeans)
 
-alldata <- bind12
+alldata <- bind13
 head(alldata)
 
 write.csv(alldata, file = "alldata.csv")
