@@ -422,7 +422,7 @@ head(Mahood2BDll)
 kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated","yr_samp")]
 head(kpMahood2)
 
-
+str(kpMahood2)
 ###
 #make cheatgrass %C an object to use later
 cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
@@ -504,6 +504,35 @@ head(kpRau)
 #merge dataframes together
 #add Rau here
 list_studies <- list(kpJones, kpWeber, kpBlank, kpNorton, kpStark, kpDavies, kpBradleysoil, kpBradleyveg, kpNorton2008, kpMahood1, kpMahood2, kpRau)
+
+
+###
+#Ogle data
+Ogle <- as.data.frame(read_csv("Ogle.csv"))
+
+#ifelse(<condition>, <yes>, ifelse(<condition>, <yes>, <no>))
+Ogle$topdepth_cm <- ifelse(Ogle$`b-depth` == 1, 0, ifelse(Ogle$`b-depth` == 2, 5, 15))
+Ogle$bottomdepth_cm <- ifelse(Ogle$`b-depth` == 1, 5, ifelse(Ogle$`b-depth` == 2, 15, 30))
+Ogle$thick <- Ogle$bottomdepth_cm - Ogle$topdepth_cm
+
+colnames(Ogle)[colnames(Ogle) == '%C'] <- 'soil%C'
+colnames(Ogle)[colnames(Ogle) == 'bulk density (g/cm3)'] <- 'BD_g_cm3'
+colnames(Ogle)[colnames(Ogle) == 'Plot'] <- 'plot'
+
+Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
+Ogle$lat <- 43.55
+Ogle$long <- -103.36667
+Ogle$native_veg <- c("mixed grass")
+Ogle$veg <- c("cheatgrass")
+Ogle$yr_samp <- c("1996-1997")
+Ogle$site <- c("Wind Cave National Park")
+
+Ogle$BD_estimated <- c("no")  
+Ogle
+
+
+
+
 
 ###
 rbind.all.columns <- function(x, y) {
