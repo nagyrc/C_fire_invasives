@@ -522,12 +522,14 @@ colnames(Ogle)[colnames(Ogle) == 'Plot'] <- 'plot'
 Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
 Ogle$lat <- 43.55
 Ogle$long <- -103.36667
-Ogle$native_veg <- c("mixed grass")
-Ogle$veg <- c("cheatgrass")
+Ogle$native_veg <- c("mixed-grass")
+#these are mixed grass sites...with either low or high brome grasses
+Ogle$veg <- c("mixed-grass")
 Ogle$yr_samp <- c("1996-1997")
 Ogle$site <- c("Wind Cave National Park")
-
+Ogle$cheat_cover <- ifelse(Ogle$cat == 1, "<5", ifelse(Ogle$cat == 2, "5-15", ">15"))
 Ogle$BD_estimated <- c("no")  
+
 Ogle
 
 
