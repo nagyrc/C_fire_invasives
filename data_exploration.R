@@ -13,9 +13,16 @@ setwd("data/")
 
 alldata <- as.data.frame(read_csv("alldata.csv"))
 
-summary(alldata$AGBC_g_m2)
+summary(alldata$AGBC_g_m2, na.rm = TRUE)
 #why is there a zero???
 #695 NAs
+
+zeroAGB <- alldata[alldata$AGBC_g_m2 == 0, ]
+#700, so 695 NAs and 5 zeros
+
+ord <- alldata[order(alldata$AGBC_g_m2),] 
+head(ord)
+#the zeros are from Davies et al. 2009 that had zero cheatgrass biomass
 
 summary(alldata$soilC_g_m2)
 #494 NAs

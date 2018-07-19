@@ -357,8 +357,10 @@ Mahood1ll$BD_estimated <- c("no")
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'Elevation'] <- 'elevation'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'soil%C'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
-colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'soilC_g_m2'
+#these calculations are not correct- he didn't multiply by the depth
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'do_not_use'
 
+Mahood1ll$soilC_g_m2 <- Mahood1ll$`soil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick*100
 
 head(Mahood1ll)
 
