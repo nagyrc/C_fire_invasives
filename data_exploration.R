@@ -8,11 +8,13 @@ library(stringr)
 library(sf)
 library(raster)
 library(ggplot2)
+library(doBy)
 
 setwd("data/")
 
 alldata <- as.data.frame(read_csv("alldata.csv"))
 
+#data exploration
 summary(alldata$AGBC_g_m2, na.rm = TRUE)
 #why is there a zero???
 #695 NAs
@@ -33,6 +35,8 @@ hist(alldata$soilC_g_m2, breaks = 20)
 
 ggplot(data = alldata, aes(x = study, y = soilC_g_m2)) + geom_bar(stat = "identity")
 
+
+#this is probably giving weird results because of means vs. raw data
 alldata %>% 
   drop_na (soilC_g_m2) %>%
   ggplot(aes(y = soilC_g_m2, x = study)) +
@@ -44,3 +48,5 @@ qplot(alldata$soilC_g_m2, geom = "histogram", color = alldata$study)
 
 ggplot(alldata, aes(x = yr_samp, y = soilC_g_m2, color = study)) + geom_point()
 
+#
+summaryBy(soilC_g_m2 ~ study, data=alldata)
