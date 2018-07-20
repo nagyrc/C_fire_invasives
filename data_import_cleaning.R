@@ -580,7 +580,7 @@ bind12 <- rbind.all.columns(bind11, kpOgle)
 
 ###
 #bring in means
-setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
+#setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 #calculating AGBC from AGB using mean cheatgrass %C from Mahood

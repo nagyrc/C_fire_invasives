@@ -75,8 +75,6 @@ sumjoin5 <- left_join(sumjoin4, sum21, by = "study")
 sumjoin6 <- left_join(sumjoin5, sum31, by = "study")
 sumjoin6
 
-#setwd("~/")
 getwd()
-setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/")
-write.csv(sumjoin6, file = "meansbystudy.csv")
+write.csv(sumjoin6, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/meansbystudy.csv")
 
