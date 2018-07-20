@@ -14,6 +14,11 @@ setwd("data/")
 
 alldata <- as.data.frame(read_csv("alldata.csv"))
 
+str(alldata)
+
+as.numeric(alldata$litterC_g_m2)
+is.numeric(alldata$litterC_g_m2)
+
 #data exploration
 summary(alldata$AGBC_g_m2, na.rm = TRUE)
 #why is there a zero???
@@ -58,6 +63,7 @@ sum3 <- summaryBy(thick ~ study, data = alldata, FUN = max)
 sum4 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = min)
 sum4
 
+str(alldata$bottomdepth_cm)
 sumjoin <- left_join(sum1, sum2, by = "study")
 sumjoin2 <- left_join(sumjoin, sum3, by = "study")
 sumjoin2
