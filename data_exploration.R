@@ -49,11 +49,13 @@ qplot(alldata$soilC_g_m2, geom = "histogram", color = alldata$study)
 
 ggplot(alldata, aes(x = yr_samp, y = soilC_g_m2, color = study)) + geom_point()
 
-#
+#check to see if C is varying as a function of thickness and bottom depth
 sum1 <- summaryBy(soilC_g_m2 ~ study, data = alldata, FUN = mean)
 sum2 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = max)
+sum3 <- summaryBy(thick ~ study, data = alldata, FUN = max)
 
 sumjoin <- left_join(sum1, sum2, by = "study")
-sumjoin
+sumjoin2 <- left_join(sumjoin, sum3, by = "study")
+sumjoin2
 #check depths on Norton et al. 2004: 99 cm?
-#check depths on Rau et al. 2011: no bottom depth listed
+#check depths on Rau et al. 2011; Goergen et al. 2011: no bottom depth listed

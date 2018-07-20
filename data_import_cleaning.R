@@ -450,8 +450,14 @@ kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
 #check with Ben on treatments
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
 Rau_inv$study <- c("Goergen et al. 2011")
+#Goergen et al. 2011 says 0-90 cm
+#check this depth with Ben
+
 #check this year with Ben
 Rau_inv$yr_samp <- c(2008)
+Rau_inv$topdepth_cm <- 0
+Rau_inv$bottomdepth_cm <- 90
+Rau_inv$thick <- Rau_inv$bottomdepth_cm - Rau_inv$topdepth_cm
 
 unique(Rau_inv$Region)
 #SW
@@ -463,6 +469,9 @@ Rau_sage$study <- c("Rau et al. 2011")
 
 #check this year with Ben
 Rau_sage$yr_samp <- c(2011)
+Rau_sage$topdepth_cm <- 0
+Rau_sage$bottomdepth_cm <- 90
+Rau_sage$thick <- Rau_sage$bottomdepth_cm - Rau_sage$topdepth_cm
 
 unique(Rau_sage$Region)
 unique(Rau_sage$Site)
@@ -496,7 +505,7 @@ colnames(Rau)[colnames(Rau) == 'Elevation'] <- 'elevation'
 
 head(Rau)
 
-kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2","yr_samp")]
+kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2","yr_samp","topdepth_cm","bottomdepth_cm","thick")]
 head(kpRau)
 
 
