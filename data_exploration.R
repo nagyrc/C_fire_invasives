@@ -38,9 +38,13 @@ hist(alldata$soilC_g_m2, breaks = 20)
 
 
 ###
+#funtion to remove NAs
+meanfxn <- function(x)base::mean(x, na.rm = TRUE)
+
 #soil carbon
 #check to see if soil C is varying as a function of thickness and bottom depth
-sum1 <- summaryBy(soilC_g_m2 ~ study, data = alldata, FUN = mean)
+sum1 <- summaryBy(soilC_g_m2 ~ study, data = alldata, FUN = c(meanfxn))
+sum1
 sum2 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = max)
 sum3 <- summaryBy(thick ~ study, data = alldata, FUN = max)
 sum4 <- summaryBy(thick ~ study, data = alldata, FUN = length)
@@ -53,22 +57,22 @@ sumjoin3
 p1 <- as.data.frame(sumjoin3)
 
 #this is useful, show Bethany and Emily
-plot(sumjoin3$soilC_g_m2.mean~sumjoin3$thick.max)
+plot(sumjoin3$soilC_g_m2.meanfxn~sumjoin3$thick.max)
 ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.mean, color = study)) + geom_point()
 
 ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.mean, size = bottomdepth_cm.max)) + geom_point()
 
 #AGB carbon
-sum11 <- summaryBy(AGBC_g_m2 ~ study, data = alldata, FUN = mean)
+sum11 <- summaryBy(AGBC_g_m2 ~ study, data = alldata, FUN = meanfxn)
 
 
 
 #BGB carbon
-sum21 <- summaryBy(BGBC_g_m2 ~ study, data = alldata, FUN = mean)
+sum21 <- summaryBy(BGBC_g_m2 ~ study, data = alldata, FUN = meanfxn)
 
 
 #litter carbon
-sum31 <- summaryBy(litterC_g_m2 ~ study, data = alldata, FUN = mean)
+sum31 <- summaryBy(litterC_g_m2 ~ study, data = alldata, FUN = meanfxn)
 
 sumjoin4 <- left_join(sum1, sum11, by = "study")
 sumjoin5 <- left_join(sumjoin4, sum21, by = "study")

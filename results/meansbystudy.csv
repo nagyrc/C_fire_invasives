@@ -1,7 +1,7 @@
-"","study","soilC_g_m2.mean","AGBC_g_m2.mean","BGBC_g_m2.mean","litterC_g_m2.mean"
+"","study","soilC_g_m2.meanfxn","AGBC_g_m2.meanfxn","BGBC_g_m2.meanfxn","litterC_g_m2.meanfxn"
 "1","Blank & Norton 2006",NA,NA,NA,NA
 "2","Boulton et al. 1993",845.3125,NA,NA,NA
-"3","Bradley et al. 2006",NA,NA,NA,NA
+"3","Bradley et al. 2006",NA,280.658,NA,NA
 "4","Davies et al. 2009",NA,6.4393516091954,NA,NA
 "5","Diamond et al. 2012",NA,19.6023671267816,NA,NA
 "6","Gill and Burke 1999",8000,NA,NA,NA
@@ -10,12 +10,12 @@
 "9","Johnson et al. 2011",NA,NA,NA,NA
 "10","Jones et al. 2015",1231.25090277778,36.0916666666667,NA,136.911597354167
 "11","Kessler et al. 2015",NA,35.3518484332759,NA,NA
-"12","Mahood et al. unpub1",NA,NA,NA,NA
+"12","Mahood et al. unpub1",1808.67248739074,NA,NA,NA
 "13","Mahood et al. unpub2",1900.7215148375,NA,NA,NA
 "14","Meyer et al. 2011",NA,NA,893.462416666667,NA
 "15","Norton et al. 2004",2043.0042766744,NA,NA,NA
 "16","Norton et al. 2008",NA,NA,NA,NA
-"17","Ogle et al. 2004",NA,NA,NA,NA
+"17","Ogle et al. 2004",1655.45436619271,NA,NA,NA
 "18","Ogle et al. 2004 means",NA,121.487835233678,NA,NA
 "19","Rau et al. 2011",3046.11908108108,NA,160.100918918919,NA
 "20","Stark et al. 2015",1817.274375,NA,NA,NA
