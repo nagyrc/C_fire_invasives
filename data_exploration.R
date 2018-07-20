@@ -52,7 +52,11 @@ ggplot(alldata, aes(x = yr_samp, y = soilC_g_m2, color = study)) + geom_point()
 #check to see if C is varying as a function of thickness and bottom depth
 sum1 <- summaryBy(soilC_g_m2 ~ study, data = alldata, FUN = mean)
 sum2 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = max)
+sum2
 sum3 <- summaryBy(thick ~ study, data = alldata, FUN = max)
+
+sum4 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = min)
+sum4
 
 sumjoin <- left_join(sum1, sum2, by = "study")
 sumjoin2 <- left_join(sumjoin, sum3, by = "study")
