@@ -580,12 +580,15 @@ bind12 <- rbind.all.columns(bind11, kpOgle)
 
 ###
 #bring in means
+setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
-studymeans$AGBC_g_m2 <- studymeans$AGB_g_m2 * meancheat_percC / 100
-studymeans$AGBC_g_m2_SE <- studymeans$AGB_g_m2_SE * meancheat_percC / 100
+#calculating AGBC from AGB using mean cheatgrass %C from Mahood
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Hooker et al. 2008', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Hooker et al. 2008',studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
 
 head(studymeans)
+studymeans
 
 bind13 <- rbind.all.columns(bind12, studymeans)
 
