@@ -543,7 +543,6 @@ Ogle
 
 kpOgle <- Ogle[,c("plot", "soil%C", "BD_g_cm3", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "BD_estimated", "lat", "long", "native_veg", "veg","cheat_cover", "yr_samp", "site", "study")]
 
-kpOgle
 
 
 ###
