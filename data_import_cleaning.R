@@ -595,6 +595,18 @@ head(alldata)
 write.csv(alldata, file = "alldata.csv")
 
 
+###
+#making sure all numeric fields are numeric
+str(alldata)
+
+alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+alldata$lat <- as.numeric(alldata$lat)
+alldata$long <- as.numeric(alldata$long)
+alldata$elevation <- as.numeric(alldata$elevation)
+alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+
+str(alldata)
 
 ###
 ###

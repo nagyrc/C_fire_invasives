@@ -14,11 +14,6 @@ setwd("data/")
 
 alldata <- as.data.frame(read_csv("alldata.csv"))
 
-str(alldata)
-
-as.numeric(alldata$litterC_g_m2)
-is.numeric(alldata$litterC_g_m2)
-
 #data exploration
 summary(alldata$AGBC_g_m2, na.rm = TRUE)
 #why is there a zero???
