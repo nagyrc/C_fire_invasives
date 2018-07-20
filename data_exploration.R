@@ -97,3 +97,12 @@ sumjoin9
 
 write.csv(sumjoin9, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/meansbyveg.csv")
 
+ggplot(sumjoin9, aes(x = veg, y = soilC_g_m2.meanfxn)) + geom_point()
+ggplot(sumjoin9, aes(x = veg, y = AGBC_g_m2.meanfxn)) + geom_point()
+
+
+ggplot(alldata, aes(x = veg, y = soilC_g_m2, color = study)) + geom_point()
+ggplot(alldata, aes(x = veg, y = AGBC_g_m2, color = study)) + geom_point()
+
+#normalize soil carbon by thickness
+ggplot(alldata, aes(x = veg, y = soilC_g_m2/thick, color = study)) + geom_point()
