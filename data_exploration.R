@@ -13,7 +13,9 @@ library(doBy)
 setwd("data/")
 
 alldata <- as.data.frame(read_csv("alldata.csv"))
+head(alldata)
 
+###
 #data exploration
 summary(alldata$AGBC_g_m2, na.rm = TRUE)
 #why is there a zero???
@@ -34,33 +36,47 @@ summary(alldata$soilC_g_m2)
 #need to remove NAs...tried na.rm, na.omit, na.exclude
 hist(alldata$soilC_g_m2, breaks = 20)
 
-ggplot(data = alldata, aes(x = study, y = soilC_g_m2)) + geom_bar(stat = "identity")
 
-
-#this is probably giving weird results because of means vs. raw data
-alldata %>% 
-  drop_na (soilC_g_m2) %>%
-  ggplot(aes(y = soilC_g_m2, x = study)) +
-  geom_bar(stat = "identity")
-#huge variation, this will tell me what datasets to check for those who have soil data
-#check calculations in Mahood1
-
-qplot(alldata$soilC_g_m2, geom = "histogram", color = alldata$study)
-
-ggplot(alldata, aes(x = yr_samp, y = soilC_g_m2, color = study)) + geom_point()
-
-#check to see if C is varying as a function of thickness and bottom depth
+###
+#soil carbon
+#check to see if soil C is varying as a function of thickness and bottom depth
 sum1 <- summaryBy(soilC_g_m2 ~ study, data = alldata, FUN = mean)
 sum2 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = max)
-sum2
 sum3 <- summaryBy(thick ~ study, data = alldata, FUN = max)
+sum4 <- summaryBy(thick ~ study, data = alldata, FUN = length)
 
-sum4 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = min)
-sum4
-
-str(alldata$bottomdepth_cm)
 sumjoin <- left_join(sum1, sum2, by = "study")
 sumjoin2 <- left_join(sumjoin, sum3, by = "study")
-sumjoin2
-#check depths on Norton et al. 2004: 99 cm?
-#check depths on Rau et al. 2011; Goergen et al. 2011: no bottom depth listed
+sumjoin3 <- left_join(sumjoin2, sum4, by = "study")
+sumjoin3
+
+p1 <- as.data.frame(sumjoin3)
+
+#this is useful, show Bethany and Emily
+plot(sumjoin3$soilC_g_m2.mean~sumjoin3$thick.max)
+ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.mean, color = study)) + geom_point()
+
+ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.mean, size = bottomdepth_cm.max)) + geom_point()
+
+#AGB carbon
+sum11 <- summaryBy(AGBC_g_m2 ~ study, data = alldata, FUN = mean)
+
+
+
+#BGB carbon
+sum21 <- summaryBy(BGBC_g_m2 ~ study, data = alldata, FUN = mean)
+
+
+#litter carbon
+sum31 <- summaryBy(litterC_g_m2 ~ study, data = alldata, FUN = mean)
+
+sumjoin4 <- left_join(sum1, sum11, by = "study")
+sumjoin5 <- left_join(sumjoin4, sum21, by = "study")
+sumjoin6 <- left_join(sumjoin5, sum31, by = "study")
+sumjoin6
+
+setwd("~/")
+setwd("results/")
+getwd()
+write.csv(sumjoin6, file = "meansbystudy.csv")
+
