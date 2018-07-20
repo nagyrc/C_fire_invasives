@@ -106,3 +106,4 @@ ggplot(alldata, aes(x = veg, y = AGBC_g_m2, color = study)) + geom_point()
 
 #normalize soil carbon by thickness
 ggplot(alldata, aes(x = veg, y = soilC_g_m2/thick, color = study)) + geom_point()
+
