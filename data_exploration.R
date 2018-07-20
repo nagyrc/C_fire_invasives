@@ -77,6 +77,6 @@ sumjoin6
 
 #setwd("~/")
 getwd()
-setwd("results/")
+setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/")
 write.csv(sumjoin6, file = "meansbystudy.csv")
 
