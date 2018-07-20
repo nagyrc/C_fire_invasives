@@ -58,9 +58,9 @@ p1 <- as.data.frame(sumjoin3)
 
 #this is useful, show Bethany and Emily
 plot(sumjoin3$soilC_g_m2.meanfxn~sumjoin3$thick.max)
-ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.mean, color = study)) + geom_point()
+ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.meanfxn, color = study)) + geom_point()
 
-ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.mean, size = bottomdepth_cm.max)) + geom_point()
+ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.meanfxn, size = bottomdepth_cm.max)) + geom_point()
 
 #AGB carbon
 sum11 <- summaryBy(AGBC_g_m2 ~ study, data = alldata, FUN = meanfxn)
