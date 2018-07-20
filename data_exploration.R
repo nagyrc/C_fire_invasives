@@ -75,8 +75,8 @@ sumjoin5 <- left_join(sumjoin4, sum21, by = "study")
 sumjoin6 <- left_join(sumjoin5, sum31, by = "study")
 sumjoin6
 
-setwd("~/")
-setwd("results/")
+#setwd("~/")
 getwd()
+setwd("results/")
 write.csv(sumjoin6, file = "meansbystudy.csv")
 
