@@ -82,3 +82,18 @@ sumjoin6
 getwd()
 write.csv(sumjoin6, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/meansbystudy.csv")
 
+
+
+#try means by veg category
+sum41 <- summaryBy(soilC_g_m2 ~ veg, data = alldata, FUN = c(meanfxn))
+sum51 <- summaryBy(AGBC_g_m2 ~ veg, data = alldata, FUN = c(meanfxn))
+sum61 <- summaryBy(BGBC_g_m2 ~ veg, data = alldata, FUN = c(meanfxn))
+sum71 <- summaryBy(litterC_g_m2 ~ veg, data = alldata, FUN = c(meanfxn))
+
+sumjoin7 <- left_join(sum41, sum51, by = "veg")
+sumjoin8 <- left_join(sumjoin7, sum61, by = "veg")
+sumjoin9 <- left_join(sumjoin8, sum71, by = "veg")
+sumjoin9
+
+write.csv(sumjoin9, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/meansbyveg.csv")
+
