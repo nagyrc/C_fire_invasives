@@ -610,7 +610,20 @@ alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 
 str(alldata)
 
+
+
+
 ###
+#get unique lat/longs for Emily to extract burn data
+#unique(df[c("yad", "per")])
+lllist <- unique(alldata[c("lat","long")])
+
+write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
+
+
+
+
+
 ###
 #bring in bulk density spatial data
 #data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
