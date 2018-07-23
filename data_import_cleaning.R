@@ -10,7 +10,6 @@ library(raster)
 
 setwd("data/")
 
-file_names <- list.files()
 
 #Jones data# burns were prescibed burns; do not need to append burn data since prescribed
 #does not currently include the pre and post burn data (Jones_burn.csv)
@@ -647,7 +646,7 @@ summary(sub2$BD_g_cm3)
 if (alldata$study == "Weber et al. 2015") {
   alldata$BD_g_cm3 == 1.417
   }
-                         
+#Warning message: In if (alldata$study == "Weber et al. 2015") { :the condition has length > 1 and only the first element will be used                         
 
 alldata$study == "Bradley et al. 2006"
 alldata$study == "Norton et al. 2008"
