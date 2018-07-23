@@ -623,6 +623,36 @@ write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/
 
 
 
+###
+#this code below was run once after alldata was compiled to calculate means
+#then these means were applied to individual studies above
+#then alldata was recompiled
+#find mean BD from studies that have BD data
+#0-10 cm
+sub1 <- alldata[ which(alldata$topdepth_cm == 0 & alldata$bottomdepth_cm == 10),]
+
+summary(sub1$BD_g_cm3)
+#mean = 1.417; based on 95 observations across studies
+
+#10-20 cm
+sub2 <- alldata[ which(alldata$topdepth_cm == 10 & alldata$bottomdepth_cm == 20),]
+sub2
+
+summary(sub2$BD_g_cm3)
+#mean = 1.35; based on 8 observations from Stark BD data
+
+
+###
+#apply mean BD data to 5 studies missing BD data
+if (alldata$study == "Weber et al. 2015") {
+  alldata$BD_g_cm3 == 1.417
+  }
+                         
+
+alldata$study == "Bradley et al. 2006"
+alldata$study == "Norton et al. 2008"
+
+
 
 ###
 #bring in bulk density spatial data
