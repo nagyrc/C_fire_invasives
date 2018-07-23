@@ -640,16 +640,15 @@ sub2
 summary(sub2$BD_g_cm3)
 #mean = 1.35; based on 8 observations from Stark BD data
 
+sub3 <- alldata[ which(alldata$bottomdepth_cm == 10 | alldata$bottomdepth_cm == 20),]
+
+summary(sub3$BD_g_cm3)
+#1.408
 
 ###
 #apply mean BD data to 5 studies missing BD data
-if (alldata$study == "Weber et al. 2015") {
-  alldata$BD_g_cm3 == 1.417
-  }
-#Warning message: In if (alldata$study == "Weber et al. 2015") { :the condition has length > 1 and only the first element will be used                         
-
-alldata$study == "Bradley et al. 2006"
-alldata$study == "Norton et al. 2008"
+meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
+alldataBD <- left_join (alldata, meanBDs, by=c("study", "topdepth_cm", "bottomdepth_cm"))
 
 
 
