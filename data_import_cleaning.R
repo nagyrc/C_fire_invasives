@@ -623,9 +623,6 @@ write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/
 
 
 ###
-#this code below was run once after alldata was compiled to calculate means
-#then these means were applied to individual studies above
-#then alldata was recompiled
 #find mean BD from studies that have BD data
 #0-10 cm
 sub1 <- alldata[ which(alldata$topdepth_cm == 0 & alldata$bottomdepth_cm == 10),]
@@ -648,7 +645,10 @@ summary(sub3$BD_g_cm3)
 ###
 #apply mean BD data to 5 studies missing BD data
 meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
-alldataBD <- left_join (alldata, meanBDs, by=c("study", "topdepth_cm", "bottomdepth_cm"))
+alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm"))
+
+#apply function that uses BD to calculate C content when BD is not NA
+alldataBD$soilC_g_m2 <- ifelse(is.na(alldataBD$BD_g_cm3), NA, alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100) 
 
 
 
