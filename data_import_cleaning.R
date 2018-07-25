@@ -648,7 +648,9 @@ meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
 alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm"))
 
 #apply function that uses BD to calculate C content when BD is not NA
-alldataBD$soilC_g_m2 <- ifelse(is.na(alldataBD$BD_g_cm3), NA, alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100) 
+alldataBD$soilC_g_m2 <- ifelse(alldataBD$study == "Davies et al. 2009" | alldataBD$study == "Diamond et al. 2012" | alldataBD$study == "Kessler et al. 2015" | alldataBD$study == "Meyer et al. 2011" | alldataBD$study == "Ogle et al. 2004 means", NA, alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100)
+
+
 
 
 
