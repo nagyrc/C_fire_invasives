@@ -645,14 +645,13 @@ summary(sub3$BD_g_cm3)
 ###
 #apply mean BD data to 5 studies missing BD data
 meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
-alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm"))
 
-#apply function that uses BD to calculate C content when BD is not NA
-alldataBD$soilC_g_m2 <- ifelse(alldataBD$study == "Davies et al. 2009" | alldataBD$study == "Diamond et al. 2012" | alldataBD$study == "Kessler et al. 2015" | alldataBD$study == "Meyer et al. 2011" | alldataBD$study == "Ogle et al. 2004 means", NA, alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100)
+#check this step to see what happens when NAs are merged with mean BD data
+alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm", "BD_g_cm3"))
 
+alldataBD$soilC_g_m2 <- alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100
 
-
-
+head(alldataBD)
 
 ###
 #bring in bulk density spatial data
