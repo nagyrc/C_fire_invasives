@@ -87,10 +87,13 @@ colnames(Weber)[colnames(Weber) == '% C'] <- 'soil%C'
 colnames(Weber)[colnames(Weber) == 'Sample'] <- 'sample'
 
 Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
+#max soil depth is 8 cm so use mean for 1-10 cm
+Weber$BD_g_cm3 <- 1.417
+Weber$soilC_g_m2 <- Weber$BD_g_cm3*Weber$`soil%C`*Weber$thick*100
 
 head(Weber)
 
-kpWeber <- Weber[,c("sample","treatment","soil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick")]
+kpWeber <- Weber[,c("sample","treatment","soil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick","BD_g_cm3","soilC_g_m2")]
 head(kpWeber)
 
 
@@ -121,7 +124,11 @@ Blank$thick <- Blank$bottomdepth_cm - Weber$topdepth_cm
 Blank$pr_burned <- c("no")
 Blank$seeded <- c("no")
 
-kpBlank <- Blank[,c("site","treatment","rep","soil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded")]
+Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.417, 1.35)
+Blank$soilC_g_m2 <- Blank$BD_g_cm3*Blank$`soil%C`*Blank$thick*100
+
+
+kpBlank <- Blank[,c("site","treatment","rep","soil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","soilC_g_m2")]
 head(kpBlank)
 
 
@@ -190,7 +197,7 @@ Stark2$`BD estimated` <- c("other")
 
 Stark2$soil_percC <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-#Stark2$soilC_g_m2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick*100
+Stark2$soilC_g_m2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick*100
 
 Stark2$pr_burned <- c("no")
 Stark2$lat <- c("39.90333333")
@@ -274,6 +281,9 @@ colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Sample_Name'] <- 'sample'
 colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Top Depth'] <- 'topdepth_cm'
 colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Bottom Depth'] <- 'bottomdepth_cm'
 
+Bradley_soil2$BD_g_cm3 <- 1.417
+Bradley_soil2$soilC_g_m2 <- Bradley_soil2$BD_g_cm3 * Bradley_soil2$`soil%C` * Bradley_soil2$thick * 100
+
 colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'Site'] <- 'site'
 colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
 
@@ -313,6 +323,10 @@ colnames(Norton_2008c)[colnames(Norton_2008c) == 'TOC_perc'] <- 'soil%C'
 colnames(Norton_2008c)[colnames(Norton_2008c) == 'life form'] <- 'life_form'
 
 head(Norton_2008c)
+
+Norton_2008c$BD_g_cm3 <- 1.417
+Norton_2008c$soilC_g_m2 <- Norton_2008c$BD_g_cm3 * Norton_2008c$`soil%C` * Norton_2008c$thick * 100
+
 
 kpNorton2008 <- Norton_2008c[,c("life_form","rep","soil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp")]
 head(kpNorton2008)
@@ -359,7 +373,7 @@ colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
 #these calculations are not correct- he didn't multiply by the depth
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'do_not_use'
 
-#Mahood1ll$soilC_g_m2 <- Mahood1ll$`soil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick*100
+Mahood1ll$soilC_g_m2 <- Mahood1ll$`soil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick * 100
 
 head(Mahood1ll)
 
@@ -404,7 +418,7 @@ Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 Mahood2BDll$topdepth_cm <- c(0)
 Mahood2BDll$bottomdepth_cm <- c(10)
 Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
-#Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
+Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
 Mahood2BDll$seeded <- c("no")
 Mahood2BDll$pr_burned <- c("no")
 Mahood2BDll$BD_estimated <- c("no")
@@ -528,7 +542,7 @@ colnames(Ogle)[colnames(Ogle) == '%C'] <- 'soil%C'
 colnames(Ogle)[colnames(Ogle) == 'bulk density (g/cm3)'] <- 'BD_g_cm3'
 colnames(Ogle)[colnames(Ogle) == 'Plot'] <- 'plot'
 
-#Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
+Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
 Ogle$lat <- 43.55
 Ogle$long <- -103.36667
 Ogle$native_veg <- c("mixed-grass")
@@ -620,36 +634,20 @@ write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/
 
 
 
-###
-#find mean BD from studies that have BD data
-#0-10 cm
-sub1 <- alldata[ which(alldata$topdepth_cm == 0 & alldata$bottomdepth_cm == 10),]
 
-summary(sub1$BD_g_cm3)
-#mean = 1.417; based on 95 observations across studies
 
-#10-20 cm
-sub2 <- alldata[ which(alldata$topdepth_cm == 10 & alldata$bottomdepth_cm == 20),]
 
-summary(sub2$BD_g_cm3)
-#mean = 1.35; based on 8 observations from Stark BD data
-
-sub3 <- alldata[ which(alldata$bottomdepth_cm == 10 | alldata$bottomdepth_cm == 20),]
-
-summary(sub3$BD_g_cm3)
-#1.408
-
-###
+##############################
+#code below did not work
 #apply mean BD data to 5 studies missing BD data
-meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
+#meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
 
 #check this step to see what happens when NAs are merged with mean BD data
-alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm", "BD_g_cm3"))
+#alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm", "BD_g_cm3"))
 
-alldataBD$soilC_g_m2 <- alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100
-
-head(alldataBD)
-
+#alldataBD$soilC_g_m2 <- alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100
+#head(alldataBD)
+##############################
 
 
 
