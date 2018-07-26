@@ -108,7 +108,7 @@ Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
 #add fields that will be common across studies
 unique(Blank$Treatment)
 Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','cheatgrass')
-Blank$study <- "Blank & Norton 2006"
+Blank$study <- "Blank and Norton 2006"
 
 head(Blank)
 
@@ -328,7 +328,7 @@ Norton_2008c$BD_g_cm3 <- 1.417
 Norton_2008c$soilC_g_m2 <- Norton_2008c$BD_g_cm3 * Norton_2008c$`soil%C` * Norton_2008c$thick * 100
 
 
-kpNorton2008 <- Norton_2008c[,c("life_form","rep","soil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp")]
+kpNorton2008 <- Norton_2008c[,c("life_form","rep","soil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp", "BD_g_cm3", "soilC_g_m2")]
 head(kpNorton2008)
 
 
