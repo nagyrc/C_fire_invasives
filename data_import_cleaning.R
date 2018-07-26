@@ -69,7 +69,7 @@ head(kpJones)
 
 
 ###
-#Weber data# need BD to calculate soil C content; need to append burn info (one lat/long only)
+#Weber data# need to append burn info (one lat/long only)
 Weber <- as.data.frame(read_csv("Weber.csv"))
 
 #lat and long data are messed up
@@ -96,7 +96,7 @@ head(kpWeber)
 
 
 ###
-#Blank data# need BD to calculate soil C content; need to append burn info for diff sites
+#Blank data# need to append burn info for diff sites
 Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
 
 Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
@@ -190,7 +190,7 @@ Stark2$`BD estimated` <- c("other")
 
 Stark2$soil_percC <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-Stark2$soilC_g_m2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick*100
+#Stark2$soilC_g_m2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick*100
 
 Stark2$pr_burned <- c("no")
 Stark2$lat <- c("39.90333333")
@@ -240,7 +240,7 @@ head(kpDavies)
 
 
 ###
-#Bradley data# need BD 
+#Bradley data# have info on burn history in paper 
 Bradley_soil <- as.data.frame(read_csv("Bradley_soil.csv"))
 Bradley_AGB <- as.data.frame(read_csv("Bradley_AGB.csv"))
 head(Bradley_soil)
@@ -274,7 +274,6 @@ colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Sample_Name'] <- 'sample'
 colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Top Depth'] <- 'topdepth_cm'
 colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Bottom Depth'] <- 'bottomdepth_cm'
 
-
 colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'Site'] <- 'site'
 colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
 
@@ -287,7 +286,7 @@ head(kpBradleyveg)
 
 
 ###
-#Norton et al. 2008 data# need BD
+#Norton et al. 2008 data# need burn info for 1 site
 #lat = 42.70777778
 #long = -108.60583333
 Norton_2008 <- as.data.frame(read_csv("Norton_2008.csv"))
@@ -313,7 +312,6 @@ colnames(Norton_2008c)[colnames(Norton_2008c) == 'Bottom Depth'] <- 'bottomdepth
 colnames(Norton_2008c)[colnames(Norton_2008c) == 'TOC_perc'] <- 'soil%C'
 colnames(Norton_2008c)[colnames(Norton_2008c) == 'life form'] <- 'life_form'
 
-
 head(Norton_2008c)
 
 kpNorton2008 <- Norton_2008c[,c("life_form","rep","soil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp")]
@@ -322,7 +320,9 @@ head(kpNorton2008)
 
 
 ###
-#Mahood data# need info on veg categories and burned/unburned and bottom depth sampled
+#Mahood data
+#need burn info from lat/longs
+#need info on veg categories and burned/unburned and bottom depth sampled
 #make sure Jones data is not repeated from publication
 Mahood1 <- as.data.frame(read_csv("Mahood1.csv"))
 head(Mahood1)
@@ -359,7 +359,7 @@ colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
 #these calculations are not correct- he didn't multiply by the depth
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'do_not_use'
 
-Mahood1ll$soilC_g_m2 <- Mahood1ll$`soil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick*100
+#Mahood1ll$soilC_g_m2 <- Mahood1ll$`soil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick*100
 
 head(Mahood1ll)
 
@@ -372,7 +372,6 @@ head(kpMahood1)
 
 
 
-#need lat, long info for these plots
 #need burned/unburned category here
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
 
@@ -405,7 +404,7 @@ Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 Mahood2BDll$topdepth_cm <- c(0)
 Mahood2BDll$bottomdepth_cm <- c(10)
 Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
-Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
+#Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
 Mahood2BDll$seeded <- c("no")
 Mahood2BDll$pr_burned <- c("no")
 Mahood2BDll$BD_estimated <- c("no")
@@ -422,6 +421,8 @@ kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C
 head(kpMahood2)
 
 str(kpMahood2)
+
+
 ###
 #make cheatgrass %C an object to use later
 cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
@@ -436,6 +437,8 @@ meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
 #42.6447
 ###
 
+
+
 ###
 #apply mean %C 
 kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
@@ -446,6 +449,7 @@ kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
 
 ###
 #Rau data# need soil depths
+#need burn info for lat/longs
 #check with Ben on treatments
 Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
 Rau_inv$study <- c("Goergen et al. 2011")
@@ -508,17 +512,14 @@ kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "
 head(kpRau)
 
 
-###
-#merge dataframes together
-#add Rau here
-list_studies <- list(kpJones, kpWeber, kpBlank, kpNorton, kpStark, kpDavies, kpBradleysoil, kpBradleyveg, kpNorton2008, kpMahood1, kpMahood2, kpRau)
+
 
 
 ###
 #Ogle data
+#need burn info for lat/long
 Ogle <- as.data.frame(read_csv("Ogle.csv"))
 
-#ifelse(<condition>, <yes>, ifelse(<condition>, <yes>, <no>))
 Ogle$topdepth_cm <- ifelse(Ogle$`b-depth` == 1, 0, ifelse(Ogle$`b-depth` == 2, 5, 15))
 Ogle$bottomdepth_cm <- ifelse(Ogle$`b-depth` == 1, 5, ifelse(Ogle$`b-depth` == 2, 15, 30))
 Ogle$thick <- Ogle$bottomdepth_cm - Ogle$topdepth_cm
@@ -527,7 +528,7 @@ colnames(Ogle)[colnames(Ogle) == '%C'] <- 'soil%C'
 colnames(Ogle)[colnames(Ogle) == 'bulk density (g/cm3)'] <- 'BD_g_cm3'
 colnames(Ogle)[colnames(Ogle) == 'Plot'] <- 'plot'
 
-Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
+#Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
 Ogle$lat <- 43.55
 Ogle$long <- -103.36667
 Ogle$native_veg <- c("mixed-grass")
@@ -588,10 +589,7 @@ studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Hooker et al. 2008',study
 head(studymeans)
 studymeans
 
-bind13 <- rbind.all.columns(bind12, studymeans)
-
-alldata <- bind13
-head(alldata)
+alldata <- rbind.all.columns(bind12, studymeans)
 
 write.csv(alldata, file = "alldata.csv")
 
@@ -632,7 +630,6 @@ summary(sub1$BD_g_cm3)
 
 #10-20 cm
 sub2 <- alldata[ which(alldata$topdepth_cm == 10 & alldata$bottomdepth_cm == 20),]
-sub2
 
 summary(sub2$BD_g_cm3)
 #mean = 1.35; based on 8 observations from Stark BD data
@@ -652,6 +649,10 @@ alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomd
 alldataBD$soilC_g_m2 <- alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100
 
 head(alldataBD)
+
+
+
+
 
 ###
 #bring in bulk density spatial data
