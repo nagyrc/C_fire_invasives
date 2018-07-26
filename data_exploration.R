@@ -19,10 +19,10 @@ head(alldata)
 #data exploration
 summary(alldata$AGBC_g_m2, na.rm = TRUE)
 #why is there a zero???
-#755 NAs
+#753 NAs
 
 zeroAGB <- alldata[alldata$AGBC_g_m2 == 0, ]
-#760, so 755 NAs and 5 zeros
+#758, so 753 NAs and 5 zeros
 
 ord <- alldata[order(alldata$AGBC_g_m2),] 
 head(ord)
