@@ -197,7 +197,7 @@ Stark2$`BD estimated` <- c("other")
 
 Stark2$soil_percC <- Stark2$`org C (g C/kg)` / 10
 Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-Stark2$soilC_g_m2 <- Stark2$BD_g_cm3*Stark2$soil_percC*Stark2$thick*100
+Stark2$soilC_g_m2 <- Stark2$BD_g_cm3 * Stark2$soil_percC * Stark2$thick * 100
 
 Stark2$pr_burned <- c("no")
 Stark2$lat <- c("39.90333333")
