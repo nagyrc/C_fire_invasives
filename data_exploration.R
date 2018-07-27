@@ -59,6 +59,7 @@ p1 <- as.data.frame(sumjoin3)
 p1
 #this is useful, show Bethany and Emily
 plot(sumjoin3$soilC_g_m2.meanfxn~sumjoin3$thick.max)
+unique(alldata$thick)
 ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.meanfxn, color = study)) + geom_point()
 
 
