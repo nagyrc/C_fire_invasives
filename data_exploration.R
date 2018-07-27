@@ -40,15 +40,16 @@ hist(alldata$soilC_g_m2, breaks = 20)
 ###
 #funtion to remove NAs
 meanfxn <- function(x)base::mean(x, na.rm = TRUE)
-
+maxfxn <- function(x)base::max(x, na.rm = TRUE)
+lengthfxn <- function(x)base::length(x, na.rm = TRUE)
 
 #soil carbon
 #check to see if soil C is varying as a function of thickness and bottom depth
 sum1 <- summaryBy(soilC_g_m2 ~ study, data = alldata, FUN = c(meanfxn))
 sum1
-sum2 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = max)
-sum3 <- summaryBy(thick ~ study, data = alldata, FUN = max)
-sum4 <- summaryBy(thick ~ study, data = alldata, FUN = length)
+sum2 <- summaryBy(bottomdepth_cm ~ study, data = alldata, FUN = c(maxfxn))
+sum3 <- summaryBy(thick ~ study, data = alldata, FUN = c(maxfxn))
+sum4 <- summaryBy(thick ~ study, data = alldata, FUN = c(lengthfxn))
 
 sumjoin <- left_join(sum1, sum2, by = "study")
 sumjoin2 <- left_join(sumjoin, sum3, by = "study")
@@ -58,9 +59,9 @@ sumjoin3
 p1 <- as.data.frame(sumjoin3)
 p1
 #this is useful, show Bethany and Emily
-plot(sumjoin3$soilC_g_m2.meanfxn~sumjoin3$thick.max)
+plot(sumjoin3$soilC_g_m2.meanfxn~sumjoin3$thick.maxfxn)
 unique(alldata$thick)
-ggplot(sumjoin3, aes(x = thick.max, y = soilC_g_m2.meanfxn, color = study)) + geom_point()
+ggplot(sumjoin3, aes(x = thick.maxfxn, y = soilC_g_m2.meanfxn, color = study)) + geom_point()
 
 
 #AGB carbon
