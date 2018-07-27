@@ -625,6 +625,7 @@ str(alldata)
 
 
 ###
+#only need to run the code below one time; then turn off
 #get unique lat/longs for Emily to extract burn data
 #unique(df[c("yad", "per")])
 lllist <- unique(alldata[c("lat","long")])
@@ -637,21 +638,7 @@ write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/
 
 
 
-##############################
-#code below did not work
-#apply mean BD data to 5 studies missing BD data
-#meanBDs <- as.data.frame(read_csv("meanBDs.csv"))
-
-#check this step to see what happens when NAs are merged with mean BD data
-#alldataBD <- left_join(alldata, meanBDs, by = c("study", "topdepth_cm", "bottomdepth_cm", "BD_g_cm3"))
-
-#alldataBD$soilC_g_m2 <- alldataBD$`soil%C` * alldataBD$BD_g_cm3 * alldataBD$thick * 100
-#head(alldataBD)
-##############################
-
-
-
-
+#not used
 ###
 #bring in bulk density spatial data
 #data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
