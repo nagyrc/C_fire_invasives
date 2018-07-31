@@ -529,33 +529,6 @@ head(kpRau)
 
 
 
-###
-#Ogle data
-#need burn info for lat/long
-Ogle <- as.data.frame(read_csv("Ogle.csv"))
-
-Ogle$topdepth_cm <- ifelse(Ogle$`b-depth` == 1, 0, ifelse(Ogle$`b-depth` == 2, 5, 15))
-Ogle$bottomdepth_cm <- ifelse(Ogle$`b-depth` == 1, 5, ifelse(Ogle$`b-depth` == 2, 15, 30))
-Ogle$thick <- Ogle$bottomdepth_cm - Ogle$topdepth_cm
-
-colnames(Ogle)[colnames(Ogle) == '%C'] <- 'soil%C'
-colnames(Ogle)[colnames(Ogle) == 'bulk density (g/cm3)'] <- 'BD_g_cm3'
-colnames(Ogle)[colnames(Ogle) == 'Plot'] <- 'plot'
-
-Ogle$soilC_g_m2 <- Ogle$`soil%C` * Ogle$BD_g_cm3 * Ogle$thick * 100
-Ogle$lat <- 43.55
-Ogle$long <- -103.36667
-Ogle$native_veg <- c("mixed-grass")
-#these are mixed grass sites...with either low or high brome grasses
-Ogle$veg <- c("mixed-grass")
-Ogle$yr_samp <- c("1996-1997")
-Ogle$site <- c("Wind Cave National Park")
-Ogle$cheat_cover <- ifelse(Ogle$cat == 1, "<5", ifelse(Ogle$cat == 2, "5-15", ">15"))
-Ogle$BD_estimated <- c("no")  
-Ogle$study <- c("Ogle et al. 2004")
-Ogle
-
-kpOgle <- Ogle[,c("plot", "soil%C", "BD_g_cm3", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "BD_estimated", "lat", "long", "native_veg", "veg","cheat_cover", "yr_samp", "site", "study")]
 
 
 
@@ -585,7 +558,7 @@ bind8 <- rbind.all.columns(bind7, kpNorton2008)
 bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
-bind12 <- rbind.all.columns(bind11, kpOgle)
+
 
 
 
@@ -603,7 +576,7 @@ studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Hooker et al. 2008',study
 head(studymeans)
 studymeans
 
-alldata <- rbind.all.columns(bind12, studymeans)
+alldata <- rbind.all.columns(bind11, studymeans)
 
 
 
