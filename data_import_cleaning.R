@@ -605,22 +605,42 @@ studymeans
 
 alldata <- rbind.all.columns(bind12, studymeans)
 
-write.csv(alldata, file = "alldata.csv")
+
+
+#bring in fire data
+fire <- as.data.frame(read_csv("uniquelatlong_LYB_no_field.csv"))
+
+alldata$lat <- as.numeric(alldata$lat)
+alldata$long <- as.numeric(alldata$long)
+
+alldatall <- left_join(alldata, fire, by = c("lat","long"))
+
 
 
 ###
 #making sure all numeric fields are numeric
-str(alldata)
+str(alldatall)
 
-alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
-alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
-alldata$lat <- as.numeric(alldata$lat)
-alldata$long <- as.numeric(alldata$long)
-alldata$elevation <- as.numeric(alldata$elevation)
-alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+alldatall$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+alldatall$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+alldatall$elevation <- as.numeric(alldata$elevation)
+alldatall$cheat_cover <- as.numeric(alldata$cheat_cover)
 
-str(alldata)
+str(alldatall)
 
+
+#replace 0 fire with NAs
+unique(alldatall$MCD64LYB)
+alldatall$MCD64LYB <- ifelse(alldatall$MCD64LYB == 0, 1920, alldatall$MCD64LYB)
+
+unique(alldatall$MTBS_LYB)
+alldatall$MTBS_LYB <- ifelse(alldatall$MTBS_LYB == 0, 1920, alldatall$MTBS_LYB)
+
+unique(alldatall$BAECV_LYB)
+alldatall$BAECV_LYB <- ifelse(alldatall$BAECV_LYB == 0, 1920, alldatall$BAECV_LYB)
+
+
+write.csv(alldatall, file = "alldatall.csv")
 
 
 
@@ -628,17 +648,17 @@ str(alldata)
 #only need to run the code below one time; then turn off
 #get unique lat/longs for Emily to extract burn data
 #unique(df[c("yad", "per")])
-lllist <- unique(alldata[c("lat","long")])
+#lllist <- unique(alldata[c("lat","long")])
 
-write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
-
-
+#write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
 
 
 
 
 
-#not used
+
+
+#below not used
 ###
 #bring in bulk density spatial data
 #data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
