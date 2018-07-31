@@ -654,7 +654,12 @@ write.csv(alldatall, file = "alldatall.csv")
 
 
 
+###
+studyid <- as.data.frame(read_csv("alldatall_bystudyid.csv"))
+head(studyid)
+artstud <- unique(studyid[c("Article_ID", "Study_ID")])
 
+write.csv(artstud, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/articlestudyid.csv")
 
 
 
