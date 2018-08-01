@@ -570,8 +570,8 @@ bind11 <- rbind.all.columns(bind10, kpRau)
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 #calculating AGBC from AGB using mean cheatgrass %C from Mahood
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Hooker et al. 2008' | studymeans$study == 'Diamond et al. 2012', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Hooker et al. 2008' | studymeans$study == 'Diamond et al. 2012',studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012',studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
 
 head(studymeans)
 studymeans
