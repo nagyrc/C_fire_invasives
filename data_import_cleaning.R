@@ -27,43 +27,59 @@ Jones_veg_litter <- merge(Jones_veg_only, Jones_litter_only,
 
 #rm(Jones_vls)
 #merge veg_litter and soil dataframes
+#this code excludes data in years/treatments uncommon to both datasets (R, 2010, 2011)
 Jones_vls <- merge(Jones_veg_litter, Jones_soil, 
-                          by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"))
+                          by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"), all = TRUE)
+
+unique(Jones_vls$Burn_trt)
+unique(Jones_vls$Year)
+
+#remove B, C, R treatments after initial year (after burning and seeding with cheatgrass)
+Jones_vls2008 <- subset.data.frame(Jones_vls, Year == 2008)
+Jones_vls2009 <- subset.data.frame(Jones_vls, Year == 2009)
+Jones_vls2010 <- subset.data.frame(Jones_vls, Year == 2010)
+Jones_vls2011 <- subset.data.frame(Jones_vls, Year == 2011)
+Jones_vls2012 <- subset.data.frame(Jones_vls, Year == 2012)
+
+Jones2009 <- subset.data.frame(Jones_vls2009, Burn_trt == "N")
+Jones2010 <- subset.data.frame(Jones_vls2010, Burn_trt == "N")
+Jones2011 <- subset.data.frame(Jones_vls2011, Burn_trt == "N")
+Jones2012 <- subset.data.frame(Jones_vls2012, Burn_trt == "N")
+
+Jones_vls2a <- rbind(Jones_vls2008,Jones2009)
+Jones_vls2b <- rbind(Jones_vls2a,Jones2010)
+Jones_vls2c <- rbind(Jones_vls2b,Jones2011)
+Jones_vls2 <- rbind(Jones_vls2c,Jones2012)
 
 #unique(Jones_vls$Burn_trt)
 #add fields that will be common across studies
-#Jones_vls$pr_burned <- ifelse(Jones_vls$Burn_trt == 'B' | Jones_vls$Burn_trt == 'C', 'yes','no')
-Jones_vls$study <- "Jones et al. 2015"
+Jones_vls2$study <- "Jones et al. 2015"
 
-Jones_vls$lat1 <- ifelse(Jones_vls$Site == 'E' , '4564313','4598553')
-Jones_vls$long1 <- ifelse(Jones_vls$Site == 'E' , '466314','436294')
-Jones_vls$lat <- ifelse(Jones_vls$Site == 'E' , '41.229507','41.536094')
-Jones_vls$long <- ifelse(Jones_vls$Site == 'E' , '-117.4019367','-117.7637079')
-#Jones_vls$seeded <- Jones_vls$`cheatgrass seeded`
-#colnames(trSamp) <- "newname2"
-#colnames(df)[colnames(df) == 'oldName'] <- 'newName'
-colnames(Jones_vls)[colnames(Jones_vls) == 'cheatgrass seeded'] <- 'seeded'
-colnames(Jones_vls)[colnames(Jones_vls) == 'prescribed burn'] <- 'pr_burned'
-colnames(Jones_vls)[colnames(Jones_vls) == 'BD estimated'] <- 'BD_estimated'
-colnames(Jones_vls)[colnames(Jones_vls) == '%C'] <- 'soil%C'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Soil C (g/m2)'] <- 'soilC_g_m2'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Bulk density (g/cm3)'] <- 'BD_g_cm3'
-colnames(Jones_vls)[colnames(Jones_vls) == 'top depth'] <- 'topdepth_cm'
-colnames(Jones_vls)[colnames(Jones_vls) == 'bottom depth'] <- 'bottomdepth_cm'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Litter_C_g_m2'] <- 'litterC_g_m2'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Total_Vegetation_C_g_m2'] <- 'AGBC_g_m2'
+Jones_vls2$lat1 <- ifelse(Jones_vls2$Site == 'E' , '4564313','4598553')
+Jones_vls2$long1 <- ifelse(Jones_vls2$Site == 'E' , '466314','436294')
+Jones_vls2$lat <- ifelse(Jones_vls2$Site == 'E' , '41.229507','41.536094')
+Jones_vls2$long <- ifelse(Jones_vls2$Site == 'E' , '-117.4019367','-117.7637079')
+
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'BD estimated'] <- 'BD_estimated'
+colnames(Jones_vls2)[colnames(Jones_vls2) == '%C'] <- 'soil%C'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Soil C (g/m2)'] <- 'soilC_g_m2'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Bulk density (g/cm3)'] <- 'BD_g_cm3'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'top depth'] <- 'topdepth_cm'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'bottom depth'] <- 'bottomdepth_cm'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Litter_C_g_m2'] <- 'litterC_g_m2'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Total_Vegetation_C_g_m2'] <- 'AGBC_g_m2'
 #colnames(Jones_vls)[colnames(Jones_vls) == 'BD_g_m3'] <- 'BD_g_cm3'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Year'] <- 'yr_samp'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Barrel'] <- 'barrel'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Site'] <- 'site'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Burn_trt'] <- 'burn_trt'
-colnames(Jones_vls)[colnames(Jones_vls) == 'Rep'] <- 'rep'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Year'] <- 'yr_samp'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Barrel'] <- 'barrel'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Site'] <- 'site'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Burn_trt'] <- 'burn_trt'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Rep'] <- 'rep'
 
-Jones_vls$thick <- Jones_vls$bottomdepth_cm - Jones_vls$topdepth_cm
-head(Jones_vls)
+Jones_vls2$thick <- Jones_vls2$bottomdepth_cm - Jones_vls2$topdepth_cm
+head(Jones_vls2)
 
 
-kpJones <- Jones_vls[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","seeded","pr_burned","study","lat","long","thick")]
+kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick")]
 head(kpJones)
 
 
