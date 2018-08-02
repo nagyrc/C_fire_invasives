@@ -16,6 +16,19 @@ setwd("data/")
 alldatall = read_csv("alldatall.csv")
 
 ###
+#automate the studyid csv that we did manually
+#varibles that create a new studyid: veg, year, soil depth, location/site, carbon pools
+studyid <- alldatall
+studyid$Article_IDs <- str_sub(studyid$study,1,4)
+unique(studyid$Article_IDs)
+studyid$Article_IDe <- str_sub(studyid$study,-4,-1)
+unique(studyid$Article_IDe)
+studyid$Study_ID <- studyid$Article_ID <- paste(toupper(studyid$Article_IDs),studyid$Article_IDe)
+unique(studyid$Article_ID)
+#studyid$Study_ID <- gsub(" ", "", studyid$Article_ID) 
+studyid$Study_ID <- stringr::str_squish(studyid$Article_ID)
+
+###
 #in this table I'm bringing in here, we manually entered article ID and study ID
 #data ninja-ing for attribute table
 studyid <- as.data.frame(read_csv("alldatall_bystudyid.csv"))
