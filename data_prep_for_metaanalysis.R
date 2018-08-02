@@ -23,10 +23,14 @@ studyid$Article_IDs <- str_sub(studyid$study,1,4)
 unique(studyid$Article_IDs)
 studyid$Article_IDe <- str_sub(studyid$study,-4,-1)
 unique(studyid$Article_IDe)
-studyid$Study_ID <- studyid$Article_ID <- paste(toupper(studyid$Article_IDs),studyid$Article_IDe)
+studyid$Article_ID <- paste(toupper(studyid$Article_IDs),studyid$Article_IDe)
+studyid$Article_ID <- gsub(" ", "", studyid$Article_ID) 
+studyid$Article_ID <- gsub("MAHOpub1", "MAHO2018a", studyid$Article_ID) 
+studyid$Article_ID <- gsub("MAHOpub2", "MAHO2018b", studyid$Article_ID) 
+
 unique(studyid$Article_ID)
-#studyid$Study_ID <- gsub(" ", "", studyid$Article_ID) 
-studyid$Study_ID <- stringr::str_squish(studyid$Article_ID)
+#these look great
+
 
 ###
 #in this table I'm bringing in here, we manually entered article ID and study ID
