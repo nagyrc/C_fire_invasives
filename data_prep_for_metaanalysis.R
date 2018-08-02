@@ -31,6 +31,14 @@ studyid$Article_ID <- gsub("MAHOpub2", "MAHO2018b", studyid$Article_ID)
 unique(studyid$Article_ID)
 #these look great
 
+#make each row that has more that one pool into its own row
+studyid$test <- group_by(studyid, study, lat, long, veg, site, bottomdepth_cm)
+studyid$test
+
+#create Study_ID variable based on unique combinations of study, lat, long, veg, site, bottomdepth_cm
+studyid %>% 
+  mutate(Study_ID = group_indices_(studyid, .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm")))
+
 
 ###
 #in this table I'm bringing in here, we manually entered article ID and study ID
