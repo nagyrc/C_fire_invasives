@@ -10,6 +10,7 @@ library(raster)
 library(ggplot2)
 library(doBy)
 library(reshape)
+library(velox)
 
 setwd("data/")
 
@@ -72,17 +73,14 @@ if (!file.exists(fpa_gdb)) {
 }
 
 #Download the MTBS fire polygons
-mtbs_shp <- file.path(mtbs_prefix, 'mtbs_perimeter_data_v2', 'dissolve_mtbs_perims_1984-2015_DD_20170501.shp')
+mtbs_shp <- file.path('mtbs', 'mtbs_perimeter_data_v2', 'dissolve_mtbs_perims_1984-2015_DD_20170501.shp')
 if (!file.exists(mtbs_shp)) {
   loc <- "https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/MTBS_Fire/data/composite_data/burned_area_extent_shapefile/mtbs_perimeter_data.zip"
-  dest <- paste0(mtbs_prefix, ".zip")
+  dest <- paste0('mtbs', ".zip")
   download.file(loc, dest)
-  unzip(dest, exdir = mtbs_prefix)
+  unzip(dest, exdir = 'mtbs')
   unlink(dest)
   assert_that(file.exists(mtbs_shp))
-  system(paste0("aws s3 sync ",
-                raw_prefix, " ",
-                s3_raw_prefix))
 }
 
 #bring in shapefile of US states
@@ -93,13 +91,12 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
     setNames(tolower(names(.)))
 
 #bring in MTBS data
-mtbs_fire <- st_read(dsn = file.path('data','fire', 'mtbs_perimeter_data_v2'),
-                     layer = "dissolve_mtbs_perims_1984-2015_DD_20170501", quiet = TRUE) %>%
+mtbs_fire <- st_read(dsn = 'mtbs',
+                     layer = "mtbs_perims_DD", quiet = TRUE) %>%
   st_transform(st_crs(usa_shp)) %>%
   mutate(MTBS_ID = Fire_ID,
          MTBS_DISCOVERY_YEAR = Year) %>%
-  dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)  %>%
-  lwgeom::st_make_valid()
+  dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)
 
 #creates study_ID variable and intersects the US states and MTBS shapefiles with data points
 clean_study <- studyid %>%
@@ -114,17 +111,91 @@ clean_study <- studyid %>%
   dplyr::filter(long != 0 & lat != 0) %>%
   sf::st_as_sf(., coords = c("long", "lat"), 
            crs = 4326) %>%
-  mutate(yr_samp = ifelse(is.na(yr_samp), 0, yr_samp)) %>%
+  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) %>%
   sf::st_join(., usa_shp) %>%
-  sf::st_join(., mtbs_fire)
+  mutate(id = row_number(),
+         study_year = str_sub(study,-4,-1),
+         study_year = ifelse(study_year == 'pub1', 2017, study_year),
+         yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
 
+mtbs_test <- mtbs_fire  %>%
+  sf::st_intersection(., clean_study) %>%
+  mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
+  filter(mtbs_keep != 0) %>%
+  dplyr::select(-mtbs_keep) %>%
+  group_by(id) %>%
+  summarise(last_burn_year = max(MTBS_DISCOVERY_YEAR))
+
+mtbs_clean <- clean_study %>%
+  left_join(., as.data.frame(mtbs_test) %>% dplyr::select(-geometry), by = 'id')
 
 #bring in MODIS data
+dir <- 'modis_events'
+
+layer_reclass <- function(dir) {
+  
+  files <- list.files(file.path(dir), pattern = 'BurnDate') # list all files from a given driver folder
+  # Assuming TIF images, List files from wdata folder
+  ## Change below if using any other format
+  ltif <- grep(".tif$", files, ignore.case = TRUE, value = TRUE)
+  stkl <- stack()
+  
+  for(i in 1:length(ltif)){
+    
+    file_split <- ltif[i] %>%
+      strsplit(split = "_") %>%
+      unlist
+    
+    if(!file.exists(paste0(dir, '/modis_', file_split[3], '.tif'))) {
+      
+      x <- raster(file.path(dir, ltif[i]),
+                  package = "raster", varname = fname)
+      
+      rcl_matrix <- matrix(c(1, Inf, as.numeric(file_split[3])),
+                           ncol=3, byrow=TRUE)
+      
+      stkl <- reclassify(x, rcl_matrix)
+      writeRaster(stkl, filename = paste0(dir, '/modis_', file_split[3], '.tif'))
+    }
+  }
+  files <- list.files(file.path(dir), pattern = 'modis_', full.names = TRUE) # list all files from a given driver folder
+  
+  stk <- stack(files)
+  return(stk)
+  }
+
+yearly_modis <- layer_reclass(dir = dir)
+
+library(velox)
+
+clean_study_laea <- clean_study %>%
+  st_transform('+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs')
+
+modis_df <- velox(yearly_modis)$extract_points(sp = clean_study_laea) %>%
+  as_tibble()
+colnames(modis_df) <- names(yearly_modis)
+
+modis_df2 <- modis_df   %>%
+  mutate(id = as.data.frame(clean_study)$id) %>%
+  gather(key = key, value = last_burn_year_modis , -id) %>%
+  dplyr::select(-key) %>%
+  filter(last_burn_year_modis != 0)
 
 
+clean_study_laea <- clean_study %>%
+  st_transform('+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs') %>%
+  st_buffer(dis = 10)
 
+modis_df <- velox(yearly_modis)$extract(sp = clean_study_laea, fun = function(x) max(x, na.rm=TRUE), small = TRUE, df = TRUE) %>%
+  as_tibble()
+colnames(modis_df) <- c('ID_sp', names(yearly_modis))
 
-
+modis_df2 <- modis_df   %>%
+  mutate(id = as.data.frame(clean_study)$id) %>%
+  dplyr::select(-ID_sp) %>%
+  gather(key = key, value = last_burn_year_modis , -id) %>%
+  dplyr::select(-key) %>%
+  filter(last_burn_year_modis != 0)
 
 
 
