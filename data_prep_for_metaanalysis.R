@@ -9,6 +9,7 @@ library(sf)
 library(raster)
 library(ggplot2)
 library(doBy)
+library(reshape)
 
 setwd("data/")
 
@@ -31,13 +32,110 @@ studyid$Article_ID <- gsub("MAHOpub2", "MAHO2018b", studyid$Article_ID)
 unique(studyid$Article_ID)
 #these look great
 
+head(studyid)
+
 #make each row that has more that one pool into its own row
-studyid$test <- group_by(studyid, study, lat, long, veg, site, bottomdepth_cm)
-studyid$test
+#studyid$test <- group_by(studyid, study, lat, long, veg, site, bottomdepth_cm)
+#studyid$test
+
+#finish this 
+x <- c("tidyverse", "sf", "assertthat", "purrr", "httr")
+lapply(x, library, character.only = TRUE, verbose = FALSE)
+
+# Use this code to download any data file
+us_shp <- file.path('states_shp', "cb_2016_us_state_20m.shp")
+if (!file.exists(us_shp)) {
+  # The location where the data is housed
+  loc <- "https://www2.census.gov/geo/tiger/GENZ2016/shp/cb_2016_us_state_20m.zip"
+  # Where you want to data to be downloaded to
+  dest <- paste0(file.path('states_shp', ".zip"))
+  # Download the data
+  download.file(loc, dest)
+  # Unzip the data file and move to permenant location
+  unzip(dest, exdir = file.path('states_shp'))
+  # Delete zip file
+  unlink(dest)
+  # Check t make sure it worked
+  assert_that(file.exists(us_shp))
+}
+
+fpa_gdb <- file.path(fpa_prefix, "Data", "FPA_FOD_20170508.gdb")
+if (!file.exists(fpa_gdb)) {
+  pg <- read_html("https://www.fs.usda.gov/rds/archive/Product/RDS-2013-0009.4/")
+  fils <- html_nodes(pg, xpath=".//dd[@class='product']//li/a[contains(., 'zip') and contains(., 'GDB')]")
+  dest <- paste0(fpa_prefix, ".zip")
+  walk2(html_attr(fils, 'href'),  html_text(fils),
+        ~GET(sprintf("https:%s", .x), write_disk(dest), progress()))
+  unzip(dest, exdir = fpa_prefix)
+  unlink(dest)
+  assert_that(file.exists(fpa_gdb))
+  system(paste0("aws s3 sync ",
+                raw_prefix, " ",
+                s3_raw_prefix))
+}
+
+#Download the MTBS fire polygons
+mtbs_shp <- file.path(mtbs_prefix, 'mtbs_perimeter_data_v2', 'dissolve_mtbs_perims_1984-2015_DD_20170501.shp')
+if (!file.exists(mtbs_shp)) {
+  loc <- "https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/MTBS_Fire/data/composite_data/burned_area_extent_shapefile/mtbs_perimeter_data.zip"
+  dest <- paste0(mtbs_prefix, ".zip")
+  download.file(loc, dest)
+  unzip(dest, exdir = mtbs_prefix)
+  unlink(dest)
+  assert_that(file.exists(mtbs_shp))
+  system(paste0("aws s3 sync ",
+                raw_prefix, " ",
+                s3_raw_prefix))
+}
+
+usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
+    filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
+    st_transform(4326) %>%  # e.g. US National Atlas Equal Area
+    dplyr::select(STATEFP, STUSPS) %>%
+    setNames(tolower(names(.)))
+
+mtbs_fire <- st_read(dsn = file.path('data','fire', 'mtbs_perimeter_data_v2'),
+                     layer = "dissolve_mtbs_perims_1984-2015_DD_20170501", quiet = TRUE) %>%
+  st_transform(st_crs(usa_shp)) %>%
+  mutate(MTBS_ID = Fire_ID,
+         MTBS_DISCOVERY_YEAR = Year) %>%
+  dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)  %>%
+  lwgeom::st_make_valid()
+
+clean_study <- studyid %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
+  # tidyr::gather(key = variable, value = value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm) %>%
+  mutate(site = as.factor(site),
+         veg = as.factor(veg),
+         long = ifelse(is.na(long), 0, long),
+         lat = ifelse(is.na(lat), 0, lat),
+         # variable = as.factor(variable),
+         Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm"))) %>%
+  dplyr::filter(long != 0 & lat != 0) %>%
+  sf::st_as_sf(., coords = c("long", "lat"), 
+           crs = 4326) %>%
+  mutate(yr_samp = ifelse(is.na(yr_samp), 0, yr_samp)) %>%
+  sf::st_join(., usa_shp) %>%
+  sf::st_join(., mtbs_fire)
+
+
+#########
+#remove next 12 lines of code
+kpstudyid <- studyid[,c("site","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick")]
+head(kpstudyid)
+
+head(kpstudyid)
+studyidmelt <- melt(kpstudyid, id = c("study","studyid","site","lat","long","veg","bottomdepth_cm"))
+
+kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick")]
+head(kpJones)
 
 #create Study_ID variable based on unique combinations of study, lat, long, veg, site, bottomdepth_cm
 studyid %>% 
-  mutate(Study_ID = group_indices_(studyid, .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm")))
+  mutate(Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm")))
+#########
+
+
 
 
 ###
