@@ -18,7 +18,7 @@ alldatall = read_csv("alldatall.csv")
 
 ###
 #automate the studyid csv that we did manually
-#varibles that create a new studyid: veg, year, soil depth, location/site, carbon pools
+#create Article ID
 studyid <- alldatall
 studyid$Article_IDs <- str_sub(studyid$study,1,4)
 unique(studyid$Article_IDs)
@@ -34,11 +34,7 @@ unique(studyid$Article_ID)
 
 head(studyid)
 
-#make each row that has more that one pool into its own row
-#studyid$test <- group_by(studyid, study, lat, long, veg, site, bottomdepth_cm)
-#studyid$test
-
-#finish this 
+#load multiple libraries 
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
@@ -59,6 +55,7 @@ if (!file.exists(us_shp)) {
   assert_that(file.exists(us_shp))
 }
 
+#use this to bring in Short data (if desired)
 fpa_gdb <- file.path(fpa_prefix, "Data", "FPA_FOD_20170508.gdb")
 if (!file.exists(fpa_gdb)) {
   pg <- read_html("https://www.fs.usda.gov/rds/archive/Product/RDS-2013-0009.4/")
@@ -88,12 +85,14 @@ if (!file.exists(mtbs_shp)) {
                 s3_raw_prefix))
 }
 
+#bring in shapefile of US states
 usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
     filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
     st_transform(4326) %>%  # e.g. US National Atlas Equal Area
     dplyr::select(STATEFP, STUSPS) %>%
     setNames(tolower(names(.)))
 
+#bring in MTBS data
 mtbs_fire <- st_read(dsn = file.path('data','fire', 'mtbs_perimeter_data_v2'),
                      layer = "dissolve_mtbs_perims_1984-2015_DD_20170501", quiet = TRUE) %>%
   st_transform(st_crs(usa_shp)) %>%
@@ -102,6 +101,7 @@ mtbs_fire <- st_read(dsn = file.path('data','fire', 'mtbs_perimeter_data_v2'),
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)  %>%
   lwgeom::st_make_valid()
 
+#creates study_ID variable and intersects the US states and MTBS shapefiles with data points
 clean_study <- studyid %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
   # tidyr::gather(key = variable, value = value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm) %>%
@@ -119,26 +119,18 @@ clean_study <- studyid %>%
   sf::st_join(., mtbs_fire)
 
 
-#########
-#remove next 12 lines of code
-kpstudyid <- studyid[,c("site","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick")]
-head(kpstudyid)
+#bring in MODIS data
 
-head(kpstudyid)
-studyidmelt <- melt(kpstudyid, id = c("study","studyid","site","lat","long","veg","bottomdepth_cm"))
 
-kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick")]
-head(kpJones)
 
-#create Study_ID variable based on unique combinations of study, lat, long, veg, site, bottomdepth_cm
-studyid %>% 
-  mutate(Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm")))
-#########
+
+
 
 
 
 
 ###
+#move this code to new R script and use new dataframe that has spatial information
 #in this table I'm bringing in here, we manually entered article ID and study ID
 #data ninja-ing for attribute table
 studyid <- as.data.frame(read_csv("alldatall_bystudyid.csv"))
