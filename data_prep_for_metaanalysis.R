@@ -12,10 +12,8 @@ library(doBy)
 library(reshape)
 library(velox)
 
-setwd("data/")
-
 # Read in alldatall.csv
-alldatall = read_csv("alldatall.csv")
+alldatall = read_csv("data/alldatall.csv")
 
 ###
 #automate the studyid csv that we did manually
