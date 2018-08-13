@@ -118,8 +118,11 @@ head(kpWeber)
 #Blank data# need to append burn info for diff sites
 Blankall <- as.data.frame(read_csv("Blank&Norton.csv"))
 
-#remove Succor Creek site because percent cover of cheatgrass within the sagebrush was not reported
-Blank <- Blankall[which(Blankall$Site != "Succor Creek" | Blankall$Site != "Lincoln Bench" ),]
+#remove Succor Creek and Lincoln Bench sites because percent cover of cheatgrass within the sagebrush was not reported
+Blank <- Blankall %>% 
+  filter(!Site == "Succor Creek" | !Site == "Lincoln Bench")
+
+Blank <- Blankall[which(Blankall$Site != "Succor Creek"  | Blankall$Site != "Lincoln Bench"),]
 
 Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
 Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
