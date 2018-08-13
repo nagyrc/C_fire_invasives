@@ -116,14 +116,19 @@ head(kpWeber)
 
 ###
 #Blank data# need to append burn info for diff sites
-Blank <- as.data.frame(read_csv("Blank&Norton.csv"))
+Blankall <- as.data.frame(read_csv("Blank&Norton.csv"))
+
+#remove Succor Creek site because percent cover of cheatgrass within the sagebrush was not reported
+Blank <- Blankall[which(Blankall$Site != "Succor Creek" | Blankall$Site != "Lincoln Bench" ),]
 
 Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
 Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
 
+head(Blank)
 #add fields that will be common across studies
 unique(Blank$Treatment)
-Blank$veg <- ifelse(Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','cheatgrass')
+Blank$veg <- ifelse(Blank$Treatment == 'cheatgrass' & Blank$Site != 'Canyon Creek', 'cheatgrass',
+  ifelse(Blank$Site == 'Vernon Hills' & Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','sagecheat'))
 Blank$study <- "Blank and Norton 2006"
 
 head(Blank)
@@ -142,7 +147,6 @@ Blank$seeded <- c("no")
 
 Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.417, 1.35)
 Blank$soilC_g_m2 <- Blank$BD_g_cm3*Blank$`soil%C`*Blank$thick*100
-
 
 kpBlank <- Blank[,c("site","treatment","rep","soil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","soilC_g_m2")]
 head(kpBlank)
