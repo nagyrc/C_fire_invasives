@@ -120,7 +120,7 @@ Blankall <- as.data.frame(read_csv("Blank&Norton.csv"))
 
 #remove Succor Creek and Lincoln Bench sites because percent cover of cheatgrass within the sagebrush was not reported
 Blank <- Blankall %>% 
-  filter(!Site == "Succor Creek" | !Site == "Lincoln Bench")
+  filter(Site != "Succor Creek" | Site != "Lincoln Bench")
 
 Blank <- Blankall[which(Blankall$Site != "Succor Creek"  | Blankall$Site != "Lincoln Bench"),]
 
@@ -246,25 +246,25 @@ head(kpStark)
 #Davies data# 
 #prescribed burn was in 1993
 #no other burn from 1936-2007 besides prescribed burn
-Davies <- as.data.frame(read_csv("Davies.csv"))
-Davies$veg <- c("cheatgrass")
-Davies$pr_burned <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
+#Davies <- as.data.frame(read_csv("Davies.csv"))
+#Davies$veg <- c("cheatgrass")
+#Davies$pr_burned <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
 
-Davies$lat <- c("43.48333333")
-Davies$long <- c("-119.71666667")
-Davies$study <- "Davies et al. 2009"
+#Davies$lat <- c("43.48333333")
+#Davies$long <- c("-119.71666667")
+#Davies$study <- "Davies et al. 2009"
 
-colnames(Davies)[colnames(Davies) == 'Treatment'] <- 'treatment'
-colnames(Davies)[colnames(Davies) == 'Year'] <- 'yr_samp'
+#colnames(Davies)[colnames(Davies) == 'Treatment'] <- 'treatment'
+#colnames(Davies)[colnames(Davies) == 'Year'] <- 'yr_samp'
 
-Davies$biomass_g_m2 <- Davies$`Cheatgrass biomass (kg/ha)`/10
-Davies$seeded <- c("no")
+#Davies$biomass_g_m2 <- Davies$`Cheatgrass biomass (kg/ha)`/10
+#Davies$seeded <- c("no")
 
 
-head(Davies)
+#head(Davies)
 
-kpDavies <- Davies[,c("treatment","block","yr_samp","veg","pr_burned","lat","long","study","biomass_g_m2","seeded")]
-head(kpDavies)
+#kpDavies <- Davies[,c("treatment","block","yr_samp","veg","pr_burned","lat","long","study","biomass_g_m2","seeded")]
+#head(kpDavies)
 
 
 
@@ -478,7 +478,7 @@ meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
 
 ###
 #apply mean %C 
-kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
+#kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
 ###
 
 
@@ -574,8 +574,8 @@ bind1 <- rbind.all.columns(kpJones, kpWeber)
 bind2 <- rbind.all.columns(bind1, kpBlank)
 bind3 <- rbind.all.columns(bind2, kpNorton)
 bind4 <- rbind.all.columns(bind3, kpStark)
-bind5 <- rbind.all.columns(bind4, kpDavies)
-bind6 <- rbind.all.columns(bind5, kpBradleysoil)
+#bind5 <- rbind.all.columns(bind4, kpDavies)
+bind6 <- rbind.all.columns(bind4, kpBradleysoil)
 bind7 <- rbind.all.columns(bind6, kpBradleyveg)
 bind8 <- rbind.all.columns(bind7, kpNorton2008)
 bind9 <- rbind.all.columns(bind8, kpMahood1)
