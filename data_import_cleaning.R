@@ -41,12 +41,16 @@ Jones_vls2010 <- subset.data.frame(Jones_vls, Year == 2010)
 Jones_vls2011 <- subset.data.frame(Jones_vls, Year == 2011)
 Jones_vls2012 <- subset.data.frame(Jones_vls, Year == 2012)
 
+unique(Jones_vls2008$Burn_trt)
+Jones2008 <- subset.data.frame(Jones_vls2008, Burn_trt != "R")
+unique(Jones2008$Burn_trt)
+
 Jones2009 <- subset.data.frame(Jones_vls2009, Burn_trt == "N")
 Jones2010 <- subset.data.frame(Jones_vls2010, Burn_trt == "N")
 Jones2011 <- subset.data.frame(Jones_vls2011, Burn_trt == "N")
 Jones2012 <- subset.data.frame(Jones_vls2012, Burn_trt == "N")
 
-Jones_vls2a <- rbind(Jones_vls2008,Jones2009)
+Jones_vls2a <- rbind(Jones2008,Jones2009)
 Jones_vls2b <- rbind(Jones_vls2a,Jones2010)
 Jones_vls2c <- rbind(Jones_vls2b,Jones2011)
 Jones_vls2 <- rbind(Jones_vls2c,Jones2012)
@@ -59,6 +63,8 @@ Jones_vls2$lat1 <- ifelse(Jones_vls2$Site == 'E' , '4564313','4598553')
 Jones_vls2$long1 <- ifelse(Jones_vls2$Site == 'E' , '466314','436294')
 Jones_vls2$lat <- ifelse(Jones_vls2$Site == 'E' , '41.229507','41.536094')
 Jones_vls2$long <- ifelse(Jones_vls2$Site == 'E' , '-117.4019367','-117.7637079')
+Jones_vls2$Month_sampled <- c("June")
+Jones_vls2$last_year_burned <- ifelse(Jones_vls2$Site == 'E' , 1999, 1985)
 
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'BD estimated'] <- 'BD_estimated'
 colnames(Jones_vls2)[colnames(Jones_vls2) == '%C'] <- 'soil%C'
@@ -79,7 +85,7 @@ Jones_vls2$thick <- Jones_vls2$bottomdepth_cm - Jones_vls2$topdepth_cm
 head(Jones_vls2)
 
 
-kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick")]
+kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Month_sampled")]
 head(kpJones)
 
 
@@ -87,7 +93,7 @@ head(kpJones)
 ###
 #Weber data# need to append burn info (one lat/long only)
 Weber <- as.data.frame(read_csv("Weber.csv"))
-
+head(Weber)
 #lat and long data are messed up
 Weber$lat <- c("42.853")
 Weber$long <- c("-112.402")
@@ -106,10 +112,12 @@ Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
 #max soil depth is 8 cm so use mean for 1-10 cm
 Weber$BD_g_cm3 <- 1.417
 Weber$soilC_g_m2 <- Weber$BD_g_cm3*Weber$`soil%C`*Weber$thick*100
+Weber$yr_samp <- 2011
+Weber$Month_sampled <- c("September")
 
 head(Weber)
 
-kpWeber <- Weber[,c("sample","treatment","soil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick","BD_g_cm3","soilC_g_m2")]
+kpWeber <- Weber[,c("sample","treatment","soil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick","BD_g_cm3","soilC_g_m2","yr_samp","Month_sampled")]
 head(kpWeber)
 
 
@@ -144,7 +152,7 @@ colnames(Blank)[colnames(Blank) == 'Top depth'] <- 'topdepth_cm'
 colnames(Blank)[colnames(Blank) == 'Bottom depth'] <- 'bottomdepth_cm'
 colnames(Blank)[colnames(Blank) == 'BD estimated'] <- 'BD_estimated'
 
-Blank$thick <- Blank$bottomdepth_cm - Weber$topdepth_cm
+Blank$thick <- Blank$bottomdepth_cm - Blank$topdepth_cm
 Blank$pr_burned <- c("no")
 Blank$seeded <- c("no")
 
@@ -230,6 +238,8 @@ Stark$pr_burned <- c("no")
 Stark$lat <- c("39.90333333")
 Stark$long <- c("-108.40083333")
 Stark$seeded <- ifelse(Stark$veg == 'sage', 'no','maybe')
+Stark$yr_samp <- c("2008-2009")
+Stark$Month_sampled <- c("April-June")
 
 head(Stark)
 
@@ -240,7 +250,7 @@ colnames(Stark)[colnames(Stark) == 'soil_percC'] <- 'soil%C'
 colnames(Stark)[colnames(Stark) == 'Top depth'] <- 'topdepth_cm'
 colnames(Stark)[colnames(Stark) == 'Bottom depth'] <- 'bottomdepth_cm'
 
-kpStark <- Stark[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_m2","pr_burned","lat","long","seeded")]
+kpStark <- Stark[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_m2","pr_burned","lat","long","seeded","yr_samp","Month_sampled")]
 head(kpStark)
 
 
