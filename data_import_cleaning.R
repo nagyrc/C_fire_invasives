@@ -209,40 +209,38 @@ Stark <- as.data.frame(read_csv("Stark.csv"))
 Stark$study <- "Stark et al. 2015"
 unique(Stark$VegType)
 
-#remove data from fumigated sagbrush; these were fumigated and buldozed...too different from other studies
+#fumigated sagebrush were fumigated and buldozed...too different from other studies??
 #however, I believe cheatgrass was fumigated too (24 yrs ago)
-Stark2 <- Stark[which(Stark$VegType != "fum sage"),]
-Stark2$veg <- ifelse(Stark2$VegType == 'undist sage', 'sagebrush','cheatgrass')
-#unique(Stark2$veg)
+#Stark2 <- Stark[which(Stark$VegType != "fum sage"),]
+Stark$veg <- ifelse(Stark$VegType == 'undist sage', 'sagecheat',
+                     ifelse(Stark$VegType == 'fum sage','sagebrush','cheatgrass'))
 
-#unique(Stark2$`Top depth`)
-#0, 10, 20, 40
 
 #BD provided from another Stark study 
-Stark2$BD_g_cm3 <- ifelse(Stark2$`Top depth` == 0, 1.36,
-                        ifelse(Stark2$`Top depth` == 10, 1.35,
-                               ifelse(Stark2$`Top depth` == 20, 1.455, 1.57)))
-Stark2$`BD estimated` <- c("other")
+Stark$BD_g_cm3 <- ifelse(Stark$`Top depth` == 0, 1.36,
+                        ifelse(Stark$`Top depth` == 10, 1.35,
+                               ifelse(Stark$`Top depth` == 20, 1.455, 1.57)))
+Stark$`BD estimated` <- c("other")
 
-Stark2$soil_percC <- Stark2$`org C (g C/kg)` / 10
-Stark2$thick <- Stark2$`Bottom depth` - Stark2$`Top depth`
-Stark2$soilC_g_m2 <- Stark2$BD_g_cm3 * Stark2$soil_percC * Stark2$thick * 100
+Stark$soil_percC <- Stark$`org C (g C/kg)` / 10
+Stark$thick <- Stark$`Bottom depth` - Stark$`Top depth`
+Stark$soilC_g_m2 <- Stark$BD_g_cm3 * Stark$soil_percC * Stark$thick * 100
 
-Stark2$pr_burned <- c("no")
-Stark2$lat <- c("39.90333333")
-Stark2$long <- c("-108.40083333")
-Stark2$seeded <- ifelse(Stark2$veg == 'sage', 'no','maybe')
+Stark$pr_burned <- c("no")
+Stark$lat <- c("39.90333333")
+Stark$long <- c("-108.40083333")
+Stark$seeded <- ifelse(Stark$veg == 'sage', 'no','maybe')
 
-head(Stark2)
+head(Stark)
 
-colnames(Stark2)[colnames(Stark2) == 'Plot'] <- 'plot'
-colnames(Stark2)[colnames(Stark2) == 'Block'] <- 'block'
-colnames(Stark2)[colnames(Stark2) == 'BD estimated'] <- 'BD_estimated'
-colnames(Stark2)[colnames(Stark2) == 'soil_percC'] <- 'soil%C'
-colnames(Stark2)[colnames(Stark2) == 'Top depth'] <- 'topdepth_cm'
-colnames(Stark2)[colnames(Stark2) == 'Bottom depth'] <- 'bottomdepth_cm'
+colnames(Stark)[colnames(Stark) == 'Plot'] <- 'plot'
+colnames(Stark)[colnames(Stark) == 'Block'] <- 'block'
+colnames(Stark)[colnames(Stark) == 'BD estimated'] <- 'BD_estimated'
+colnames(Stark)[colnames(Stark) == 'soil_percC'] <- 'soil%C'
+colnames(Stark)[colnames(Stark) == 'Top depth'] <- 'topdepth_cm'
+colnames(Stark)[colnames(Stark) == 'Bottom depth'] <- 'bottomdepth_cm'
 
-kpStark <- Stark2[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_m2","pr_burned","lat","long","seeded")]
+kpStark <- Stark[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_m2","pr_burned","lat","long","seeded")]
 head(kpStark)
 
 
