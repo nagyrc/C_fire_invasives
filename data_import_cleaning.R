@@ -291,42 +291,45 @@ head(Bradley_soil)
 head(Bradley_AGB)
 
 #remove Rye if only looking at sagebrush (Rye is desert shrub)
-Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
-Bradley_AGB2$veg <- ifelse(Bradley_AGB2$burned == 'no', 'sagebrush','cheatgrass')
-Bradley_AGB2$study <- c("Bradley et al. 2006")
-Bradley_AGB2$lat <- ifelse(Bradley_AGB2$Site == 'Button' , '41.0000000','40.9900000')
-Bradley_AGB2$long <- ifelse(Bradley_AGB2$Site == 'Button' , '-117.5800000','-117.8600000')
-Bradley_AGB2$pr_burned <- c("no")
-Bradley_AGB2$yr_samp <- c(2004)
-Bradley_AGB2$seeded <- c("no")
+#Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
+#check this logic with Bethany
+Bradley_AGB$veg <- ifelse(Bradley_AGB$Site == 'Rye' & Bradley_AGB$burned == 'no', 'salt_desert',
+                          ifelse(Bradley_AGB$burned == 'yes','cheatgrass', 'sagebrush'))
+Bradley_AGB$study <- c("Bradley et al. 2006")
+Bradley_AGB$lat <- ifelse(Bradley_AGB$Site == 'Button' , '41.0000000','40.9900000')
+Bradley_AGB$long <- ifelse(Bradley_AGB$Site == 'Button' , '-117.5800000','-117.8600000')
+Bradley_AGB$pr_burned <- c("no")
+Bradley_AGB$yr_samp <- c(2004)
+Bradley_AGB$seeded <- c("no")
 
-Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
-Bradley_soil2$veg <- ifelse(Bradley_soil2$burned == 'no', 'sagebrush','cheatgrass')
-Bradley_soil2$study <- c("Bradley et al. 2006")
-Bradley_soil2$lat <- ifelse(Bradley_soil2$Site == 'Button' , '41.0000000','40.9900000')
-Bradley_soil2$long <- ifelse(Bradley_soil2$Site == 'Button' , '-117.5800000','-117.8600000')
-Bradley_soil2$`Top Depth` <- c(0)
-Bradley_soil2$`Bottom Depth` <- c(10)
-Bradley_soil2$pr_burned <- c("no")
-Bradley_soil2$yr_samp <- c(2004)
-Bradley_soil2$thick <- Bradley_soil2$`Bottom Depth` - Bradley_soil2$`Top Depth`
-Bradley_soil2$seeded <- c("no")
+#Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
+Bradley_soil$veg <- ifelse(Bradley_soil$Site == 'Rye' & Bradley_soil$burned == 'no', 'salt_desert',
+                          ifelse(Bradley_soil$burned == 'yes','cheatgrass', 'sagecheat'))
+Bradley_soil$study <- c("Bradley et al. 2006")
+Bradley_soil$lat <- ifelse(Bradley_soil$Site == 'Button' , '41.0000000','40.9900000')
+Bradley_soil$long <- ifelse(Bradley_soil$Site == 'Button' , '-117.5800000','-117.8600000')
+Bradley_soil$`Top Depth` <- c(0)
+Bradley_soil$`Bottom Depth` <- c(10)
+Bradley_soil$pr_burned <- c("no")
+Bradley_soil$yr_samp <- c(2004)
+Bradley_soil$thick <- Bradley_soil$`Bottom Depth` - Bradley_soil$`Top Depth`
+Bradley_soil$seeded <- c("no")
 
-colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Carbon_perc'] <- 'soil%C'
-colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Site'] <- 'site'
-colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Sample_Name'] <- 'sample'
-colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Top Depth'] <- 'topdepth_cm'
-colnames(Bradley_soil2)[colnames(Bradley_soil2) == 'Bottom Depth'] <- 'bottomdepth_cm'
+colnames(Bradley_soil)[colnames(Bradley_soil) == 'Carbon_perc'] <- 'soil%C'
+colnames(Bradley_soil)[colnames(Bradley_soil) == 'Site'] <- 'site'
+colnames(Bradley_soil)[colnames(Bradley_soil) == 'Sample_Name'] <- 'sample'
+colnames(Bradley_soil)[colnames(Bradley_soil) == 'Top Depth'] <- 'topdepth_cm'
+colnames(Bradley_soil)[colnames(Bradley_soil) == 'Bottom Depth'] <- 'bottomdepth_cm'
 
-Bradley_soil2$BD_g_cm3 <- 1.417
-Bradley_soil2$soilC_g_m2 <- Bradley_soil2$BD_g_cm3 * Bradley_soil2$`soil%C` * Bradley_soil2$thick * 100
+Bradley_soil$BD_g_cm3 <- 1.417
+Bradley_soil$soilC_g_m2 <- Bradley_soil$BD_g_cm3 * Bradley_soil$`soil%C` * Bradley_soil$thick * 100
 
-colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'Site'] <- 'site'
-colnames(Bradley_AGB2)[colnames(Bradley_AGB2) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
+colnames(Bradley_AGB)[colnames(Bradley_AGB) == 'Site'] <- 'site'
+colnames(Bradley_AGB)[colnames(Bradley_AGB) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
 
 
-kpBradleysoil <- Bradley_soil2
-kpBradleyveg <- Bradley_AGB2[,c("site","burned","AGBC_g_m2","veg","study","lat","long","pr_burned","yr_samp","seeded")]
+kpBradleysoil <- Bradley_soil
+kpBradleyveg <- Bradley_AGB[,c("site","burned","AGBC_g_m2","veg","study","lat","long","pr_burned","yr_samp","seeded")]
 
 head(kpBradleysoil)
 head(kpBradleyveg)
