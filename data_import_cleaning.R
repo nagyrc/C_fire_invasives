@@ -158,13 +158,19 @@ head(kpBlank)
 
 ###
 #Norton data# need to append burn info for 7 sites
-Norton <- as.data.frame(read_csv("Norton.csv"))
+Nortonpre <- as.data.frame(read_csv("Norton.csv"))
 
+head(Nortonpre)
 #add fields that will be common across studies
 #unique(Norton$Trt)
-Norton$study <- "Norton et al. 2004"
-Norton$veg <- ifelse(Norton$Trt == 'N', 'sagebrush','cheatgrass')
+Nortonpre$studypre <- "Norton et al. 2004"
 
+Norton <- Nortonpre %>%
+  filter(!Site == "MW")
+
+Norton$veg <- ifelse(Norton$Site == 'N', 'sagebrush','sagecheat')
+Norton$Month_sampled <- "July-September"
+Norton$yr_samp <- 2001
 #Norton$lat <- Norton$latitude
 #Norton$long <- Norton$longitude
 #unique(Norton$lat)
@@ -183,7 +189,7 @@ colnames(Norton)[colnames(Norton) == 'BD estimated'] <- 'BD_estimated'
 
 head(Norton)
 
-kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","soil%C","soilC_g_m2","BD_estimated","lat","long","study","veg")]
+kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","soil%C","soilC_g_m2","BD_estimated","lat","long","study","veg", "Month_sampled", "yr_samp")]
 head(kpNorton)
 
 Norton$check <- Norton$`soil%C` * Norton$thick * Norton$BD_g_cm3 * 100
@@ -498,6 +504,7 @@ Rau_inv$yr_samp <- c(2008)
 Rau_inv$topdepth_cm <- 0
 Rau_inv$bottomdepth_cm <- 90
 Rau_inv$thick <- Rau_inv$bottomdepth_cm - Rau_inv$topdepth_cm
+Rau_inv$Month_sampled <- c('December')
 
 unique(Rau_inv$Region)
 #SW
@@ -512,6 +519,7 @@ Rau_sage$yr_samp <- c(2011)
 Rau_sage$topdepth_cm <- 0
 Rau_sage$bottomdepth_cm <- 90
 Rau_sage$thick <- Rau_sage$bottomdepth_cm - Rau_sage$topdepth_cm
+Rau_sage$Month_sampled <- NULL
 
 unique(Rau_sage$Region)
 unique(Rau_sage$Site)
@@ -526,7 +534,7 @@ Rau <- rbind(Rau_inv, Rau_sage2)
 
 #add veg category
 #check with Ben and then update this with other treatments???
-Rau$veg <- ifelse(Rau$Treatment == 'Invaded' | Rau$Treatment == 'FI', 'cheatgrass','sagebrush')
+Rau$veg <- ifelse(Rau$Annual_grass > 2, 'sagecheat','sagebrush')
 Rau$BD_estimated <- c("no")
 Rau$pr_burned <- c("no")
 
@@ -545,7 +553,7 @@ colnames(Rau)[colnames(Rau) == 'Elevation'] <- 'elevation'
 
 head(Rau)
 
-kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2","yr_samp","topdepth_cm","bottomdepth_cm","thick")]
+kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2","yr_samp","topdepth_cm","bottomdepth_cm","thick", "Month_sampled")]
 head(kpRau)
 
 
@@ -593,8 +601,14 @@ bind11 <- rbind.all.columns(bind10, kpRau)
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 #calculating AGBC from AGB using mean cheatgrass %C from Mahood
+#Diamond study had C data not just biomass data
 studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
 studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012',studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
+
+#put in a real number here
+meancheatlitter_perC <- 40
+studymeans$litterC_g_m2 <- studymeans$litter_g_m2 *meancheatlitter_perC/100
+studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE *meancheatlitter_perC/100
 
 head(studymeans)
 studymeans
