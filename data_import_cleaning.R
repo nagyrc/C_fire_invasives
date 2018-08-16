@@ -617,9 +617,9 @@ studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012', studym
 studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012',studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
 
 #put in a real number here
-meancheatlitter_perC <- 40
-studymeans$litterC_g_m2 <- studymeans$litter_g_m2 *meancheatlitter_perC/100
-studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE *meancheatlitter_perC/100
+meancheatlitter_perC <- 33.667
+studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * meancheatlitter_perC/100
+studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * meancheatlitter_perC/100
 
 head(studymeans)
 studymeans
