@@ -96,17 +96,19 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)
 
-#creates study_ID variable and intersects the US states and MTBS shapefiles with data points
+
+#creates study_ID variable, creates pool variable, and intersects the US states and MTBS shapefiles with data points
 clean_study <- studyid %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
   # tidyr::gather(key = variable, value = value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm) %>%
   mutate(site = as.factor(site),
          veg = as.factor(veg),
          long = ifelse(is.na(long), 0, long),
          lat = ifelse(is.na(lat), 0, lat),
          # variable = as.factor(variable),
-         Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm"))) %>%
-  dplyr::filter(long != 0 & lat != 0) %>%
+         pool = ifelse(AGBC_g_m2 > 0, "AGB", ifelse(BGBC_g_m2 > 0, "BGB", ifelse(litterC_g_m2 > 0, "litter", "soil"))), 
+         Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) %>%
+  dplyr::filter(long != 0 & lat != 0) %>% 
   sf::st_as_sf(., coords = c("long", "lat"), 
            crs = 4326) %>%
   mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) %>%
@@ -115,6 +117,7 @@ clean_study <- studyid %>%
          study_year = str_sub(study,-4,-1),
          study_year = ifelse(study_year == 'pub1', 2017, study_year),
          yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
+#this doesn't seem to be creating the pool variable...check nested ifelse statements
 
 mtbs_test <- mtbs_fire  %>%
   sf::st_intersection(., clean_study) %>%
