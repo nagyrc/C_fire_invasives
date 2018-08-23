@@ -128,8 +128,12 @@ Blankall <- as.data.frame(read_csv("Blank&Norton.csv"))
 unique(Blankall$Site)
 
 #remove Succor Creek and Lincoln Bench sites because percent cover of cheatgrass within the sagebrush was not reported
-Blank <- Blankall %>% 
+Blank1 <- Blankall %>% 
   filter(Site == "Cindercone Butte" | Site == "Canyon Creek" | Site == "Vernon Hills" | Site == "Simpson Springs" | Site == "Izengood" | Site == "Eden Valley")
+
+#check this to make sure it didn't remove too much; then need to remove line 144 below
+Blank <- Blank1 %>%
+  filter(!Site == "Canyon Creek" & !Treatment == "cheatgrass" )
 
 Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
 Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
