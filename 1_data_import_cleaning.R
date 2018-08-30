@@ -177,7 +177,7 @@ Nortonpre <- as.data.frame(read_csv("Norton.csv"))
 head(Nortonpre)
 #add fields that will be common across studies
 #unique(Norton$Trt)
-Nortonpre$studypre <- "Norton et al. 2004"
+Nortonpre$study <- "Norton et al. 2004"
 
 Norton <- Nortonpre %>%
   filter(!Site == "MW")
@@ -296,9 +296,6 @@ Bradley_AGB <- as.data.frame(read_csv("Bradley_AGB.csv"))
 head(Bradley_soil)
 head(Bradley_AGB)
 
-#remove Rye if only looking at sagebrush (Rye is desert shrub)
-#Bradley_AGB2 <- Bradley_AGB[which(Bradley_AGB$Site != "Rye"),]
-#check this logic with Bethany
 Bradley_AGB$veg <- ifelse(Bradley_AGB$Site == 'Rye' & Bradley_AGB$burned == 'no', 'salt_desert',
                           ifelse(Bradley_AGB$burned == 'yes','cheatgrass', 'sagebrush'))
 Bradley_AGB$study <- c("Bradley et al. 2006")
@@ -312,8 +309,10 @@ Bradley_AGB$seeded <- c("no")
 Bradley_soil$veg <- ifelse(Bradley_soil$Site == 'Rye' & Bradley_soil$burned == 'no', 'salt_desert',
                           ifelse(Bradley_soil$burned == 'yes','cheatgrass', 'sagecheat'))
 Bradley_soil$study <- c("Bradley et al. 2006")
-Bradley_soil$lat <- ifelse(Bradley_soil$Site == 'Button' , '41.0000000','40.9900000')
-Bradley_soil$long <- ifelse(Bradley_soil$Site == 'Button' , '-117.5800000','-117.8600000')
+Bradley_soil$lat <- ifelse(Bradley_soil$Site == 'Button' , '41.0000000',
+                           ifelse(Bradley_soil$Site == 'Rye', '40.5700000', '40.9900000'))
+Bradley_soil$long <- ifelse(Bradley_soil$Site == 'Button' , '-117.5800000',
+                            ifelse(Bradley_soil$Site == 'Rye', '-118.3400000', '-117.8600000'))
 Bradley_soil$`Top Depth` <- c(0)
 Bradley_soil$`Bottom Depth` <- c(10)
 Bradley_soil$pr_burned <- c("no")
