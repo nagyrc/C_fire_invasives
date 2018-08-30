@@ -131,9 +131,13 @@ unique(Blankall$Site)
 Blank1 <- Blankall %>% 
   filter(Site == "Cindercone Butte" | Site == "Canyon Creek" | Site == "Vernon Hills" | Site == "Simpson Springs" | Site == "Izengood" | Site == "Eden Valley")
 
-#check this to make sure it didn't remove too much; then need to remove line 144 below
+#see how many observations should be removed (Canyon Creek AND cheatgrass)
+remove <- Blank1 %>%
+  filter(Site == "Canyon Creek" & Treatment == "cheatgrass" )
+#so 10 observations meet these criteria
+
 Blank <- Blank1 %>%
-  filter(!Site == "Canyon Creek" & !Treatment == "cheatgrass" )
+  filter(!(Site == "Canyon Creek" & Treatment == "cheatgrass" ))
 
 Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
 Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
@@ -539,7 +543,12 @@ unique(Rau_sage$Region)
 unique(Rau_sage$Site)
 unique(Rau_sage$Treatment)
 
+Rau_sage
+
 #check with Ben...what are the CP and FP treatments???
+#CP and FP have a herbicide applied...don't use these
+#CO and FI are control and fire/burn...use these
+#should FI have a different study_id???
 Rau_sage2 <- Rau_sage[which(Rau_sage$Treatment == "CO" | Rau_sage$Treatment == "FI"),]
 unique(Rau_sage2$Treatment)
 
