@@ -145,10 +145,9 @@ Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
 head(Blank)
 #add fields that will be common across studies
 unique(Blank$Treatment)
-Blank$veg <- ifelse(Blank$Treatment == 'cheatgrass' & Blank$Site != 'Canyon Creek', 'cheatgrass',
-  ifelse(Blank$Site == 'Vernon Hills' & Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','sagecheat'))
+Blank$veg <- ifelse(Blank$Site == 'Vernon Hills' & Blank$Treatment == 'Native interspace' | Blank$Treatment == 'Native shrub', 'sagebrush','sagecheat')
 Blank$study <- "Blank and Norton 2006"
-
+unique(Blank$veg)
 head(Blank)
 
 colnames(Blank)[colnames(Blank) == 'Site'] <- 'site'
