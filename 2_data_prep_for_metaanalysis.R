@@ -7,13 +7,13 @@
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
-# Read in alldatall.csv
-alldatall = read_csv("alldatall.csv")
+# Read in alldata.csv
+alldata = read_csv("alldata.csv")
 
 ###
 #automate the studyid csv that we did manually
 #create Article ID
-studyid <- alldatall
+studyid <- alldata
 studyid$Article_IDs <- str_sub(studyid$study,1,4)
 unique(studyid$Article_IDs)
 studyid$Article_IDe <- str_sub(studyid$study,-4,-1)
@@ -59,7 +59,7 @@ clean_study <- studyid %>%
 #move this code to new R script and use new dataframe that has spatial information
 #in this table I'm bringing in here, we manually entered article ID and study ID
 #data ninja-ing for attribute table
-studyid <- as.data.frame(read_csv("alldatall_bystudyid.csv"))
+studyid <- as.data.frame(read_csv("alldata_bystudyid.csv"))
 head(studyid)
 artstud <- unique(studyid[c("Article_ID", "Study_ID")])
 
@@ -67,7 +67,7 @@ write.csv(artstud, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results
 is.numeric(studyid$topdepth_cm)
 is.numeric(studyid$bottomdepth_cm)
 
-#recalculate thickness; there were some issues with this when we looked at alldatall.csv
+#recalculate thickness; there were some issues with this when we looked at alldata.csv
 studyid$thick <- studyid$bottomdepth_cm - studyid$topdepth_cm
 #this fixed it
 
@@ -102,7 +102,7 @@ combo3$Carbon_pool <- ifelse(combo3$soilC_g_m2.mean > 0, "soil",
 write.csv(combo3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/attributes2.csv")
 
 
-soilsubby <- subset.data.frame(alldatall, study == "Rau et al. 2011"| study == "Johnson et al. 2011")
+soilsubby <- subset.data.frame(alldata, study == "Rau et al. 2011"| study == "Johnson et al. 2011")
 unique(soilsubby$study)
 
 ggplot(soilsubby, aes(x = veg, y = soilC_g_m2, color=study)) + geom_violin()

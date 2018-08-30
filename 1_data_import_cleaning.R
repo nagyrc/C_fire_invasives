@@ -299,8 +299,10 @@ head(Bradley_AGB)
 Bradley_AGB$veg <- ifelse(Bradley_AGB$Site == 'Rye' & Bradley_AGB$burned == 'no', 'salt_desert',
                           ifelse(Bradley_AGB$burned == 'yes','cheatgrass', 'sagebrush'))
 Bradley_AGB$study <- c("Bradley et al. 2006")
-Bradley_AGB$lat <- ifelse(Bradley_AGB$Site == 'Button' , '41.0000000','40.9900000')
-Bradley_AGB$long <- ifelse(Bradley_AGB$Site == 'Button' , '-117.5800000','-117.8600000')
+Bradley_AGB$lat <- ifelse(Bradley_AGB$Site == 'Button' , '41.0000000',
+                           ifelse(Bradley_AGB$Site == 'Rye', '40.5700000', '40.9900000'))
+Bradley_AGB$long <- ifelse(Bradley_AGB$Site == 'Button' , '-117.5800000',
+                            ifelse(Bradley_AGB$Site == 'Rye', '-118.3400000', '-117.8600000'))
 Bradley_AGB$pr_burned <- c("no")
 Bradley_AGB$yr_samp <- c(2004)
 Bradley_AGB$seeded <- c("no")
@@ -535,13 +537,13 @@ Rau_sage$yr_samp <- c(2011)
 Rau_sage$topdepth_cm <- 0
 Rau_sage$bottomdepth_cm <- 90
 Rau_sage$thick <- Rau_sage$bottomdepth_cm - Rau_sage$topdepth_cm
-Rau_sage$Month_sampled <- NULL
+Rau_sage$Month_sampled <- c("unknown")
 
 unique(Rau_sage$Region)
 unique(Rau_sage$Site)
 unique(Rau_sage$Treatment)
 
-Rau_sage
+head(Rau_sage)
 
 #check with Ben...what are the CP and FP treatments???
 #CP and FP have a herbicide applied...don't use these
@@ -622,11 +624,11 @@ bind11 <- rbind.all.columns(bind10, kpRau)
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 #calculating AGBC from AGB using mean cheatgrass %C from Mahood
-#Diamond study had C data not just biomass data
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012',studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
+#Diamond and Bjerregaard studies had C data in addition to biomass data
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
 
-#put in a real number here
+
 meancheatlitter_perC <- 33.667
 studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * meancheatlitter_perC/100
 studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * meancheatlitter_perC/100
@@ -638,40 +640,41 @@ alldata <- rbind.all.columns(bind11, studymeans)
 
 
 
+
+
+
 #bring in fire data
-fire <- as.data.frame(read_csv("uniquelatlong_LYB_no_field.csv"))
+#fire <- as.data.frame(read_csv("uniquelatlong_LYB_no_field.csv"))
 
-alldata$lat <- as.numeric(alldata$lat)
-alldata$long <- as.numeric(alldata$long)
+#alldata$lat <- as.numeric(alldata$lat)
+#alldata$long <- as.numeric(alldata$long)
 
-alldatall <- left_join(alldata, fire, by = c("lat","long"))
+#alldatall <- left_join(alldata, fire, by = c("lat","long"))
 
 
 
 ###
 #making sure all numeric fields are numeric
-str(alldatall)
+str(alldata)
 
-alldatall$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
-alldatall$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
-alldatall$elevation <- as.numeric(alldata$elevation)
-alldatall$cheat_cover <- as.numeric(alldata$cheat_cover)
-
-str(alldatall)
+alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+alldata$elevation <- as.numeric(alldata$elevation)
+alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 
 
 #replace 0 fire with NAs
-unique(alldatall$MCD64LYB)
-alldatall$MCD64LYB <- ifelse(alldatall$MCD64LYB == 0, 1920, alldatall$MCD64LYB)
+#unique(alldatall$MCD64LYB)
+#alldatall$MCD64LYB <- ifelse(alldatall$MCD64LYB == 0, 1920, alldatall$MCD64LYB)
 
-unique(alldatall$MTBS_LYB)
-alldatall$MTBS_LYB <- ifelse(alldatall$MTBS_LYB == 0, 1920, alldatall$MTBS_LYB)
+#unique(alldatall$MTBS_LYB)
+#alldatall$MTBS_LYB <- ifelse(alldatall$MTBS_LYB == 0, 1920, alldatall$MTBS_LYB)
 
-unique(alldatall$BAECV_LYB)
-alldatall$BAECV_LYB <- ifelse(alldatall$BAECV_LYB == 0, 1920, alldatall$BAECV_LYB)
+#unique(alldatall$BAECV_LYB)
+#alldatall$BAECV_LYB <- ifelse(alldatall$BAECV_LYB == 0, 1920, alldatall$BAECV_LYB)
 
 
-write.csv(alldatall, file = "alldatall.csv")
+write.csv(alldata, file = "alldata.csv")
 
 
 

@@ -6,8 +6,8 @@
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
-# Read in alldatall.csv
-alldatall = read_csv("data/alldatall.csv")
+# Read in alldata.csv
+alldata = read_csv("data/alldata.csv")
 
 
 
