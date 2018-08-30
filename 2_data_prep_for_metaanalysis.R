@@ -8,7 +8,7 @@ x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "ras
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 # Read in alldatall.csv
-alldatall = read_csv("data/alldatall.csv")
+alldatall = read_csv("alldatall.csv")
 
 ###
 #automate the studyid csv that we did manually
@@ -27,7 +27,7 @@ unique(studyid$Article_ID)
 #these look great
 
 head(studyid)
-
+  
 
 #creates study_ID variable, creates pool variable, and intersects the US states and MTBS shapefiles with data points
 clean_study <- studyid %>%
@@ -40,15 +40,15 @@ clean_study <- studyid %>%
          # variable = as.factor(variable),
          pool = ifelse(AGBC_g_m2 > 0, "AGB", ifelse(BGBC_g_m2 > 0, "BGB", ifelse(litterC_g_m2 > 0, "litter", "soil"))), 
          Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) %>%
-  dplyr::filter(long != 0 & lat != 0) %>% 
+  #dplyr::filter(long != 0 & lat != 0) %>% 
   sf::st_as_sf(., coords = c("long", "lat"), 
            crs = 4326) %>%
-  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) %>%
-  sf::st_join(., usa_shp) %>%
-  mutate(id = row_number(),
-         study_year = str_sub(study,-4,-1),
-         study_year = ifelse(study_year == 'pub1', 2017, study_year),
-         yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
+  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) #%>%
+  #sf::st_join(., usa_shp) %>%
+  #mutate(id = row_number(),
+         #study_year = str_sub(study,-4,-1),
+         #study_year = ifelse(study_year == 'pub1', 2017, study_year),
+         #yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
 #this doesn't seem to be creating the pool variable...check nested ifelse statements
 
 
