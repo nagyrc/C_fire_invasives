@@ -11,51 +11,48 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 alldata = read_csv("data/alldata.csv")
 
 ###
-#automate the studyid csv that we did manually
-#create Article ID
-studyid <- alldata
-studyid$Article_IDs <- str_sub(studyid$study,1,4)
-unique(studyid$Article_IDs)
-studyid$Article_IDe <- str_sub(studyid$study,-4,-1)
-unique(studyid$Article_IDe)
-studyid$Article_ID <- paste(toupper(studyid$Article_IDs),studyid$Article_IDe)
-studyid$Article_ID <- gsub(" ", "", studyid$Article_ID) 
-studyid$Article_ID <- gsub("MAHOpub1", "MAHO2018a", studyid$Article_ID) 
-studyid$Article_ID <- gsub("MAHOpub2", "MAHO2018b", studyid$Article_ID) 
 
-unique(studyid$Article_ID)
-#these look great
+colnames(alldata)[colnames(alldata) == 'soil%C'] <- 'soilperC'
 
-head(studyid)
-  
+#recalculate thickness- we saw some issues with it in the .csv file
+is.numeric(alldata$topdepth_cm)
+is.numeric(alldata$bottomdepth_cm)
+alldata$thick <- alldata$bottomdepth_cm - alldata$topdepth_cm
 
-#slims dataframe to key variables 
-clean_study <- studyid %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
+#slims dataframe to key variables...still wide format to use with spatial data in script 4 (adding fire data)
+clean_study <- alldata %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","soilperC","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
   mutate(site = as.factor(site),
          veg = as.factor(veg)) %>%
-  #dplyr::filter(long != 0 & lat != 0) %>% 
-  sf::st_as_sf(., coords = c("long", "lat"), 
-           crs = 4326) %>%
-  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) #%>%
-  #mutate(id = row_number(),
-         #study_year = str_sub(study,-4,-1),
-         #study_year = ifelse(study_year == 'pub1', 2017, study_year),
-         #yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
+  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) %>%
+  mutate(id = row_number(),
+         study_year = str_sub(study,-4,-1),
+         study_year = ifelse(study_year == 'pub1', 2017, study_year),
+         yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
 
 
-#creates study_ID, pool, and setup for Bethany's meta-analysis
-meta <- clean_study %>%
-  tidyr::gather(key = variable, value = value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm) %>%
+
+#create Article_ID
+alldata$Article_IDs <- str_sub(alldata$study,1,4)
+unique(alldata$Article_IDs)
+alldata$Article_IDe <- str_sub(alldata$study,-4,-1)
+unique(alldata$Article_IDe)
+alldata$Article_ID <- paste(toupper(alldata$Article_IDs),alldata$Article_IDe)
+alldata$Article_ID <- gsub(" ", "", alldata$Article_ID) 
+alldata$Article_ID <- gsub("MAHOpub1", "MAHO2018a", alldata$Article_ID) 
+alldata$Article_ID <- gsub("MAHOpub2", "MAHO2018b", alldata$Article_ID) 
+
+unique(alldata$Article_ID)
+#these look great
+
+
+#creates study_ID, pool, and setup for Bethany's meta-analysis format (long format)
+studyid <- alldata %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","soilperC","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
+  tidyr::gather(key = variable, value = value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -soilperC, -BD_g_cm3, -Article_ID) %>%
   mutate(variable = as.factor(variable),
          pool = ifelse(AGBC_g_m2 > 0, "AGB", ifelse(BGBC_g_m2 > 0, "BGB", ifelse(litterC_g_m2 > 0, "litter", "soil"))), 
          Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) %>%
-  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) #%>%
-#sf::st_join(., usa_shp) %>%
-#mutate(id = row_number(),
-#study_year = str_sub(study,-4,-1),
-#study_year = ifelse(study_year == 'pub1', 2017, study_year),
-#yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
 #check nested ifelse statements to make sure it is creating pool
 
 
@@ -63,20 +60,10 @@ meta <- clean_study %>%
 
 
 ###
-#move this code to new R script and use new dataframe that has spatial information
-#in this table I'm bringing in here, we manually entered article ID and study ID
-#data ninja-ing for attribute table
-studyid <- as.data.frame(read_csv("alldata_bystudyid.csv"))
-head(studyid)
+#start to gather info for attribute table
+#this could be moved to a different script
 artstud <- unique(studyid[c("Article_ID", "Study_ID")])
-
 write.csv(artstud, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/articlestudyid.csv")
-is.numeric(studyid$topdepth_cm)
-is.numeric(studyid$bottomdepth_cm)
-
-#recalculate thickness; there were some issues with this when we looked at alldata.csv
-studyid$thick <- studyid$bottomdepth_cm - studyid$topdepth_cm
-#this fixed it
 
 
 att1 <- unique(studyid[c("Article_ID", "Study_ID", "veg", "topdepth_cm", "bottomdepth_cm", "BD_estimated","yr_samp", "lat","long")])
