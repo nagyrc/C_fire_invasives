@@ -6,6 +6,7 @@
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
+setwd("data/")
 
 # Use this code to download any data file
 us_shp <- file.path('states_shp', "cb_2016_us_state_20m.shp")
@@ -20,7 +21,7 @@ if (!file.exists(us_shp)) {
   unzip(dest, exdir = file.path('states_shp'))
   # Delete zip file
   unlink(dest)
-  # Check t make sure it worked
+  # Check to make sure it worked
   assert_that(file.exists(us_shp))
 }
 
