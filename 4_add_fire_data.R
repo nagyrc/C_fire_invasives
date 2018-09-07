@@ -8,7 +8,8 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-# Use this code to download any data file
+
+#Download US shapefile
 us_shp <- file.path('states_shp', "cb_2016_us_state_20m.shp")
 if (!file.exists(us_shp)) {
   # The location where the data is housed
@@ -25,22 +26,9 @@ if (!file.exists(us_shp)) {
   assert_that(file.exists(us_shp))
 }
 
-#use this to bring in Short data (if desired)
-fpa_gdb <- file.path(fpa_prefix, "Data", "FPA_FOD_20170508.gdb")
-if (!file.exists(fpa_gdb)) {
-  pg <- read_html("https://www.fs.usda.gov/rds/archive/Product/RDS-2013-0009.4/")
-  fils <- html_nodes(pg, xpath=".//dd[@class='product']//li/a[contains(., 'zip') and contains(., 'GDB')]")
-  dest <- paste0(fpa_prefix, ".zip")
-  walk2(html_attr(fils, 'href'),  html_text(fils),
-        ~GET(sprintf("https:%s", .x), write_disk(dest), progress()))
-  unzip(dest, exdir = fpa_prefix)
-  unlink(dest)
-  assert_that(file.exists(fpa_gdb))
-  system(paste0("aws s3 sync ",
-                raw_prefix, " ",
-                s3_raw_prefix))
-}
 
+###########################
+#MTBS
 #Download the MTBS fire polygons
 mtbs_shp <- file.path('mtbs', 'mtbs_perimeter_data_v2', 'dissolve_mtbs_perims_1984-2015_DD_20170501.shp')
 if (!file.exists(mtbs_shp)) {
@@ -80,6 +68,9 @@ mtbs_test <- mtbs_fire  %>%
 mtbs_clean <- clean_study %>%
   left_join(., as.data.frame(mtbs_test) %>% dplyr::select(-geometry), by = 'id')
 
+
+###########################
+#MODIS
 #bring in MODIS data
 dir <- 'modis_events'
 
@@ -148,3 +139,25 @@ modis_df2 <- modis_df   %>%
   dplyr::select(-key) %>%
   filter(last_burn_year_modis != 0)
 
+
+###########################
+#BAECV
+
+
+
+###########################
+#use this to bring in Short data (if desired)
+fpa_gdb <- file.path(fpa_prefix, "Data", "FPA_FOD_20170508.gdb")
+if (!file.exists(fpa_gdb)) {
+  pg <- read_html("https://www.fs.usda.gov/rds/archive/Product/RDS-2013-0009.4/")
+  fils <- html_nodes(pg, xpath=".//dd[@class='product']//li/a[contains(., 'zip') and contains(., 'GDB')]")
+  dest <- paste0(fpa_prefix, ".zip")
+  walk2(html_attr(fils, 'href'),  html_text(fils),
+        ~GET(sprintf("https:%s", .x), write_disk(dest), progress()))
+  unzip(dest, exdir = fpa_prefix)
+  unlink(dest)
+  assert_that(file.exists(fpa_gdb))
+  system(paste0("aws s3 sync ",
+                raw_prefix, " ",
+                s3_raw_prefix))
+}
