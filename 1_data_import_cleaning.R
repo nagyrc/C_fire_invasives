@@ -613,70 +613,7 @@ bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
 
-
-
-
-
-
-###
-#bring in means
-#setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
-studymeans <- as.data.frame(read_csv("study_means.csv"))
-
-#calculating AGBC from AGB using mean cheatgrass %C from Mahood
-#Diamond and Bjerregaard studies had C data in addition to biomass data
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
-
-
-meancheatlitter_perC <- 33.667
-studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * meancheatlitter_perC/100
-studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * meancheatlitter_perC/100
-
-head(studymeans)
-studymeans
-
-alldata <- rbind.all.columns(bind11, studymeans)
-
-
-
-
-
-
-#bring in fire data
-#fire <- as.data.frame(read_csv("uniquelatlong_LYB_no_field.csv"))
-
-#alldata$lat <- as.numeric(alldata$lat)
-#alldata$long <- as.numeric(alldata$long)
-
-#alldatall <- left_join(alldata, fire, by = c("lat","long"))
-
-
-
-###
-#making sure all numeric fields are numeric
-str(alldata)
-
-alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
-alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
-alldata$elevation <- as.numeric(alldata$elevation)
-alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
-
-
-#replace 0 fire with NAs
-#unique(alldatall$MCD64LYB)
-#alldatall$MCD64LYB <- ifelse(alldatall$MCD64LYB == 0, 1920, alldatall$MCD64LYB)
-
-#unique(alldatall$MTBS_LYB)
-#alldatall$MTBS_LYB <- ifelse(alldatall$MTBS_LYB == 0, 1920, alldatall$MTBS_LYB)
-
-#unique(alldatall$BAECV_LYB)
-#alldatall$BAECV_LYB <- ifelse(alldatall$BAECV_LYB == 0, 1920, alldatall$BAECV_LYB)
-
-
-write.csv(alldata, file = "alldata.csv")
-
-
+write.csv(bind11, file = "bind11.csv")
 
 ###
 #only need to run the code below one time; then turn off
@@ -691,26 +628,3 @@ write.csv(alldata, file = "alldata.csv")
 
 
 
-
-#below not used
-###
-#bring in bulk density spatial data
-#data downloaded from here: https://water.usgs.gov/GIS/metadata/usgswrd/XML/muid.xml#stdorder
-#soil <- raster(paste0("muid.e00"))
-#str(soil)
-#attributes(soil)
-
-#dataonly <- soil@data
-
-#trying to pull out an info table
-#data2 <- soil@data@MUID.LAYER
-#Error: no slot of name "MUID.LAYER" for this object of class ".SingleLayerData"
-
-#crs(soil)
-#+proj=aea +lat_1=0 +lat_2=29.5 +lat_0=45.5 +lon_0=0 +x_0=0 +y_0=-96
-#+datum=NAD27 +units=m +no_defs +ellps=clrk66
-#+nadgrids=@conus,@alaska,@ntv2_0.gsb,@ntv1_can.dat 
-
-#not sure what this is plotting
-#plot(soil[[1]])
-#plot(soil[[]])

@@ -6,13 +6,32 @@
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
-# Read in alldata.csv
-alldata = read_csv("data/alldata.csv")
+
+###############################
+#bring in means
+#setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
+studymeans <- as.data.frame(read_csv("data/study_means.csv"))
+
+#calculating AGBC from AGB using mean cheatgrass %C from Mahood
+#Diamond and Bjerregaard studies had C data in addition to biomass data
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
+
+
+meancheatlitter_perC <- 33.667
+studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * meancheatlitter_perC/100
+studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * meancheatlitter_perC/100
+
+head(studymeans)
+studymeans
 
 
 
 
 
+
+
+#########################
 # Parametric Bootstrap sample
 MeanCheat  = soilsubby2$soilC_mean[2]
 SECheat = soilsubby2$soilC_SE[2]
@@ -69,3 +88,24 @@ Dists = rbind(Dists, Boot2DF)
 ggplot(Dists, aes(x=soilC_g_m2, fill=Type)) +
   geom_density(alpha=.5, position="identity")
 
+
+
+
+
+
+################################
+########################
+# Read in alldata.csv
+bind11 = read_csv("data/bind11.csv")
+alldata <- rbind.all.columns(bind11, studymeans)
+
+#making sure all numeric fields are numeric
+str(alldata)
+
+alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+alldata$elevation <- as.numeric(alldata$elevation)
+alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+
+
+write.csv(alldata, file = "data/alldata.csv")
