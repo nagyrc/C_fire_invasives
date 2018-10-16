@@ -10,7 +10,7 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 ###############################
 #bring in means
 #setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
-studymeans <- as.data.frame(read_csv("data/study_means.csv"))
+studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 #calculating AGBC from AGB using mean cheatgrass %C from Mahood
 #Diamond and Bjerregaard studies had C data in addition to biomass data
@@ -96,7 +96,7 @@ ggplot(Dists, aes(x=soilC_g_m2, fill=Type)) +
 ################################
 ########################
 # Read in alldata.csv
-bind11 = read_csv("data/bind11.csv")
+bind11 = read_csv("bind11.csv")
 alldata <- rbind.all.columns(bind11, studymeans)
 
 #making sure all numeric fields are numeric
@@ -108,4 +108,4 @@ alldata$elevation <- as.numeric(alldata$elevation)
 alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 
 
-write.csv(alldata, file = "data/alldata.csv")
+write.csv(alldata, file = "alldata.csv")
