@@ -54,5 +54,3 @@ studyid <- alldata %>%
 #check nested ifelse statements to make sure it is creating pool
 
 write.csv(studyid, file = "studyid.csv")
-
-
