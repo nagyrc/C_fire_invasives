@@ -609,7 +609,7 @@ Peschel2&veg <- 'sagebrush'
 
 
 ###
-#make all conversions from soil %C to content
+#make all conversions from soil %C to content with mean BD
 
 
 #make all conversions from biomass g/m2 to biomass carbon gC/m2
