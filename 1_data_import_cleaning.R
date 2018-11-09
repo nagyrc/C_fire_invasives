@@ -604,6 +604,17 @@ colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'biomass_g_m2'
 Peschel2$study <- 'Peschel et al. 2015'
 Peschel2&veg <- 'sagebrush'
 
+#convert Peschel biomass into biomass carbon by using mean value for sagebrush
+
+
+
+###
+#make all conversions from soil %C to content
+
+
+#make all conversions from biomass g/m2 to biomass carbon gC/m2
+
+
 ###
 rbind.all.columns <- function(x, y) {
   
