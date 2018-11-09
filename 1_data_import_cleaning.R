@@ -7,6 +7,7 @@ library(tidyverse)
 library(stringr)
 library(sf)
 library(raster)
+library(doBy)
 
 setwd("data/")
 
@@ -581,10 +582,27 @@ head(kpRau)
 
 
 
+#Peschel data
+Peschel <- as.data.frame(read_csv("Peschel.csv"))
+head(Peschel)
 
+Peschel2 <- summaryBy(biomass_g_m2 ~ Site + Treatment, data = Peschel, FUN = sum)
+head(Peschel2)
 
+unique(Peschel2$Site)
 
+#add lat, long, study, veg
+Peschel2$lat <- ifelse (Peschel2$Site == 'Gros Venture', '43.56944444',
+                    ifelse (Peschel2$Site == 'Lower Hoback','43.29583333',
+                           ifelse (Peschel2$Site == 'Upper Hoback', '43.30000000', '43.51444444')))
 
+Peschel2$long <- ifelse (Peschel2$Site == 'Gros Venture', '-110.31111111',
+                        ifelse (Peschel2$Site == 'Lower Hoback','-110.65750000',
+                                ifelse (Peschel2$Site == 'Upper Hoback', '-110.66055556', '-110.71166667')))
+
+colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'biomass_g_m2'
+Peschel2$study <- 'Peschel et al. 2015'
+Peschel2&veg <- 'sagebrush'
 
 ###
 rbind.all.columns <- function(x, y) {
