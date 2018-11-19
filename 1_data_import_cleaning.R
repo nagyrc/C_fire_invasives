@@ -601,10 +601,23 @@ Peschel2$long <- ifelse (Peschel2$Site == 'Gros Venture', '-110.31111111',
                                 ifelse (Peschel2$Site == 'Upper Hoback', '-110.66055556', '-110.71166667')))
 
 colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'biomass_g_m2'
+colnames(Peschel2)[colnames(Peschel2) == 'Site'] <- 'site'
+colnames(Peschel2)[colnames(Peschel2) == 'Treatment'] <- 'treatment'
 Peschel2$study <- 'Peschel et al. 2015'
-Peschel2&veg <- 'sagebrush'
+Peschel2$veg <- 'sagebrush'
+Peschel2$Month_sampled <- 'July'
+Peschel2$yr_samp <- c(2013)
 
 #convert Peschel biomass into biomass carbon by using mean value for sagebrush
+
+kpPeschel <- Peschel2[,c("site", "treatment", "biomass_g_m2", "lat", "long", "study", "veg", "Month_sampled", "yr_samp")]
+
+
+
+
+#Norton et al. 2012 data
+Norton2012 <- as.data.frame(read_csv("Norton_2012.csv"))
+head(Norton2012)
 
 
 
@@ -641,6 +654,7 @@ bind8 <- rbind.all.columns(bind7, kpNorton2008)
 bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
+bind12 <-rbind.all.columns(bind11, kpPeschel)
 
 write.csv(bind11, file = "bind11.csv")
 
