@@ -649,10 +649,33 @@ Norton2012$veg <- 'sagecheat'
 
 Norton2012$lat <- 40.33333333
 Norton2012$long <- -112.56666667
+Norton2012$study <- 'Norton et al. 2012'
 
 head(Norton2012)
-kpNorton2012 <- Norton2012[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long")]
+kpNorton2012 <- Norton2012[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long","study")]
 
+
+
+
+#Witwicki data
+Witwicki_soil <- as.data.frame(read_csv("Witwicki_soil.csv"))
+head(Witwicki_soil)
+
+#remove the treatments where C and N were added, or keep only the control treatment
+Witwicki_soil2 <- subset.data.frame(Witwicki_soil, tx == 'X')
+unique(Witwicki_soil2$tx)
+
+is.character(Witwicki_soil2$date)
+
+Witwicki_soil2$month <- sapply(strsplit(as.character(Witwicki_soil2$date), ".", fixed = TRUE), "[", 1)
+head(Witwicki_soil2)
+unique(Witwicki_soil2$month)
+
+Witwicki_soil2$Month_sampled <- ifelse (Witwicki_soil2$month == '5', 'May',
+                                    ifelse (Witwicki_soil2$month == '11','November',
+                                            ifelse (Witwicki_soil2$month == '10','October','unknown')))
+
+Witwicki_soil2$yr_samp <- c(2005)
 
 
 
