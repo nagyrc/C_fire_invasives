@@ -704,9 +704,13 @@ unique(Witwicki_veg2$treatment)
 colnames(Witwicki_veg2)[colnames(Witwicki_veg2) == 'Site'] <- 'site'
 head(Witwicki_veg2)
 
+summaryBy(biomass_gC_m2~plant_type, data = Witwicki_veg2)
 
 
 
+
+
+rm(Witwicki_veg)
 
 ###
 #make all conversions from soil %C to content with mean BD
