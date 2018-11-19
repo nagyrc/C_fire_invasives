@@ -657,7 +657,7 @@ kpNorton2012 <- Norton2012[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "
 
 
 
-#Witwicki data
+#Witwicki soils data
 Witwicki_soil <- as.data.frame(read_csv("Witwicki_soil.csv"))
 head(Witwicki_soil)
 
@@ -689,6 +689,20 @@ colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'percC'] <- 'soil%C'
 Witwicki_soil2$BD_estimated <- c("no")
 
 colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'bulk_soil_TC_g_m2'] <- 'soilC_g_m2'
+
+
+
+
+#Witwicki veg data
+Witwicki_veg <- as.data.frame(read_csv("Witwicki_veg.csv"))
+head(Witwicki_veg)
+
+#remove the treatments where C and N were added, or keep only the control treatment
+Witwicki_veg2 <- subset.data.frame(Witwicki_veg, treatment == 'X')
+unique(Witwicki_veg2$treatment)
+
+colnames(Witwicki_veg2)[colnames(Witwicki_veg2) == 'Site'] <- 'site'
+head(Witwicki_veg2)
 
 
 
