@@ -619,6 +619,41 @@ kpPeschel <- Peschel2[,c("site", "treatment", "biomass_g_m2", "lat", "long", "st
 Norton2012 <- as.data.frame(read_csv("Norton_2012.csv"))
 head(Norton2012)
 
+colnames(Norton2012)[colnames(Norton2012) == 'Year'] <- 'yr_samp'
+Norton2012$month <- str_sub(Norton2012$Date, 1, 1)
+unique(Norton2012$month)
+
+Norton2012$Month_sampled <- ifelse (Norton2012$month == '3', 'March',
+                                    ifelse (Norton2012$month == '4','April',
+                                            ifelse (Norton2012$month == '5', 'May', 
+                                                    ifelse (Norton2012$month == '6', 'June',
+                                                            ifelse (Norton2012$month == '7', 'July',
+                                                                    ifelse (Norton2012$month == '8','August',
+                                                                            ifelse (Norton2012$month == '9','September',
+                                                                                    ifelse (Norton2012$month == '1','January','unknown'))))))))
+
+Norton2012$BD_estimated <- c("yes")
+
+Norton2012$topdepth_cm <- 0
+Norton2012$bottomdepth_cm <- 10
+Norton2012$thick <- Norton2012$bottomdepth_cm - Norton2012$topdepth_cm
+Norton2012$percC <- Norton2012$ug_C_mg / 10
+colnames(Norton2012)[colnames(Norton2012) == 'percC'] <- 'soil%C'
+
+unique(Norton2012$spec)
+
+#check veg with Bethany and Emily
+Norton2012$veg <- 'sagecheat'
+
+#need average BD for Norton 2012
+
+Norton2012$lat <- 40.33333333
+Norton2012$long <- -112.56666667
+
+head(Norton2012)
+kpNorton2012 <- Norton2012[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long")]
+
+
 
 
 ###
@@ -654,9 +689,10 @@ bind8 <- rbind.all.columns(bind7, kpNorton2008)
 bind9 <- rbind.all.columns(bind8, kpMahood1)
 bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
-bind12 <-rbind.all.columns(bind11, kpPeschel)
+bind12 <- rbind.all.columns(bind11, kpPeschel)
+bind13 <- rbind.all.columns(bind12, kpNorton2012)
 
-write.csv(bind11, file = "bind11.csv")
+write.csv(bind13, file = "bind13.csv")
 
 ###
 #only need to run the code below one time; then turn off
