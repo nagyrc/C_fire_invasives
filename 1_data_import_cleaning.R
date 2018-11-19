@@ -676,6 +676,21 @@ Witwicki_soil2$Month_sampled <- ifelse (Witwicki_soil2$month == '5', 'May',
                                             ifelse (Witwicki_soil2$month == '10','October','unknown')))
 
 Witwicki_soil2$yr_samp <- c(2005)
+Witwicki_soil2$topdepth_cm <- 0
+Witwicki_soil2$bottomdepth_cm <- 10
+Witwicki_soil2$thick <- Witwicki_soil2$bottomdepth_cm - Witwicki_soil2$topdepth_cm
+
+Witwicki_soil2$percC <- Witwicki_soil2$bulk_soil_TC_mg_kg / 10000
+colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'percC'] <- 'soil%C'
+
+#Witwicki_soil2$check <- Witwicki_soil2$`soil%C`*Witwicki_soil2$plot_bulk_density_g_L*Witwicki_soil2$thick*100
+#super close, within a few grams, so use their calculation for C content
+
+Witwicki_soil2$BD_estimated <- c("no")
+
+colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'bulk_soil_TC_g_m2'] <- 'soilC_g_m2'
+
+
 
 
 
