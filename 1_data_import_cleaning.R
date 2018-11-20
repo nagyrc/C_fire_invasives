@@ -618,6 +618,7 @@ kpPeschel <- Peschel2[,c("site", "treatment", "biomass_g_m2", "lat", "long", "st
 #Norton et al. 2012 data
 Norton2012 <- as.data.frame(read_csv("Norton_2012.csv"))
 head(Norton2012)
+tail(Norton2012)
 
 colnames(Norton2012)[colnames(Norton2012) == 'Year'] <- 'yr_samp'
 Norton2012$month <- str_sub(Norton2012$Date, 1, 1)
@@ -643,16 +644,27 @@ colnames(Norton2012)[colnames(Norton2012) == 'percC'] <- 'soil%C'
 unique(Norton2012$spec)
 
 #check veg with Bethany and Emily
-Norton2012$veg <- 'sagecheat'
-
-#need average BD for Norton 2012
+Norton2012$veg <- ifelse (Norton2012$spec == 'Br', 'cheatgrass', 'sagebrush')
 
 Norton2012$lat <- 40.33333333
 Norton2012$long <- -112.56666667
 Norton2012$study <- 'Norton et al. 2012'
 
-head(Norton2012)
-kpNorton2012 <- Norton2012[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long","study")]
+canopy <- subset.data.frame(Norton2012, spec == 'Sa.B')
+inter <- subset.data.frame(Norton2012, spec == 'Sa.I')
+cheat <- subset.data.frame(Norton2012, spec == 'Br')
+
+sage <- canopy
+sage$`soil%C` <- (canopy$`soil%C`*0.38 + inter$`soil%C`*0.62)
+sage$ug_C_mg <- (canopy$ug_C_mg*0.38 + inter$ug_C_mg*0.62)
+sage$spec <- c("Sa")
+
+Norton2012merge <- rbind (sage, cheat)
+
+#need average BD for Norton 2012
+
+head(Norton2012merge)
+kpNorton2012 <- Norton2012merge[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long","study")]
 
 
 
@@ -707,7 +719,7 @@ head(Witwicki_veg2)
 summaryBy(biomass_gC_m2~plant_type, data = Witwicki_veg2)
 #these numbers are very low; especially for sagebrush; the percent C looks reasonable, low numbers are coming from biomass numbers
 
-
+unique(Witwicki_veg2$cell)
 
 
 
