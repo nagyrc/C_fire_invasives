@@ -654,6 +654,7 @@ canopy <- subset.data.frame(Norton2012, spec == 'Sa.B')
 inter <- subset.data.frame(Norton2012, spec == 'Sa.I')
 cheat <- subset.data.frame(Norton2012, spec == 'Br')
 
+#need to make sure they are ordered correctly first
 sage <- canopy
 sage$`soil%C` <- (canopy$`soil%C`*0.38 + inter$`soil%C`*0.62)
 sage$ug_C_mg <- (canopy$ug_C_mg*0.38 + inter$ug_C_mg*0.62)
