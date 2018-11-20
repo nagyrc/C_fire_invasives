@@ -705,7 +705,7 @@ colnames(Witwicki_veg2)[colnames(Witwicki_veg2) == 'Site'] <- 'site'
 head(Witwicki_veg2)
 
 summaryBy(biomass_gC_m2~plant_type, data = Witwicki_veg2)
-
+#these numbers are very low; especially for sagebrush; the percent C looks reasonable, low numbers are coming from biomass numbers
 
 
 
