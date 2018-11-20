@@ -710,7 +710,11 @@ summaryBy(biomass_gC_m2~plant_type, data = Witwicki_veg2)
 
 
 
-rm(Witwicki_veg)
+
+#Anderson data
+
+
+
 
 ###
 #make all conversions from soil %C to content with mean BD
