@@ -725,7 +725,18 @@ unique(Witwicki_veg2$cell)
 
 
 #Anderson data
+Anderson_bio <- as.data.frame(read_csv("Anderson_biomass.csv"))
+Anderson_ED <- as.data.frame(read_csv("Anderson_ED.csv"))
 
+head(Anderson_bio)
+head(Anderson_ED)
+
+Anderson_bio$CellName <- paste0(Anderson_bio$CellType,Anderson_bio$CellNum)
+
+Anderson <- left_join (Anderson_bio, Anderson_ED, by = "CellName")
+head(Anderson)
+
+Anderson_sub <- subset.data.frame(Anderson, Treatments_No_Grazing == 'Control')
 
 
 
