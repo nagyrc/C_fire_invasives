@@ -8,6 +8,7 @@ library(stringr)
 library(sf)
 library(raster)
 library(doBy)
+library(dplyr)
 
 setwd("data/")
 
@@ -731,16 +732,57 @@ Anderson_ED <- as.data.frame(read_csv("Anderson_ED.csv"))
 head(Anderson_bio)
 head(Anderson_ED)
 
+#create CellName to match with other dataset
 Anderson_bio$CellName <- paste0(Anderson_bio$CellType,Anderson_bio$CellNum)
 
+#join biomass with experimental design data
 Anderson <- left_join (Anderson_bio, Anderson_ED, by = "CellName")
 head(Anderson)
 
+#subset to only the control treatment
 Anderson_sub <- subset.data.frame(Anderson, Treatments_No_Grazing == 'Control')
 
+#calculate total biomass of shrubs + herbs
+Anderson_sub$biomass_g_m2 <- Anderson_sub$gHerb + Anderson_sub$gDShrb + Anderson_sub$gLShrb
 
+Anderson_sub$yr_samp <- c(2013)
+ 
+
+#bring in species occupancy data
+Anderson_occ <- as.data.frame(read_csv("Anderson_occ.csv"))
+head(Anderson_occ)
+
+#subset to only cheatgrass and sagebrush occupancy
+occ <- Anderson_occ[,c("PointID","CellName","Year","ARTR2_occ","BRTE_occ")]
+
+occ
+unique(occ$ARTR2_occ)
+unique(occ$BRTE_occ)
+
+#join occupancy data to biomass and experimental design
+And2 <- left_join(Anderson_sub, occ, by = c("PointID", "CellName","Year"))
+head(And2)
+
+#select columns for keeping
+And3 <- subset(And2, select = c("PtName", "PointID","Year","CellNum","PtNum","CellType","gHerb","gDShrb","gLShrb","CellName","BlockName","biomass_g_m2","yr_samp","ARTR2_occ","BRTE_occ"))
+
+#create veg category by presence/absence of cheatgrass and sagebrush 
+And3$veg <- ifelse (And3$ARTR2_occ == 1 & And3$BRTE_occ == 0, 'sagebrush',
+                    ifelse (And3$ARTR2_occ == 1 & And3$BRTE_occ == 1,'sagecheat',
+                            ifelse (And3$ARTR2_occ == 0 & And3$BRTE_occ == 1, 'cheatgrass', 'other')))
+
+#subset to only blocks that had sagebrush and/or cheatgrass
+And4 <- subset.data.frame(And3, veg == 'cheatgrass' | veg == 'sagecheat' | veg == 'sagebrush')
+head(And4)
+
+And4$veg
 
 ###
+
+
+
+
+
 #make all conversions from soil %C to content with mean BD
 
 
