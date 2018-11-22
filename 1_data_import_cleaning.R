@@ -111,6 +111,8 @@ colnames(Weber)[colnames(Weber) == '% C'] <- 'soil%C'
 colnames(Weber)[colnames(Weber) == 'Sample'] <- 'sample'
 
 Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
+
+#apply mean BD to calculate soil carbon content
 #max soil depth is 8 cm so use mean for 1-10 cm
 Weber$BD_g_cm3 <- 1.417
 Weber$soilC_g_m2 <- Weber$BD_g_cm3*Weber$`soil%C`*Weber$thick*100
@@ -164,6 +166,7 @@ Blank$thick <- Blank$bottomdepth_cm - Blank$topdepth_cm
 Blank$pr_burned <- c("no")
 Blank$seeded <- c("no")
 
+#apply mean BD to calculate soil carbon content
 Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.417, 1.35)
 Blank$soilC_g_m2 <- Blank$BD_g_cm3*Blank$`soil%C`*Blank$thick*100
 
@@ -173,7 +176,7 @@ head(kpBlank)
 
 
 ###
-#Norton data# need to append burn info for 7 sites
+#Norton data
 Nortonpre <- as.data.frame(read_csv("Norton.csv"))
 
 head(Nortonpre)
@@ -208,7 +211,7 @@ head(Norton)
 kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","soil%C","soilC_g_m2","BD_estimated","lat","long","study","veg", "Month_sampled", "yr_samp")]
 head(kpNorton)
 
-Norton$check <- Norton$`soil%C` * Norton$thick * Norton$BD_g_cm3 * 100
+#Norton$check <- Norton$`soil%C` * Norton$thick * Norton$BD_g_cm3 * 100
 Norton
 
 kpNorton$pr_burned <- c("no")
@@ -330,6 +333,7 @@ colnames(Bradley_soil)[colnames(Bradley_soil) == 'Sample_Name'] <- 'sample'
 colnames(Bradley_soil)[colnames(Bradley_soil) == 'Top Depth'] <- 'topdepth_cm'
 colnames(Bradley_soil)[colnames(Bradley_soil) == 'Bottom Depth'] <- 'bottomdepth_cm'
 
+#apply mean BD to calculate soil carbon content
 Bradley_soil$BD_g_cm3 <- 1.417
 Bradley_soil$soilC_g_m2 <- Bradley_soil$BD_g_cm3 * Bradley_soil$`soil%C` * Bradley_soil$thick * 100
 
@@ -345,9 +349,7 @@ head(kpBradleyveg)
 
 
 ###
-#Norton et al. 2008 data# need burn info for 1 site
-#lat = 42.70777778
-#long = -108.60583333
+#Norton et al. 2008 data
 Norton_2008 <- as.data.frame(read_csv("Norton_2008.csv"))
 head(Norton_2008)
 
@@ -373,6 +375,7 @@ colnames(Norton_2008c)[colnames(Norton_2008c) == 'life form'] <- 'life_form'
 
 head(Norton_2008c)
 
+#apply mean BD to calculate soil carbon content
 Norton_2008c$BD_g_cm3 <- 1.417
 Norton_2008c$soilC_g_m2 <- Norton_2008c$BD_g_cm3 * Norton_2008c$`soil%C` * Norton_2008c$thick * 100
 
@@ -384,7 +387,6 @@ head(kpNorton2008)
 
 ###
 #Mahood data
-#need burn info from lat/longs
 #need info on veg categories and burned/unburned and bottom depth sampled
 #make sure Jones data is not repeated from publication
 Mahood1 <- as.data.frame(read_csv("Mahood1.csv"))
@@ -398,7 +400,7 @@ Mahood1ll <- left_join(Mahood1, Mahoodll, by = "plot")
 
 head(Mahood1ll)
 #decide on threshold for "cheatgrass dominance"
-#use mean of this data for cheatgrass %C?
+#use mean of this data for cheatgrass %C; see below
 summary(Mahood1ll$cheatgrass_cover)
 #min cheat % cover = 0.333; max cheat % cover = 57.22
 
@@ -434,8 +436,7 @@ head(kpMahood1)
 
 
 
-
-#need burned/unburned category here
+#Mahood2
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
 
 Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
@@ -485,27 +486,6 @@ head(kpMahood2)
 
 str(kpMahood2)
 
-
-###
-#make cheatgrass %C an object to use later
-cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
-cheat_percC2 <- Mahood2$Bromus_TC_pct
-meancheat_percC1 <- mean(cheat_percC1, na.rm = TRUE)
-#42.6007
-meancheat_percC2 <- mean(cheat_percC2, na.rm = TRUE)
-#42.6645
-
-cheat_percC <- c(cheat_percC1,cheat_percC2)
-meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
-#42.6447
-###
-
-
-
-###
-#apply mean %C 
-#kpDavies$AGBC_g_m2 <- kpDavies$biomass_g_m2 * meancheat_percC / 100
-###
 
 
 
@@ -609,8 +589,6 @@ Peschel2$veg <- 'sagebrush'
 Peschel2$Month_sampled <- 'July'
 Peschel2$yr_samp <- c(2013)
 
-#convert Peschel biomass into biomass carbon by using mean value for sagebrush
-
 kpPeschel <- Peschel2[,c("site", "treatment", "biomass_g_m2", "lat", "long", "study", "veg", "Month_sampled", "yr_samp")]
 
 
@@ -703,8 +681,8 @@ colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'percC'] <- 'soil%C'
 Witwicki_soil2$BD_estimated <- c("no")
 
 colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'bulk_soil_TC_g_m2'] <- 'soilC_g_m2'
-
-
+colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'tx'] <- 'treatment'
+colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'type'] <- 'plant_type'
 
 
 #Witwicki veg data
@@ -724,6 +702,13 @@ summaryBy(biomass_gC_m2~plant_type, data = Witwicki_veg2)
 unique(Witwicki_veg2$cell)
 
 
+#join Witwicki soil and veg data?
+head(Witwicki_soil2)
+head(Witwicki_veg2)
+
+#make final dataset here
+kpWitwicki <- 
+
 
 #Anderson data
 Anderson_bio <- as.data.frame(read_csv("Anderson_biomass.csv"))
@@ -742,12 +727,12 @@ head(Anderson)
 #subset to only the control treatment
 Anderson_sub <- subset.data.frame(Anderson, Treatments_No_Grazing == 'Control')
 
-#calculate total biomass of shrubs + herbs
+#calculate total biomass of shrubs + herbs; veg was clipped in 1 m2 subplots so the g here are g/m2
 Anderson_sub$biomass_g_m2 <- Anderson_sub$gHerb + Anderson_sub$gDShrb + Anderson_sub$gLShrb
 
 Anderson_sub$yr_samp <- c(2013)
  
-
+Anderson_sub$gDShrb
 #bring in species occupancy data
 Anderson_occ <- as.data.frame(read_csv("Anderson_occ.csv"))
 head(Anderson_occ)
@@ -759,8 +744,15 @@ occ
 unique(occ$ARTR2_occ)
 unique(occ$BRTE_occ)
 
+check3 <- subset.data.frame(occ, ARTR2_occ == 1)
+check3b <- subset.data.frame(occ, BRTE_occ == 1)
+#only cheatgrass left in control treatments
+
+head(Anderson_sub)
+head(occ)
+
 #join occupancy data to biomass and experimental design
-And2 <- left_join(Anderson_sub, occ, by = c("PointID", "CellName","Year"))
+And2 <- inner_join(Anderson_sub, occ, by = c("PointID", "CellName","Year"))
 head(And2)
 
 #select columns for keeping
@@ -776,20 +768,49 @@ And4 <- subset.data.frame(And3, veg == 'cheatgrass' | veg == 'sagecheat' | veg =
 head(And4)
 
 And4$veg
+#cheatgrass only; no sage samples;need to apply cheatgrass % C to biomass data
 
+And4$Month_sampled <- "May"
+
+#need to remove columns here
+kpAnderson <- And4
 ###
 
 
 
 
 
-#make all conversions from soil %C to content with mean BD
 
-
+###########################################
 #make all conversions from biomass g/m2 to biomass carbon gC/m2
 
+#make cheatgrass %C an object to use later
+cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
+cheat_percC2 <- Mahood2$Bromus_TC_pct
+meancheat_percC1 <- mean(cheat_percC1, na.rm = TRUE)
+#42.6007
+meancheat_percC2 <- mean(cheat_percC2, na.rm = TRUE)
+#42.6645
 
+cheat_percC <- c(cheat_percC1,cheat_percC2)
+meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
+#42.6447
 ###
+
+#put in real numbers here
+#sage % C = ______
+#salt desert % C = _____
+sagepercC <- 1
+saltpercC <- 1
+
+#convert biomass into biomass carbon by using mean values
+kpPeschel$AGBC_g_m2 <- kpPeschel$biomass_g_m2*sagepercC
+kpAnderson$AGBC_g_m2 <- kpAnderson$biomass_g_m2*meancheat_percC
+###########################################
+
+
+
+###########################################
 rbind.all.columns <- function(x, y) {
   
   x.diff <- setdiff(colnames(x), colnames(y))
@@ -817,10 +838,12 @@ bind10 <- rbind.all.columns(bind9, kpMahood2)
 bind11 <- rbind.all.columns(bind10, kpRau)
 bind12 <- rbind.all.columns(bind11, kpPeschel)
 bind13 <- rbind.all.columns(bind12, kpNorton2012)
+bind14 <- rbind.all.columns(bind13, kpWitwicki)
+bind15 <- rbind.all.columns(bind14, kpAnderson)
 
-write.csv(bind13, file = "bind13.csv")
+write.csv(bind13, file = "bind15.csv")
 
-###
+###########################################
 #only need to run the code below one time; then turn off
 #get unique lat/longs for Emily to extract burn data
 #unique(df[c("yad", "per")])
@@ -830,6 +853,37 @@ write.csv(bind13, file = "bind13.csv")
 
 
 
+#bring in means
+#setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
+studymeans <- as.data.frame(read_csv("study_means.csv"))
 
+#calculating AGBC from AGB using mean cheatgrass %C from Mahood
+#Diamond and Bjerregaard studies had C data in addition to biomass data
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
+
+#update these numbers below now that more studies have been added
+meancheatlitter_perC <- 33.667
+studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * meancheatlitter_perC/100
+studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * meancheatlitter_perC/100
+
+head(studymeans)
+studymeans
+
+
+bind15 = read_csv("bind15.csv")
+alldata <- rbind.all.columns(bind11, studymeans)
+
+
+#making sure all numeric fields are numeric
+str(alldata)
+
+alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+alldata$elevation <- as.numeric(alldata$elevation)
+alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+
+
+write.csv(alldata, file = "alldata.csv")
 
 
