@@ -590,7 +590,7 @@ Peschel2$Month_sampled <- 'July'
 Peschel2$yr_samp <- c(2013)
 
 kpPeschel <- Peschel2[,c("site", "treatment", "biomass_g_m2", "lat", "long", "study", "veg", "Month_sampled", "yr_samp")]
-
+head(kpPeschel)
 
 
 
@@ -716,12 +716,12 @@ And4$veg
 And4$Month_sampled <- "May"
 
 #need to remove columns here
-kpAnderson <- And4[,c("PtName", "Point_ID", "CellNum", "PtNum", "CellName", "BlockName", "biomass_g_m2", "yr_samp", "veg", "Month_sampled")]
+kpAnderson <- And4[,c("PtName", "PointID", "CellNum", "PtNum", "CellName", "BlockName", "biomass_g_m2", "yr_samp", "veg", "Month_sampled")]
 kpAnderson$study <- 'Anderson et al. 2018'
 kpAnderson$lat <- 43.28333333
 kpAnderson$long <- -116.20000000
 
-###
+head(kpAnderson)
 
 
 
@@ -778,19 +778,17 @@ bind1 <- rbind.all.columns(kpJones, kpWeber)
 bind2 <- rbind.all.columns(bind1, kpBlank)
 bind3 <- rbind.all.columns(bind2, kpNorton)
 bind4 <- rbind.all.columns(bind3, kpStark)
-#bind5 <- rbind.all.columns(bind4, kpDavies)
-bind6 <- rbind.all.columns(bind4, kpBradleysoil)
-bind7 <- rbind.all.columns(bind6, kpBradleyveg)
-bind8 <- rbind.all.columns(bind7, kpNorton2008)
-bind9 <- rbind.all.columns(bind8, kpMahood1)
-bind10 <- rbind.all.columns(bind9, kpMahood2)
-bind11 <- rbind.all.columns(bind10, kpRau)
-bind12 <- rbind.all.columns(bind11, kpPeschel)
-bind13 <- rbind.all.columns(bind12, kpNorton2012)
-bind14 <- rbind.all.columns(bind13, kpWitwicki)
-bind15 <- rbind.all.columns(bind14, kpAnderson)
+bind5 <- rbind.all.columns(bind4, kpBradleysoil)
+bind6 <- rbind.all.columns(bind5, kpBradleyveg)
+bind7 <- rbind.all.columns(bind6, kpNorton2008)
+bind8 <- rbind.all.columns(bind7, kpMahood1)
+bind9 <- rbind.all.columns(bind8, kpMahood2)
+bind10 <- rbind.all.columns(bind9, kpRau)
+bind11 <- rbind.all.columns(bind10, kpPeschel)
+bind12 <- rbind.all.columns(bind11, kpNorton2012)
+bind13 <- rbind.all.columns(bind12, kpAnderson)
 
-write.csv(bind13, file = "bind15.csv")
+write.csv(bind13, file = "bind13.csv")
 
 ###########################################
 #only need to run the code below one time; then turn off
@@ -823,8 +821,8 @@ head(studymeans)
 studymeans
 
 
-bind15 = read_csv("bind15.csv")
-alldata <- rbind.all.columns(bind11, studymeans)
+bind13 = read_csv("bind13.csv")
+alldata <- rbind.all.columns(bind13, studymeans)
 
 
 #making sure all numeric fields are numeric
