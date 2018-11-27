@@ -620,6 +620,7 @@ Norton2012$thick <- Norton2012$bottomdepth_cm - Norton2012$topdepth_cm
 Norton2012$percC <- Norton2012$ug_C_mg / 10
 colnames(Norton2012)[colnames(Norton2012) == 'percC'] <- 'soil%C'
 
+
 unique(Norton2012$spec)
 
 #check veg with Bethany and Emily
@@ -641,10 +642,12 @@ sage$spec <- c("Sa")
 
 Norton2012merge <- rbind (sage, cheat)
 
-#need average BD for Norton 2012
+#apply mean BD for 0-10 cm 
+Norton2012merge$BD_g_cm3 <- 1.417
+Norton2012merge$soilC_g_m2 <- Norton2012merge$BD_g_cm3*Norton2012merge$`soil%C`*Norton2012merge$thick*100
 
 head(Norton2012merge)
-kpNorton2012 <- Norton2012merge[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long","study")]
+kpNorton2012 <- Norton2012merge[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long","study", "BD_g_cm3", "soilC_g_m2")]
 
 
 
@@ -744,8 +747,8 @@ occ
 unique(occ$ARTR2_occ)
 unique(occ$BRTE_occ)
 
-check3 <- subset.data.frame(occ, ARTR2_occ == 1)
-check3b <- subset.data.frame(occ, BRTE_occ == 1)
+#check3 <- subset.data.frame(occ, ARTR2_occ == 1)
+#check3b <- subset.data.frame(occ, BRTE_occ == 1)
 #only cheatgrass left in control treatments
 
 head(Anderson_sub)
@@ -773,7 +776,11 @@ And4$veg
 And4$Month_sampled <- "May"
 
 #need to remove columns here
-kpAnderson <- And4
+kpAnderson <- And4[,c("PtName", "Point_ID", "CellNum", "PtNum", "CellName", "BlockName", "biomass_g_m2", "yr_samp", "veg", "Month_sampled")]
+kpAnderson$study <- 'Anderson et al. 2018'
+kpAnderson$lat <- 43.28333333
+kpAnderson$long <- -116.20000000
+
 ###
 
 
@@ -782,7 +789,7 @@ kpAnderson <- And4
 
 
 ###########################################
-#make all conversions from biomass g/m2 to biomass carbon gC/m2
+#make all conversions from aboveground biomass g/m2 to aboveground biomass carbon gC/m2
 
 #make cheatgrass %C an object to use later
 cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
@@ -792,23 +799,25 @@ meancheat_percC1 <- mean(cheat_percC1, na.rm = TRUE)
 meancheat_percC2 <- mean(cheat_percC2, na.rm = TRUE)
 #42.6645
 
-cheat_percC <- c(cheat_percC1,cheat_percC2)
-meancheat_percC <- mean(cheat_percC, na.rm = TRUE)
+meancheat_percC <- c(cheat_percC1,cheat_percC2)
+cheat_percC <- mean(meancheat_percC, na.rm = TRUE)
 #42.6447
 ###
 
-#put in real numbers here
-#sage % C = ______
-#salt desert % C = _____
-sagepercC <- 1
-saltpercC <- 1
+sagepercC <- 0.45 #sage AGB % C = 45; from West 1972 Table 8
+saltpercC <- 0.454 #salt desert AGB % C = 45.5; from Bjerregaard et al. 1984
 
-#convert biomass into biomass carbon by using mean values
+#convert aboveground biomass into AGB C by using mean values
 kpPeschel$AGBC_g_m2 <- kpPeschel$biomass_g_m2*sagepercC
-kpAnderson$AGBC_g_m2 <- kpAnderson$biomass_g_m2*meancheat_percC
+kpAnderson$AGBC_g_m2 <- kpAnderson$biomass_g_m2*cheat_percC
+
+
+
 ###########################################
-
-
+#Litter conversion factors (if needed)
+sagelitterpercC <- 0.38 #from West 1972 Table 8
+cheatlitterpercC <- 0.33667 #from Mahood2
+saltlitterpercC <- 0.435 # from Bjerregaard et al. 1984 
 
 ###########################################
 rbind.all.columns <- function(x, y) {
@@ -857,15 +866,18 @@ write.csv(bind13, file = "bind15.csv")
 #setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
+#need to work on this section of code to do the following...
+#if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
+
 #calculating AGBC from AGB using mean cheatgrass %C from Mahood
 #Diamond and Bjerregaard studies had C data in addition to biomass data
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * meancheat_percC / 100)
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * meancheat_percC / 100)
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * cheat_percC / 100)
 
 #update these numbers below now that more studies have been added
-meancheatlitter_perC <- 33.667
-studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * meancheatlitter_perC/100
-studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * meancheatlitter_perC/100
+studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * cheatlitterpercC
+studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * cheatlitterpercC
+
 
 head(studymeans)
 studymeans
