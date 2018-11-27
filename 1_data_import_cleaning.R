@@ -804,20 +804,35 @@ write.csv(bind13, file = "bind13.csv")
 #setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
-#need to work on this section of code to do the following...
+#need to write this section of code to do the following...
 #if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC,
+                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Driese and Reiners 1997' | studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
+                                      ifelse(studymeans$study == 'Driese and Reiners 1997' & studymeans$veg == 'salt_desert',studymeans$AGB_g_m2 * saltpercC, studymeans$AGBC_g_m2)))
 
-#calculating AGBC from AGB using mean cheatgrass %C from Mahood
+#do the same for SE here
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC,
+                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Driese and Reiners 1997' | studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2_SE * sagepercC, 
+                                      ifelse(studymeans$study == 'Driese and Reiners 1997' & studymeans$veg == 'salt_desert',studymeans$AGB_g_m2_SE * saltpercC, studymeans$AGBC_g_m2_SE)))
+
+
+#do the same for litter mean and SE here
+studymeans$litterC_g_m2 <- ifelse(studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$litter_g_m2 * cheatlitterpercC,
+                               ifelse(studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$litter_g_m2 * sagelitterpercC, studymeans$litterC_g_m2))
+
+studymeans$litterC_g_m2_SE <- ifelse(studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$litter_g_m2_SE * cheatlitterpercC,
+                                  ifelse(studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$litter_g_m2_SE * sagelitterpercC, studymeans$litterC_g_m2_SE))
+
+
+###
 #Diamond and Bjerregaard studies had C data in addition to biomass data
-
-
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * cheat_percC / 100)
+#studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
+#studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * cheat_percC / 100)
 
 #update these numbers below now that more studies have been added
-studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * cheatlitterpercC
-studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * cheatlitterpercC
-
+#studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * cheatlitterpercC
+#studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * cheatlitterpercC
+###
 
 head(studymeans)
 studymeans
