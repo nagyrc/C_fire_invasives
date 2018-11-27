@@ -652,66 +652,6 @@ kpNorton2012 <- Norton2012merge[,c("yr_samp", "Date", "Season", "block", "ug_C_m
 
 
 
-#Witwicki soils data
-Witwicki_soil <- as.data.frame(read_csv("Witwicki_soil.csv"))
-head(Witwicki_soil)
-
-#remove the treatments where C and N were added, or keep only the control treatment
-Witwicki_soil2 <- subset.data.frame(Witwicki_soil, tx == 'X')
-unique(Witwicki_soil2$tx)
-
-is.character(Witwicki_soil2$date)
-
-Witwicki_soil2$month <- sapply(strsplit(as.character(Witwicki_soil2$date), ".", fixed = TRUE), "[", 1)
-head(Witwicki_soil2)
-unique(Witwicki_soil2$month)
-
-Witwicki_soil2$Month_sampled <- ifelse (Witwicki_soil2$month == '5', 'May',
-                                    ifelse (Witwicki_soil2$month == '11','November',
-                                            ifelse (Witwicki_soil2$month == '10','October','unknown')))
-
-Witwicki_soil2$yr_samp <- c(2005)
-Witwicki_soil2$topdepth_cm <- 0
-Witwicki_soil2$bottomdepth_cm <- 10
-Witwicki_soil2$thick <- Witwicki_soil2$bottomdepth_cm - Witwicki_soil2$topdepth_cm
-
-Witwicki_soil2$percC <- Witwicki_soil2$bulk_soil_TC_mg_kg / 10000
-colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'percC'] <- 'soil%C'
-
-#Witwicki_soil2$check <- Witwicki_soil2$`soil%C`*Witwicki_soil2$plot_bulk_density_g_L*Witwicki_soil2$thick*100
-#super close, within a few grams, so use their calculation for C content
-
-Witwicki_soil2$BD_estimated <- c("no")
-
-colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'bulk_soil_TC_g_m2'] <- 'soilC_g_m2'
-colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'tx'] <- 'treatment'
-colnames(Witwicki_soil2)[colnames(Witwicki_soil2) == 'type'] <- 'plant_type'
-
-
-#Witwicki veg data
-Witwicki_veg <- as.data.frame(read_csv("Witwicki_veg.csv"))
-head(Witwicki_veg)
-
-#remove the treatments where C and N were added, or keep only the control treatment
-Witwicki_veg2 <- subset.data.frame(Witwicki_veg, treatment == 'X')
-unique(Witwicki_veg2$treatment)
-
-colnames(Witwicki_veg2)[colnames(Witwicki_veg2) == 'Site'] <- 'site'
-head(Witwicki_veg2)
-
-summaryBy(biomass_gC_m2~plant_type, data = Witwicki_veg2)
-#these numbers are very low; especially for sagebrush; the percent C looks reasonable, low numbers are coming from biomass numbers
-
-unique(Witwicki_veg2$cell)
-
-
-#join Witwicki soil and veg data?
-head(Witwicki_soil2)
-head(Witwicki_veg2)
-
-#make final dataset here
-kpWitwicki <- 
-
 
 #Anderson data
 Anderson_bio <- as.data.frame(read_csv("Anderson_biomass.csv"))
