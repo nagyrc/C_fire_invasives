@@ -635,9 +635,24 @@ inter <- subset.data.frame(Norton2012, spec == 'Sa.I')
 cheat <- subset.data.frame(Norton2012, spec == 'Br')
 
 #need to make sure they are ordered correctly first
+canopy[
+  with(canopy, order(yr_samp,Date,Season,block)),
+]
+
+inter[
+  with(inter, order(yr_samp,Date,Season,block)),
+  ]
+
+#make sure they match
+identical(canopy[['yr_samp']],inter[['yr_samp']])
+identical(canopy[['Date']],inter[['Date']])
+identical(canopy[['Season']],inter[['Season']])
+identical(canopy[['block']],inter[['block']])
+#excellent, they all match, now can do the conversions
+
 sage <- canopy
-sage$`soil%C` <- (canopy$`soil%C`*0.38 + inter$`soil%C`*0.62)
-sage$ug_C_mg <- (canopy$ug_C_mg*0.38 + inter$ug_C_mg*0.62)
+sage$`soil%C` <- (canopy$`soil%C`*0.38) + (inter$`soil%C`*0.62)
+sage$ug_C_mg <- (canopy$ug_C_mg*0.38) + (inter$ug_C_mg*0.62)
 sage$spec <- c("Sa")
 
 Norton2012merge <- rbind (sage, cheat)
