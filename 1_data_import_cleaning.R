@@ -239,7 +239,7 @@ Stark$veg <- ifelse(Stark$VegType == 'undist sage', 'sagecheat',
 Stark$BD_g_cm3 <- ifelse(Stark$`Top depth` == 0, 1.36,
                         ifelse(Stark$`Top depth` == 10, 1.35,
                                ifelse(Stark$`Top depth` == 20, 1.455, 1.57)))
-Stark$`BD estimated` <- c("other")
+Stark$`BD estimated` <- c("no")
 
 Stark$soil_percC <- Stark$`org C (g C/kg)` / 10
 Stark$thick <- Stark$`Bottom depth` - Stark$`Top depth`
