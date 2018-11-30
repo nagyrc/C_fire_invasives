@@ -11,15 +11,12 @@ alldata <- as.data.frame(read_csv("alldata.csv"))
 sub1 <- alldata[ which(alldata$topdepth_cm == 0 & alldata$bottomdepth_cm == 10 & alldata$BD_estimated == "no"),]
 
 summary(sub1$BD_g_cm3)
-#mean = 1.422; based on 95 observations across studies
+#mean = 1.422; based on 90 observations across studies
 
 #10-20 cm
 sub2 <- alldata[ which(alldata$topdepth_cm == 10 & alldata$bottomdepth_cm == 20 & alldata$BD_estimated == "no"),]
 
 summary(sub2$BD_g_cm3)
-#mean = 1.35; based on 8 observations from Stark BD data
+#mean = 1.35; based on 14 observations 
 
-sub3 <- alldata[ which(alldata$bottomdepth_cm == 0 | alldata$bottomdepth_cm == 20 & alldata$BD_estimated == "no"),]
 
-summary(sub3$BD_g_cm3)
-#1.408

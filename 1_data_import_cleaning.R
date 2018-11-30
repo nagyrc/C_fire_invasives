@@ -113,8 +113,8 @@ colnames(Weber)[colnames(Weber) == 'Sample'] <- 'sample'
 Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
 
 #apply mean BD to calculate soil carbon content
-#max soil depth is 8 cm so use mean for 1-10 cm
-Weber$BD_g_cm3 <- 1.417
+#max soil depth is 8 cm so use mean for 0-10 cm
+Weber$BD_g_cm3 <- 1.422
 Weber$soilC_g_m2 <- Weber$BD_g_cm3*Weber$`soil%C`*Weber$thick*100
 Weber$yr_samp <- 2011
 Weber$Month_sampled <- c("September")
@@ -167,7 +167,7 @@ Blank$pr_burned <- c("no")
 Blank$seeded <- c("no")
 
 #apply mean BD to calculate soil carbon content
-Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.417, 1.35)
+Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.422, 1.35)
 Blank$soilC_g_m2 <- Blank$BD_g_cm3*Blank$`soil%C`*Blank$thick*100
 
 kpBlank <- Blank[,c("site","treatment","rep","soil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","soilC_g_m2")]
@@ -334,7 +334,7 @@ colnames(Bradley_soil)[colnames(Bradley_soil) == 'Top Depth'] <- 'topdepth_cm'
 colnames(Bradley_soil)[colnames(Bradley_soil) == 'Bottom Depth'] <- 'bottomdepth_cm'
 
 #apply mean BD to calculate soil carbon content
-Bradley_soil$BD_g_cm3 <- 1.417
+Bradley_soil$BD_g_cm3 <- 1.422
 Bradley_soil$soilC_g_m2 <- Bradley_soil$BD_g_cm3 * Bradley_soil$`soil%C` * Bradley_soil$thick * 100
 
 colnames(Bradley_AGB)[colnames(Bradley_AGB) == 'Site'] <- 'site'
@@ -376,7 +376,7 @@ colnames(Norton_2008c)[colnames(Norton_2008c) == 'life form'] <- 'life_form'
 head(Norton_2008c)
 
 #apply mean BD to calculate soil carbon content
-Norton_2008c$BD_g_cm3 <- 1.417
+Norton_2008c$BD_g_cm3 <- 1.422
 Norton_2008c$soilC_g_m2 <- Norton_2008c$BD_g_cm3 * Norton_2008c$`soil%C` * Norton_2008c$thick * 100
 
 
@@ -658,7 +658,7 @@ sage$spec <- c("Sa")
 Norton2012merge <- rbind (sage, cheat)
 
 #apply mean BD for 0-10 cm 
-Norton2012merge$BD_g_cm3 <- 1.417
+Norton2012merge$BD_g_cm3 <- 1.422
 Norton2012merge$soilC_g_m2 <- Norton2012merge$BD_g_cm3*Norton2012merge$`soil%C`*Norton2012merge$thick*100
 
 head(Norton2012merge)
