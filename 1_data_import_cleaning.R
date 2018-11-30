@@ -581,7 +581,7 @@ Peschel2$long <- ifelse (Peschel2$Site == 'Gros Venture', '-110.31111111',
                         ifelse (Peschel2$Site == 'Lower Hoback','-110.65750000',
                                 ifelse (Peschel2$Site == 'Upper Hoback', '-110.66055556', '-110.71166667')))
 
-colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'biomass_g_m2'
+colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'AGB_g_m2'
 colnames(Peschel2)[colnames(Peschel2) == 'Site'] <- 'site'
 colnames(Peschel2)[colnames(Peschel2) == 'Treatment'] <- 'treatment'
 Peschel2$study <- 'Peschel et al. 2015'
@@ -589,7 +589,7 @@ Peschel2$veg <- 'sagebrush'
 Peschel2$Month_sampled <- 'July'
 Peschel2$yr_samp <- c(2013)
 
-kpPeschel <- Peschel2[,c("site", "treatment", "biomass_g_m2", "lat", "long", "study", "veg", "Month_sampled", "yr_samp")]
+kpPeschel <- Peschel2[,c("site", "treatment", "AGB_g_m2", "lat", "long", "study", "veg", "Month_sampled", "yr_samp")]
 head(kpPeschel)
 
 
@@ -736,6 +736,8 @@ kpAnderson$study <- 'Anderson et al. 2018'
 kpAnderson$lat <- 43.28333333
 kpAnderson$long <- -116.20000000
 
+colnames(kpAnderson)[colnames(kpAnderson) == 'biomass_g_m2'] <- 'AGB_g_m2'
+
 head(kpAnderson)
 
 
@@ -763,8 +765,8 @@ sagepercC <- 0.45 #sage AGB % C = 45; from West 1972 Table 8
 saltpercC <- 0.454 #salt desert AGB % C = 45.5; from Bjerregaard et al. 1984
 
 #convert aboveground biomass into AGB C by using mean values
-kpPeschel$AGBC_g_m2 <- kpPeschel$biomass_g_m2*sagepercC
-kpAnderson$AGBC_g_m2 <- kpAnderson$biomass_g_m2*cheat_percC
+kpPeschel$AGBC_g_m2 <- kpPeschel$AGB_g_m2*sagepercC
+kpAnderson$AGBC_g_m2 <- kpAnderson$AGB_g_m2*cheat_percC
 
 
 
@@ -861,9 +863,13 @@ alldata <- rbind.all.columns(bind13, studymeans)
 str(alldata)
 
 alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
-alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+#alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
 alldata$elevation <- as.numeric(alldata$elevation)
-alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+alldata$BGB_g_m2 <- as.numeric(alldata$BGB_g_m2)
+alldata$BGB_g_m2_SE <- as.numeric(alldata$BGB_g_m2_SE)
+alldata$litter_g_m2 <- as.numeric(alldata$litter_g_m2)
+alldata$litter_g_m2_SE <- as.numeric(alldata$litter_g_m2_SE)
+#alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 
 
 write.csv(alldata, file = "alldata.csv")
