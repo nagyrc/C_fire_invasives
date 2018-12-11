@@ -841,6 +841,34 @@ studymeans$litterC_g_m2_SE <- ifelse(studymeans$study == 'Rickard 1985' & studym
                                   ifelse(studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$litter_g_m2_SE * sagelitterpercC, studymeans$litterC_g_m2_SE))
 
 
+#apply mean BDs from the closest depth to studymeans data (may not be exact depth match)
+BD010 <- 1.422
+BD1020 <- 1.35
+BD020 <- 1.386
+BD60 <- 1.562
+BD90 <- BD60
+
+studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick, 
+                                   ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick, 
+                                          ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C` * BD020 *studymeans$thick,
+                                                 ifelse(studymeans$study == 'Van Miegrot et al. 2005', studymeans$`totsoil%C` * studymeans$BD_g_cm3 *studymeans$thick, 
+                                                        ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`totsoil%C` * BD010 *studymeans$thick, 
+                                                               ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick, 
+                                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick, NA)))))))
+  
+studymeans$totsoilC_g_m2_SE <-
+  
+studymeans$orgsoilC_g_m2 <- ifelse (studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 2, studymeans$`orgsoil%C` * BD010 *studymeans$thick,
+                                   ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 30, studymeans$`orgsoil%C` * BD020 *studymeans$thick,
+                                          ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 60, studymeans$`orgsoil%C` * BD60 *studymeans$thick,
+                                                 ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 90, studymeans$`orgsoil%C` * BD90 *studymeans$thick, 
+                                                        ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`orgsoil%C` * BD010 *studymeans$thick, 
+                                                               ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick, 
+                                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick, 
+                                                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick, NA)))))))
+
+studymeans$orgsoilC_g_m2_SE <-
+
 ###
 #Diamond and Bjerregaard studies had C data in addition to biomass data
 #studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
