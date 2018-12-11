@@ -437,54 +437,54 @@ head(kpMahood1)
 
 
 #Mahood2
-#Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
+Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
 
-#Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
-#Mahood2$study <- c("Mahood et al. unpub2")
+Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
+Mahood2$study <- c("Mahood et al. unpub2")
 
-#colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
-#colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
+colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
+colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
 #colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%C'
-#colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
+colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
 
 
 #bring in other file for BD of each site
-#MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
+MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
 
 #join BD data
-#Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
+Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
 
-#colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site_number'] <- 'site'
-#colnames(Mahood2BD)[colnames(Mahood2BD) == 'Transect'] <- 'transect'
-#colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site type'] <- 'site_type'
+colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site_number'] <- 'site'
+colnames(Mahood2BD)[colnames(Mahood2BD) == 'Transect'] <- 'transect'
+colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site type'] <- 'site_type'
 #colnames(Mahood2BD)[colnames(Mahood2BD) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
 
 #bring in other file for BD, lat, long of each site
-#Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
+Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
 
 #join lat, long data
-#Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
+Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 
 #Mahood2BDll$topdepth_cm <- c(0)
 #Mahood2BDll$bottomdepth_cm <- c(10)
 #Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
 #Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
-#Mahood2BDll$seeded <- c("no")
-#Mahood2BDll$pr_burned <- c("no")
-#Mahood2BDll$BD_estimated <- c("no")
+Mahood2BDll$seeded <- c("no")
+Mahood2BDll$pr_burned <- c("no")
+Mahood2BDll$BD_estimated <- c("no")
 
-#colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
-#colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
+colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
+colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
 
 #check this year with Adam
-#Mahood2BDll$yr_samp <- c(2017)
+Mahood2BDll$yr_samp <- c(2017)
 
-#head(Mahood2BDll)
+head(Mahood2BDll)
 
-#kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated","yr_samp")]
-#head(kpMahood2)
+kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "veg", "study", "lat", "long", "elevation", "seeded", "pr_burned","yr_samp")]
+head(kpMahood2)
 
-#str(kpMahood2)
+str(kpMahood2)
 
 
 
