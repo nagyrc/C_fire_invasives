@@ -22,7 +22,13 @@ summary(sub2$BD_g_cm3)
 #mean = 1.35; based on 14 observations 
 
 #0-20 cm mean; none for this exact interval so use all data from above two depths
-sub3 <- alldata[ which(alldata$topdepth_cm == 10 | alldata$bottomdepth_cm == 20 & alldata$BD_estimated == "no"),]
+(1.422+1.35)/2
+#mean = 1.386; based on 103 observations across studies
+
+#bottom depth = 60 cm
+sub3 <- alldata[ which(alldata$bottomdepth_cm == 60 & alldata$BD_estimated == "no"),]
 
 summary(sub3$BD_g_cm3)
-#mean = 1.347; based on 103 observations across studies
+#mean = 1.562; based on 13 observations
+
+ 
