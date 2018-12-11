@@ -31,4 +31,4 @@ sub3 <- alldata[ which(alldata$bottomdepth_cm == 60 & alldata$BD_estimated == "n
 summary(sub3$BD_g_cm3)
 #mean = 1.562; based on 13 observations
 
- 
+
