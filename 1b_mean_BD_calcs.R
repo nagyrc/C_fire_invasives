@@ -2,6 +2,8 @@
 #Dr. R. Chelsea Nagy
 #created July 26, 2018
 
+library(tidyverse)
+
 setwd("data/")
 
 alldata <- as.data.frame(read_csv("alldata.csv"))
@@ -19,4 +21,8 @@ sub2 <- alldata[ which(alldata$topdepth_cm == 10 & alldata$bottomdepth_cm == 20 
 summary(sub2$BD_g_cm3)
 #mean = 1.35; based on 14 observations 
 
+#0-20 cm mean; none for this exact interval so use all data from above two depths
+sub3 <- alldata[ which(alldata$topdepth_cm == 10 | alldata$bottomdepth_cm == 20 & alldata$BD_estimated == "no"),]
 
+summary(sub3$BD_g_cm3)
+#mean = 1.347; based on 103 observations across studies
