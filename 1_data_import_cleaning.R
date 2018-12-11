@@ -657,12 +657,14 @@ sage$spec <- c("Sa")
 
 Norton2012merge <- rbind (sage, cheat)
 
+colnames(Norton2012merge)[colnames(Norton2012merge) == 'soil%C'] <- 'orgsoil%C'
+
 #apply mean BD for 0-10 cm 
 Norton2012merge$BD_g_cm3 <- 1.422
-Norton2012merge$soilC_g_m2 <- Norton2012merge$BD_g_cm3*Norton2012merge$`soil%C`*Norton2012merge$thick*100
+Norton2012merge$orgsoilC_g_m2 <- Norton2012merge$BD_g_cm3*Norton2012merge$`orgsoil%C`*Norton2012merge$thick*100
 
 head(Norton2012merge)
-kpNorton2012 <- Norton2012merge[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","soil%C","veg", "lat", "long","study", "BD_g_cm3", "soilC_g_m2")]
+kpNorton2012 <- Norton2012merge[,c("yr_samp", "Date", "Season", "block", "ug_C_mg", "month", "Month_sampled", "BD_estimated", "topdepth_cm", "bottomdepth_cm","thick","orgsoil%C","veg", "lat", "long","study", "BD_g_cm3", "orgsoilC_g_m2")]
 
 
 
