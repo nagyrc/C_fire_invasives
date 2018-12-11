@@ -545,7 +545,7 @@ Rau$pr_burned <- c("no")
 
 #convert root and soil carbon from kg C/ ha to g C/m2
 Rau$BGBC_g_m2 <- Rau$RTC/10
-Rau$soilC_g_m2 <- Rau$TSOC/10
+Rau$orgsoilC_g_m2 <- Rau$TSOC/10
 
 
 colnames(Rau)[colnames(Rau) == 'Region'] <- 'region'
@@ -558,7 +558,7 @@ colnames(Rau)[colnames(Rau) == 'Elevation'] <- 'elevation'
 
 head(Rau)
 
-kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "soilC_g_m2","yr_samp","topdepth_cm","bottomdepth_cm","thick", "Month_sampled")]
+kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "orgsoilC_g_m2","yr_samp","topdepth_cm","bottomdepth_cm","thick", "Month_sampled")]
 head(kpRau)
 
 
