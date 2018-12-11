@@ -536,7 +536,6 @@ unique(Rau_sage2$Treatment)
 
 Rau <- rbind(Rau_inv, Rau_sage2)
 
-
 #add veg category
 #check with Ben and then update this with other treatments???
 Rau$veg <- ifelse(Rau$Annual_grass > 2, 'sagecheat','sagebrush')
@@ -562,6 +561,9 @@ kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "
 head(kpRau)
 
 str(kpRau)
+
+
+
 
 #Peschel data
 Peschel <- as.data.frame(read_csv("Peschel.csv"))
