@@ -561,7 +561,7 @@ head(Rau)
 kpRau <- Rau[,c("region", "site", "treatment", "subplot", "elevation", "long", "lat", "study", "veg", "BD_estimated", "pr_burned", "BGBC_g_m2", "orgsoilC_g_m2","yr_samp","topdepth_cm","bottomdepth_cm","thick", "Month_sampled")]
 head(kpRau)
 
-
+str(kpRau)
 
 #Peschel data
 Peschel <- as.data.frame(read_csv("Peschel.csv"))
