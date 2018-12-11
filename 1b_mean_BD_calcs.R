@@ -22,7 +22,7 @@ summary(sub2$BD_g_cm3)
 #mean = 1.35; based on 14 observations 
 
 #0-20 cm mean; none for this exact interval so use all data from above two depths
-(1.422+1.35)/2
+(1.422 + 1.35)/2
 #mean = 1.386; based on 103 observations across studies
 
 #bottom depth = 60 cm
