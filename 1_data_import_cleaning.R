@@ -107,7 +107,7 @@ Weber$pr_burned <- c("no")
 colnames(Weber)[colnames(Weber) == 'BD estimated'] <- 'BD_estimated'
 colnames(Weber)[colnames(Weber) == 'top depth'] <- 'topdepth_cm'
 colnames(Weber)[colnames(Weber) == 'bottom depth'] <- 'bottomdepth_cm'
-colnames(Weber)[colnames(Weber) == '% C'] <- 'soil%C'
+colnames(Weber)[colnames(Weber) == '% C'] <- 'orgsoil%C'
 colnames(Weber)[colnames(Weber) == 'Sample'] <- 'sample'
 
 Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
@@ -115,13 +115,13 @@ Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
 #apply mean BD to calculate soil carbon content
 #max soil depth is 8 cm so use mean for 0-10 cm
 Weber$BD_g_cm3 <- 1.422
-Weber$soilC_g_m2 <- Weber$BD_g_cm3*Weber$`soil%C`*Weber$thick*100
+Weber$orgsoilC_g_m2 <- Weber$BD_g_cm3*Weber$`orgsoil%C`*Weber$thick*100
 Weber$yr_samp <- 2011
 Weber$Month_sampled <- c("September")
 
 head(Weber)
 
-kpWeber <- Weber[,c("sample","treatment","soil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick","BD_g_cm3","soilC_g_m2","yr_samp","Month_sampled")]
+kpWeber <- Weber[,c("sample","treatment","orgsoil%C","topdepth_cm","bottomdepth_cm","veg","BD_estimated","lat","long","study","seeded","pr_burned","thick","BD_g_cm3","orgsoilC_g_m2","yr_samp","Month_sampled")]
 head(kpWeber)
 
 
@@ -157,7 +157,7 @@ head(Blank)
 colnames(Blank)[colnames(Blank) == 'Site'] <- 'site'
 colnames(Blank)[colnames(Blank) == 'Treatment'] <- 'treatment'
 colnames(Blank)[colnames(Blank) == 'Rep'] <- 'rep'
-colnames(Blank)[colnames(Blank) == '% C'] <- 'soil%C'
+colnames(Blank)[colnames(Blank) == '% C'] <- 'orgsoil%C'
 colnames(Blank)[colnames(Blank) == 'Top depth'] <- 'topdepth_cm'
 colnames(Blank)[colnames(Blank) == 'Bottom depth'] <- 'bottomdepth_cm'
 colnames(Blank)[colnames(Blank) == 'BD estimated'] <- 'BD_estimated'
@@ -168,9 +168,9 @@ Blank$seeded <- c("no")
 
 #apply mean BD to calculate soil carbon content
 Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.422, 1.35)
-Blank$soilC_g_m2 <- Blank$BD_g_cm3*Blank$`soil%C`*Blank$thick*100
+Blank$orgsoilC_g_m2 <- Blank$BD_g_cm3*Blank$`orgsoil%C`*Blank$thick*100
 
-kpBlank <- Blank[,c("site","treatment","rep","soil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","soilC_g_m2")]
+kpBlank <- Blank[,c("site","treatment","rep","orgsoil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","orgsoilC_g_m2")]
 head(kpBlank)
 
 
@@ -437,54 +437,54 @@ head(kpMahood1)
 
 
 #Mahood2
-Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
+#Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
 
-Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
-Mahood2$study <- c("Mahood et al. unpub2")
+#Mahood2$veg <- ifelse(Mahood2$`Site type` == 'C' | Mahood2$`Site type` == 'D', 'cheatgrass', 'sagebrush')
+#Mahood2$study <- c("Mahood et al. unpub2")
 
 #colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
 #colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
-colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%C'
-colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
+#colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%C'
+#colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
 
 
 #bring in other file for BD of each site
-MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
+#MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
 
 #join BD data
-Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
+#Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
 
-colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site_number'] <- 'site'
-colnames(Mahood2BD)[colnames(Mahood2BD) == 'Transect'] <- 'transect'
-colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site type'] <- 'site_type'
-colnames(Mahood2BD)[colnames(Mahood2BD) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
+#colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site_number'] <- 'site'
+#colnames(Mahood2BD)[colnames(Mahood2BD) == 'Transect'] <- 'transect'
+#colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site type'] <- 'site_type'
+#colnames(Mahood2BD)[colnames(Mahood2BD) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
 
 #bring in other file for BD, lat, long of each site
-Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
+#Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
 
 #join lat, long data
-Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
+#Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 
-Mahood2BDll$topdepth_cm <- c(0)
-Mahood2BDll$bottomdepth_cm <- c(10)
-Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
-Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
-Mahood2BDll$seeded <- c("no")
-Mahood2BDll$pr_burned <- c("no")
-Mahood2BDll$BD_estimated <- c("no")
+#Mahood2BDll$topdepth_cm <- c(0)
+#Mahood2BDll$bottomdepth_cm <- c(10)
+#Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
+#Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
+#Mahood2BDll$seeded <- c("no")
+#Mahood2BDll$pr_burned <- c("no")
+#Mahood2BDll$BD_estimated <- c("no")
 
-colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
-colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
+#colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
+#colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
 
 #check this year with Adam
-Mahood2BDll$yr_samp <- c(2017)
+#Mahood2BDll$yr_samp <- c(2017)
 
-head(Mahood2BDll)
+#head(Mahood2BDll)
 
-kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated","yr_samp")]
-head(kpMahood2)
+#kpMahood2 <- Mahood2BDll[,c("site", "transect", "site_type", "litter%C", "soil%C", "veg", "study", "BD_g_cm3", "lat", "long", "elevation", "topdepth_cm", "bottomdepth_cm", "thick", "soilC_g_m2", "seeded", "pr_burned", "BD_estimated","yr_samp")]
+#head(kpMahood2)
 
-str(kpMahood2)
+#str(kpMahood2)
 
 
 
@@ -821,6 +821,9 @@ write.csv(bind13, file = "bind13.csv")
 #setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
+studymeans$thick <- studymeans$bottomdepth_cm - studymeans$topdepth_cm
+is.numeric(studymeans$thick)
+
 #need to write this section of code to do the following...
 #if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
 studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC,
@@ -848,24 +851,24 @@ BD020 <- 1.386
 BD60 <- 1.562
 BD90 <- BD60
 
-studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick, 
-                                   ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick, 
-                                          ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C` * BD020 *studymeans$thick,
-                                                 ifelse(studymeans$study == 'Van Miegrot et al. 2005', studymeans$`totsoil%C` * studymeans$BD_g_cm3 *studymeans$thick, 
-                                                        ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`totsoil%C` * BD010 *studymeans$thick, 
-                                                               ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick, 
-                                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick, NA)))))))
+studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick *100, 
+                                   ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick *100, 
+                                          ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C` * BD020 *studymeans$thick *100,
+                                                 ifelse(studymeans$study == 'Van Miegrot et al. 2005', studymeans$`totsoil%C` * studymeans$BD_g_cm3 *studymeans$thick *100, 
+                                                        ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`totsoil%C` * BD010 *studymeans$thick *100, 
+                                                               ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick *100, 
+                                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick *100, NA)))))))
   
 studymeans$totsoilC_g_m2_SE <-
   
-studymeans$orgsoilC_g_m2 <- ifelse (studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 2, studymeans$`orgsoil%C` * BD010 *studymeans$thick,
-                                   ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 30, studymeans$`orgsoil%C` * BD020 *studymeans$thick,
-                                          ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 60, studymeans$`orgsoil%C` * BD60 *studymeans$thick,
-                                                 ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 90, studymeans$`orgsoil%C` * BD90 *studymeans$thick, 
-                                                        ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`orgsoil%C` * BD010 *studymeans$thick, 
-                                                               ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick, 
-                                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick, 
-                                                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick, NA)))))))
+studymeans$orgsoilC_g_m2 <- ifelse (studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 2, studymeans$`orgsoil%C` * BD010 *studymeans$thick *100,
+                                   ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 30, studymeans$`orgsoil%C` * BD020 *studymeans$thick *100,
+                                          ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 60, studymeans$`orgsoil%C` * BD60 *studymeans$thick *100,
+                                                 ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 90, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, 
+                                                        ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
+                                                               ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
+                                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick *100, 
+                                                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, NA)))))))
 
 studymeans$orgsoilC_g_m2_SE <-
 
