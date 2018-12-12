@@ -661,7 +661,7 @@ sage$spec <- c("Sa")
 
 Norton2012merge <- rbind (sage, cheat)
 
-colnames(Norton2012merge)[colnames(Norton2012merge) == 'soil%C'] <- 'orgsoil%C'
+#colnames(Norton2012merge)[colnames(Norton2012merge) == 'soil%C'] <- 'orgsoil%C'
 
 #apply mean BD for 0-10 cm 
 Norton2012merge$BD_g_cm3 <- 1.422
