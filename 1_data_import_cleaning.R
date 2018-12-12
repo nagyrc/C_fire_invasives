@@ -320,8 +320,8 @@ Bradley_soil$lat <- ifelse(Bradley_soil$Site == 'Button' , 41.0000000,
                            ifelse(Bradley_soil$Site == 'Rye', 40.5700000, 40.9900000))
 Bradley_soil$long <- ifelse(Bradley_soil$Site == 'Button' , -117.5800000,
                             ifelse(Bradley_soil$Site == 'Rye', -118.3400000, -117.8600000))
-Bradley_soil$`Top Depth` <- c(0)
-Bradley_soil$`Bottom Depth` <- c(10)
+Bradley_soil$`Top Depth` <- 0
+Bradley_soil$`Bottom Depth` <- 10
 Bradley_soil$pr_burned <- c("no")
 Bradley_soil$yr_samp <- c(2004)
 Bradley_soil$thick <- Bradley_soil$`Bottom Depth` - Bradley_soil$`Top Depth`
@@ -577,13 +577,13 @@ head(Peschel2)
 unique(Peschel2$Site)
 
 #add lat, long, study, veg
-Peschel2$lat <- ifelse (Peschel2$Site == 'Gros Venture', 43.56944444,
-                    ifelse (Peschel2$Site == 'Lower Hoback',43.29583333,
-                           ifelse (Peschel2$Site == 'Upper Hoback', 43.30000000, 43.51444444)))
+Peschel2$lat <- ifelse(Peschel2$Site == 'Gros Venture', 43.56944444,
+                    ifelse(Peschel2$Site == 'Lower Hoback', 43.29583333,
+                           ifelse(Peschel2$Site == 'Upper Hoback', 43.30000000, 43.51444444)))
 
-Peschel2$long <- ifelse (Peschel2$Site == 'Gros Venture', -110.31111111,
-                        ifelse (Peschel2$Site == 'Lower Hoback',-110.65750000,
-                                ifelse (Peschel2$Site == 'Upper Hoback', -110.66055556, -110.71166667)))
+Peschel2$long <- ifelse(Peschel2$Site == 'Gros Venture', -110.31111111,
+                        ifelse(Peschel2$Site == 'Lower Hoback', -110.65750000,
+                                ifelse(Peschel2$Site == 'Upper Hoback', -110.66055556, -110.71166667)))
 
 colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'AGB_g_m2'
 colnames(Peschel2)[colnames(Peschel2) == 'Site'] <- 'site'
@@ -627,8 +627,8 @@ colnames(Norton2012)[colnames(Norton2012) == 'percC'] <- 'orgsoil%C'
 
 unique(Norton2012$spec)
 
-#check veg with Bethany and Emily
-Norton2012$veg <- ifelse (Norton2012$spec == 'Br', 'cheatgrass', 'sagebrush')
+
+Norton2012$veg <- ifelse(Norton2012$spec == 'Br', 'cheatgrass', 'sagebrush')
 
 Norton2012$lat <- 40.33333333
 Norton2012$long <- -112.56666667
@@ -659,7 +659,7 @@ sage$`orgsoil%C` <- (canopy$`orgsoil%C`*0.38) + (inter$`orgsoil%C`*0.62)
 sage$ug_C_mg <- (canopy$ug_C_mg*0.38) + (inter$ug_C_mg*0.62)
 sage$spec <- c("Sa")
 
-Norton2012merge <- rbind (sage, cheat)
+Norton2012merge <- rbind(sage, cheat)
 
 #colnames(Norton2012merge)[colnames(Norton2012merge) == 'soil%C'] <- 'orgsoil%C'
 
@@ -865,18 +865,31 @@ studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', s
                                                                ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick *100, 
                                                                       ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick *100, NA)))))))
   
-studymeans$totsoilC_g_m2_SE <-
+studymeans$totsoilC_g_m2_SE <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100, 
+                                       ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                              ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100,
+                                                     ifelse(studymeans$study == 'Van Miegrot et al. 2005', studymeans$`totsoil%C_SE` * studymeans$BD_g_cm3 *studymeans$thick *100, 
+                                                            ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`totsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                                                   ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C_SE` * BD1020 *studymeans$thick *100, 
+                                                                          ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C_SE` * BD90 *studymeans$thick *100, NA)))))))
   
-studymeans$orgsoilC_g_m2 <- ifelse (studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 2, studymeans$`orgsoil%C` * BD010 *studymeans$thick *100,
+studymeans$orgsoilC_g_m2 <- ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 2, studymeans$`orgsoil%C` * BD010 *studymeans$thick *100,
                                    ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 30, studymeans$`orgsoil%C` * BD020 *studymeans$thick *100,
                                           ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 60, studymeans$`orgsoil%C` * BD60 *studymeans$thick *100,
                                                  ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 90, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, 
                                                         ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
                                                                ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
                                                                       ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick *100, 
-                                                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, NA)))))))
+                                                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, NA))))))))
 
-studymeans$orgsoilC_g_m2_SE <-
+studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 2, studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100,
+                                      ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 30, studymeans$`orgsoil%C_SE` * BD020 *studymeans$thick *100,
+                                             ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 60, studymeans$`orgsoil%C_SE` * BD60 *studymeans$thick *100,
+                                                    ifelse(studymeans$study == 'Bjerregaard et al. 1984' & studymeans$bottomdepth_cm == 90, studymeans$`orgsoil%C_SE` * BD90 *studymeans$thick *100, 
+                                                           ifelse(studymeans$study == 'Saetre and Stark 2005', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                                                  ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                                                         ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C_SE` * BD1020 *studymeans$thick *100, 
+                                                                                ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C_SE` * BD90 *studymeans$thick *100, NA))))))))
 
 ###
 #Diamond and Bjerregaard studies had C data in addition to biomass data
@@ -899,14 +912,14 @@ alldata <- rbind.all.columns(bind13, studymeans)
 #making sure all numeric fields are numeric
 str(alldata)
 
-alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+#alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
 #alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
-alldata$elevation <- as.numeric(alldata$elevation)
+#alldata$elevation <- as.numeric(alldata$elevation)
+#alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 alldata$BGB_g_m2 <- as.numeric(alldata$BGB_g_m2)
 alldata$BGB_g_m2_SE <- as.numeric(alldata$BGB_g_m2_SE)
 alldata$litter_g_m2 <- as.numeric(alldata$litter_g_m2)
 alldata$litter_g_m2_SE <- as.numeric(alldata$litter_g_m2_SE)
-#alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 alldata$n_sampled <- as.numeric(alldata$n_sampled)
 
 write.csv(alldata, file = "alldata.csv")
