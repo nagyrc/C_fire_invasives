@@ -23,12 +23,14 @@ write.csv(att1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/at
 #head(att2)
 
 sum71 <- summaryBy(litterC_g_m2 ~ Article_ID + Study_ID, data = studyid)
-sum72 <- summaryBy(soilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
+sum72 <- summaryBy(orgsoilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
+sum72b <- summaryBy(totsoilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 sum73 <- summaryBy(BGBC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 sum74 <- summaryBy(AGBC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 
 combo1 <- left_join(sum71, sum72, by = c("Article_ID","Study_ID"))
-combo2 <- left_join(combo1, sum73, by = c("Article_ID","Study_ID"))
+combo1b <- left_join(combo1, sum72b, by = c("Article_ID","Study_ID"))
+combo2 <- left_join(combo1b, sum73, by = c("Article_ID","Study_ID"))
 combo3 <- left_join(combo2, sum74, by = c("Article_ID","Study_ID"))
 
 head(combo3)
@@ -37,9 +39,10 @@ tail(combo3)
 #replace NAs with negative number
 combo3[is.na(combo3)] <- -2
 
-combo3$Carbon_pool <- ifelse(combo3$soilC_g_m2.mean > 0, "soil",
-                             ifelse(combo3$litterC_g_m2.mean > 0, "litter",
-                                    ifelse(combo3$AGBC_g_m2.mean > 0, "AGB", "BGB")))
+combo3$Carbon_pool <- ifelse(combo3$orgsoilC_g_m2.mean > 0, "organic soil",
+                             ifelse(combo3$totsoilC_g_m2.mean > 0, "total soil",
+                                    ifelse(combo3$litterC_g_m2.mean > 0, "litter",
+                                           ifelse(combo3$AGBC_g_m2.mean > 0, "AGB", "BGB"))))
 
 
 write.csv(combo3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/attributes2.csv")
