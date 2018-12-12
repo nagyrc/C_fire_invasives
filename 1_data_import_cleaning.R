@@ -69,8 +69,8 @@ Jones_vls2$Month_sampled <- c("June")
 Jones_vls2$last_year_burned <- ifelse(Jones_vls2$Site == 'E' , 1999, 1985)
 
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'BD estimated'] <- 'BD_estimated'
-colnames(Jones_vls2)[colnames(Jones_vls2) == '%C'] <- 'soil%C'
-colnames(Jones_vls2)[colnames(Jones_vls2) == 'Soil C (g/m2)'] <- 'soilC_g_m2'
+colnames(Jones_vls2)[colnames(Jones_vls2) == '%C'] <- 'totsoil%C'
+colnames(Jones_vls2)[colnames(Jones_vls2) == 'Soil C (g/m2)'] <- 'totsoilC_g_m2'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'Bulk density (g/cm3)'] <- 'BD_g_cm3'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'top depth'] <- 'topdepth_cm'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'bottom depth'] <- 'bottomdepth_cm'
@@ -87,7 +87,7 @@ Jones_vls2$thick <- Jones_vls2$bottomdepth_cm - Jones_vls2$topdepth_cm
 head(Jones_vls2)
 
 
-kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","soil%C","BD_g_cm3","soilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Month_sampled")]
+kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","totsoil%C","BD_g_cm3","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Month_sampled")]
 head(kpJones)
 
 
@@ -199,8 +199,8 @@ colnames(Norton)[colnames(Norton) == 'Trt'] <- 'treatment'
 colnames(Norton)[colnames(Norton) == 'Top Depth'] <- 'topdepth_cm'
 colnames(Norton)[colnames(Norton) == 'Bottom Depth'] <- 'bottomdepth_cm'
 colnames(Norton)[colnames(Norton) == 'Bulk Density'] <- 'BD_g_cm3'
-colnames(Norton)[colnames(Norton) == 'Organic C %'] <- 'soil%C'
-colnames(Norton)[colnames(Norton) == 'g OC/m2'] <- 'soilC_g_m2'
+colnames(Norton)[colnames(Norton) == 'Organic C %'] <- 'orgsoil%C'
+colnames(Norton)[colnames(Norton) == 'g OC/m2'] <- 'orgsoilC_g_m2'
 colnames(Norton)[colnames(Norton) == 'Thickness'] <- 'thick'
 colnames(Norton)[colnames(Norton) == 'latitude'] <- 'lat'
 colnames(Norton)[colnames(Norton) == 'longitude'] <- 'long'
@@ -208,7 +208,7 @@ colnames(Norton)[colnames(Norton) == 'BD estimated'] <- 'BD_estimated'
 
 head(Norton)
 
-kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","soil%C","soilC_g_m2","BD_estimated","lat","long","study","veg", "Month_sampled", "yr_samp")]
+kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","orgsoil%C","orgsoilC_g_m2","BD_estimated","lat","long","study","veg", "Month_sampled", "yr_samp")]
 head(kpNorton)
 
 #Norton$check <- Norton$`soil%C` * Norton$thick * Norton$BD_g_cm3 * 100
@@ -243,7 +243,7 @@ Stark$`BD estimated` <- c("no")
 
 Stark$soil_percC <- Stark$`org C (g C/kg)` / 10
 Stark$thick <- Stark$`Bottom depth` - Stark$`Top depth`
-Stark$soilC_g_m2 <- Stark$BD_g_cm3 * Stark$soil_percC * Stark$thick * 100
+Stark$orgsoilC_g_m2 <- Stark$BD_g_cm3 * Stark$soil_percC * Stark$thick * 100
 
 Stark$pr_burned <- c("no")
 Stark$lat <- c("39.90333333")
@@ -257,11 +257,11 @@ head(Stark)
 colnames(Stark)[colnames(Stark) == 'Plot'] <- 'plot'
 colnames(Stark)[colnames(Stark) == 'Block'] <- 'block'
 colnames(Stark)[colnames(Stark) == 'BD estimated'] <- 'BD_estimated'
-colnames(Stark)[colnames(Stark) == 'soil_percC'] <- 'soil%C'
+colnames(Stark)[colnames(Stark) == 'soil_percC'] <- 'orgsoil%C'
 colnames(Stark)[colnames(Stark) == 'Top depth'] <- 'topdepth_cm'
 colnames(Stark)[colnames(Stark) == 'Bottom depth'] <- 'bottomdepth_cm'
 
-kpStark <- Stark[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","soil%C","soilC_g_m2","pr_burned","lat","long","seeded","yr_samp","Month_sampled")]
+kpStark <- Stark[,c("plot","block","topdepth_cm","bottomdepth_cm","BD_estimated","study","veg","BD_g_cm3","thick","orgsoil%C","orgsoilC_g_m2","pr_burned","lat","long","seeded","yr_samp","Month_sampled")]
 head(kpStark)
 
 
@@ -327,7 +327,7 @@ Bradley_soil$yr_samp <- c(2004)
 Bradley_soil$thick <- Bradley_soil$`Bottom Depth` - Bradley_soil$`Top Depth`
 Bradley_soil$seeded <- c("no")
 
-colnames(Bradley_soil)[colnames(Bradley_soil) == 'Carbon_perc'] <- 'soil%C'
+colnames(Bradley_soil)[colnames(Bradley_soil) == 'Carbon_perc'] <- 'totsoil%C'
 colnames(Bradley_soil)[colnames(Bradley_soil) == 'Site'] <- 'site'
 colnames(Bradley_soil)[colnames(Bradley_soil) == 'Sample_Name'] <- 'sample'
 colnames(Bradley_soil)[colnames(Bradley_soil) == 'Top Depth'] <- 'topdepth_cm'
@@ -335,7 +335,7 @@ colnames(Bradley_soil)[colnames(Bradley_soil) == 'Bottom Depth'] <- 'bottomdepth
 
 #apply mean BD to calculate soil carbon content
 Bradley_soil$BD_g_cm3 <- 1.422
-Bradley_soil$soilC_g_m2 <- Bradley_soil$BD_g_cm3 * Bradley_soil$`soil%C` * Bradley_soil$thick * 100
+Bradley_soil$totsoilC_g_m2 <- Bradley_soil$BD_g_cm3 * Bradley_soil$`totsoil%C` * Bradley_soil$thick * 100
 
 colnames(Bradley_AGB)[colnames(Bradley_AGB) == 'Site'] <- 'site'
 colnames(Bradley_AGB)[colnames(Bradley_AGB) == 'AGB(gC/m2)'] <- 'AGBC_g_m2'
@@ -346,6 +346,8 @@ kpBradleyveg <- Bradley_AGB[,c("site","burned","AGBC_g_m2","veg","study","lat","
 
 head(kpBradleysoil)
 head(kpBradleyveg)
+
+
 
 
 ###
@@ -362,25 +364,25 @@ Norton_2008c$lat <- c("42.70777778")
 Norton_2008c$long <- c("-108.60583333")
 
 Norton_2008c$study <- c("Norton et al. 2008")
-Norton_2008c$`Top Depth` <- c(0)
-Norton_2008c$`Bottom Depth` <- c(10)
+Norton_2008c$`Top Depth` <- 0
+Norton_2008c$`Bottom Depth` <- 10
 Norton_2008c$thick <- Norton_2008c$`Bottom Depth` - Norton_2008c$`Top Depth`
 Norton_2008c$seeded <- c("no")
 Norton_2008c$yr_samp <- c(2003)
 
 colnames(Norton_2008c)[colnames(Norton_2008c) == 'Top Depth'] <- 'topdepth_cm'
 colnames(Norton_2008c)[colnames(Norton_2008c) == 'Bottom Depth'] <- 'bottomdepth_cm'
-colnames(Norton_2008c)[colnames(Norton_2008c) == 'TOC_perc'] <- 'soil%C'
+colnames(Norton_2008c)[colnames(Norton_2008c) == 'TOC_perc'] <- 'orgsoil%C'
 colnames(Norton_2008c)[colnames(Norton_2008c) == 'life form'] <- 'life_form'
 
 head(Norton_2008c)
 
 #apply mean BD to calculate soil carbon content
 Norton_2008c$BD_g_cm3 <- 1.422
-Norton_2008c$soilC_g_m2 <- Norton_2008c$BD_g_cm3 * Norton_2008c$`soil%C` * Norton_2008c$thick * 100
+Norton_2008c$orgsoilC_g_m2 <- Norton_2008c$BD_g_cm3 * Norton_2008c$`orgsoil%C` * Norton_2008c$thick * 100
 
 
-kpNorton2008 <- Norton_2008c[,c("life_form","rep","soil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp", "BD_g_cm3", "soilC_g_m2")]
+kpNorton2008 <- Norton_2008c[,c("life_form","rep","orgsoil%C","veg","lat","long","study","topdepth_cm","bottomdepth_cm","thick","seeded","yr_samp", "BD_g_cm3", "orgsoilC_g_m2")]
 head(kpNorton2008)
 
 
@@ -410,8 +412,8 @@ Mahood1ll$pr_burned <- c("no")
 #check this year with Adam
 Mahood1ll$yr_samp <- c(2017)
 Mahood1ll$burned <- ifelse(Mahood1ll$burn_status == 'burned', 'yes','no')
-Mahood1ll$topdepth_cm <- c(0)
-Mahood1ll$bottomdepth_cm <- c(10)
+Mahood1ll$topdepth_cm <- 0
+Mahood1ll$bottomdepth_cm <- 10
 Mahood1ll$thick <- Mahood1ll$bottomdepth_cm - Mahood1ll$topdepth_cm
 
 #check this with Adam
@@ -419,17 +421,17 @@ Mahood1ll$veg <- ifelse(Mahood1ll$native_shrub_cover > 0, 'sagecheat','cheatgras
 Mahood1ll$BD_estimated <- c("no")
 
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'Elevation'] <- 'elevation'
-colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'soil%C'
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'totsoil%C'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
 #these calculations are not correct- he didn't multiply by the depth
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'do_not_use'
 
-Mahood1ll$soilC_g_m2 <- Mahood1ll$`soil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick * 100
+Mahood1ll$totsoilC_g_m2 <- Mahood1ll$`totsoil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick * 100
 
 head(Mahood1ll)
 
 
-kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","soil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","soilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated")]
+kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated")]
 head(kpMahood1)
 
 
@@ -444,7 +446,7 @@ Mahood2$study <- c("Mahood et al. unpub2")
 
 colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
 colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
-#colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%C'
+#colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%OM'
 colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
 
 
@@ -620,7 +622,7 @@ Norton2012$topdepth_cm <- 0
 Norton2012$bottomdepth_cm <- 10
 Norton2012$thick <- Norton2012$bottomdepth_cm - Norton2012$topdepth_cm
 Norton2012$percC <- Norton2012$ug_C_mg / 10
-colnames(Norton2012)[colnames(Norton2012) == 'percC'] <- 'soil%C'
+colnames(Norton2012)[colnames(Norton2012) == 'percC'] <- 'orgsoil%C'
 
 
 unique(Norton2012$spec)
@@ -653,7 +655,7 @@ identical(canopy[['block']],inter[['block']])
 #excellent, they all match, now can do the conversions
 
 sage <- canopy
-sage$`soil%C` <- (canopy$`soil%C`*0.38) + (inter$`soil%C`*0.62)
+sage$`orgsoil%C` <- (canopy$`orgsoil%C`*0.38) + (inter$`orgsoil%C`*0.62)
 sage$ug_C_mg <- (canopy$ug_C_mg*0.38) + (inter$ug_C_mg*0.62)
 sage$spec <- c("Sa")
 
