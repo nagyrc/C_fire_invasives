@@ -63,8 +63,8 @@ Jones_vls2$study <- "Jones et al. 2015"
 
 Jones_vls2$lat1 <- ifelse(Jones_vls2$Site == 'E' , '4564313','4598553')
 Jones_vls2$long1 <- ifelse(Jones_vls2$Site == 'E' , '466314','436294')
-Jones_vls2$lat <- ifelse(Jones_vls2$Site == 'E' , '41.229507','41.536094')
-Jones_vls2$long <- ifelse(Jones_vls2$Site == 'E' , '-117.4019367','-117.7637079')
+Jones_vls2$lat <- ifelse(Jones_vls2$Site == 'E' , 41.229507,41.536094)
+Jones_vls2$long <- ifelse(Jones_vls2$Site == 'E' , -117.4019367,-117.7637079)
 Jones_vls2$Month_sampled <- c("June")
 Jones_vls2$last_year_burned <- ifelse(Jones_vls2$Site == 'E' , 1999, 1985)
 
@@ -97,8 +97,8 @@ head(kpJones)
 Weber <- as.data.frame(read_csv("Weber.csv"))
 head(Weber)
 #lat and long data are messed up
-Weber$lat <- c("42.853")
-Weber$long <- c("-112.402")
+Weber$lat <- 42.853
+Weber$long <- -112.402
 #add fields that will be common across studies
 Weber$study <- "Weber et al. 2015"
 Weber$seeded <- c("no") 
@@ -143,8 +143,8 @@ remove <- Blank1 %>%
 Blank <- Blank1 %>%
   filter(!(Site == "Canyon Creek" & Treatment == "cheatgrass" ))
 
-Blank$lat <- str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1)
-Blank$long <- str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1)
+Blank$lat <- as.numeric(str_sub(Blank$Latitude, 1, str_length(Blank$Latitude) -1))
+Blank$long <- as.numeric(str_sub(Blank$Longitude, 1, str_length(Blank$Longitude) -1))
 
 head(Blank)
 #add fields that will be common across studies
@@ -246,8 +246,8 @@ Stark$thick <- Stark$`Bottom depth` - Stark$`Top depth`
 Stark$orgsoilC_g_m2 <- Stark$BD_g_cm3 * Stark$soil_percC * Stark$thick * 100
 
 Stark$pr_burned <- c("no")
-Stark$lat <- c("39.90333333")
-Stark$long <- c("-108.40083333")
+Stark$lat <- 39.90333333
+Stark$long <- -108.40083333
 Stark$seeded <- ifelse(Stark$veg == 'sage', 'no','maybe')
 Stark$yr_samp <- c("2008-2009")
 Stark$Month_sampled <- c("April-June")
@@ -304,10 +304,10 @@ head(Bradley_AGB)
 Bradley_AGB$veg <- ifelse(Bradley_AGB$Site == 'Rye' & Bradley_AGB$burned == 'no', 'salt_desert',
                           ifelse(Bradley_AGB$burned == 'yes','cheatgrass', 'sagebrush'))
 Bradley_AGB$study <- c("Bradley et al. 2006")
-Bradley_AGB$lat <- ifelse(Bradley_AGB$Site == 'Button' , '41.0000000',
-                           ifelse(Bradley_AGB$Site == 'Rye', '40.5700000', '40.9900000'))
-Bradley_AGB$long <- ifelse(Bradley_AGB$Site == 'Button' , '-117.5800000',
-                            ifelse(Bradley_AGB$Site == 'Rye', '-118.3400000', '-117.8600000'))
+Bradley_AGB$lat <- ifelse(Bradley_AGB$Site == 'Button' , 41.0000000,
+                           ifelse(Bradley_AGB$Site == 'Rye', 40.5700000, 40.9900000))
+Bradley_AGB$long <- ifelse(Bradley_AGB$Site == 'Button' , -117.5800000,
+                            ifelse(Bradley_AGB$Site == 'Rye', -118.3400000, -117.8600000))
 Bradley_AGB$pr_burned <- c("no")
 Bradley_AGB$yr_samp <- c(2004)
 Bradley_AGB$seeded <- c("no")
@@ -316,10 +316,10 @@ Bradley_AGB$seeded <- c("no")
 Bradley_soil$veg <- ifelse(Bradley_soil$Site == 'Rye' & Bradley_soil$burned == 'no', 'salt_desert',
                           ifelse(Bradley_soil$burned == 'yes','cheatgrass', 'sagecheat'))
 Bradley_soil$study <- c("Bradley et al. 2006")
-Bradley_soil$lat <- ifelse(Bradley_soil$Site == 'Button' , '41.0000000',
-                           ifelse(Bradley_soil$Site == 'Rye', '40.5700000', '40.9900000'))
-Bradley_soil$long <- ifelse(Bradley_soil$Site == 'Button' , '-117.5800000',
-                            ifelse(Bradley_soil$Site == 'Rye', '-118.3400000', '-117.8600000'))
+Bradley_soil$lat <- ifelse(Bradley_soil$Site == 'Button' , 41.0000000,
+                           ifelse(Bradley_soil$Site == 'Rye', 40.5700000, 40.9900000))
+Bradley_soil$long <- ifelse(Bradley_soil$Site == 'Button' , -117.5800000,
+                            ifelse(Bradley_soil$Site == 'Rye', -118.3400000, -117.8600000))
 Bradley_soil$`Top Depth` <- c(0)
 Bradley_soil$`Bottom Depth` <- c(10)
 Bradley_soil$pr_burned <- c("no")
@@ -360,8 +360,8 @@ Norton_2008c <- Norton_2008b[which(Norton_2008b$grass == "Cheat"),]
 
 Norton_2008c$veg <- ifelse(Norton_2008c$`life form` == 'LS', 'sagecheat','cheatgrass')
 
-Norton_2008c$lat <- c("42.70777778")
-Norton_2008c$long <- c("-108.60583333")
+Norton_2008c$lat <- 42.70777778
+Norton_2008c$long <- -108.60583333
 
 Norton_2008c$study <- c("Norton et al. 2008")
 Norton_2008c$`Top Depth` <- 0
@@ -577,13 +577,13 @@ head(Peschel2)
 unique(Peschel2$Site)
 
 #add lat, long, study, veg
-Peschel2$lat <- ifelse (Peschel2$Site == 'Gros Venture', '43.56944444',
-                    ifelse (Peschel2$Site == 'Lower Hoback','43.29583333',
-                           ifelse (Peschel2$Site == 'Upper Hoback', '43.30000000', '43.51444444')))
+Peschel2$lat <- ifelse (Peschel2$Site == 'Gros Venture', 43.56944444,
+                    ifelse (Peschel2$Site == 'Lower Hoback',43.29583333,
+                           ifelse (Peschel2$Site == 'Upper Hoback', 43.30000000, 43.51444444)))
 
-Peschel2$long <- ifelse (Peschel2$Site == 'Gros Venture', '-110.31111111',
-                        ifelse (Peschel2$Site == 'Lower Hoback','-110.65750000',
-                                ifelse (Peschel2$Site == 'Upper Hoback', '-110.66055556', '-110.71166667')))
+Peschel2$long <- ifelse (Peschel2$Site == 'Gros Venture', -110.31111111,
+                        ifelse (Peschel2$Site == 'Lower Hoback',-110.65750000,
+                                ifelse (Peschel2$Site == 'Upper Hoback', -110.66055556, -110.71166667)))
 
 colnames(Peschel2)[colnames(Peschel2) == 'biomass_g_m2.sum'] <- 'AGB_g_m2'
 colnames(Peschel2)[colnames(Peschel2) == 'Site'] <- 'site'
