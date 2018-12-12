@@ -10,7 +10,8 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 # Read in alldata.csv
 alldata = read_csv("data/alldata.csv")
 
-colnames(alldata)[colnames(alldata) == 'soil%C'] <- 'soilperC'
+colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
+colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 
 #recalculate thickness- we saw some issues with it in the .csv file
 is.numeric(alldata$topdepth_cm)
