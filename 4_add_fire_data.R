@@ -55,8 +55,6 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)
 
-
-
 mtbs_test <- mtbs_fire  %>%
   sf::st_intersection(., clean_study) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
