@@ -59,6 +59,6 @@ studyid <- alldata %>%
                               ifelse(litterC_g_m2 > 0, "litter", 
                                      ifelse(totsoilC_g_m2 > 0, "total soil", "organic soil")))), 
          Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) 
-#check nested ifelse statements to make sure it is creating pool
+#check nested ifelse statements to make sure it is creating 'pool'
 
 write.csv(studyid, file = "studyid.csv")
