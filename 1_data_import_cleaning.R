@@ -772,7 +772,7 @@ saltpercC <- 0.454 #salt desert AGB % C = 45.5; from Bjerregaard et al. 1984
 
 #convert aboveground biomass into AGB C by using mean values
 kpPeschel$AGBC_g_m2 <- kpPeschel$AGB_g_m2*sagepercC
-kpAnderson$AGBC_g_m2 <- kpAnderson$AGB_g_m2*cheat_percC
+kpAnderson$AGBC_g_m2 <- kpAnderson$AGB_g_m2*cheat_percC/100
 
 
 
@@ -832,12 +832,12 @@ is.numeric(studymeans$thick)
 
 #need to write this section of code to do the following...
 #if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC,
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC/100,
                                ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Driese and Reiners 1997' | studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
                                       ifelse(studymeans$study == 'Driese and Reiners 1997' & studymeans$veg == 'salt_desert',studymeans$AGB_g_m2 * saltpercC, studymeans$AGBC_g_m2)))
 
 #do the same for SE here
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC,
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC/100,
                                ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Driese and Reiners 1997' | studymeans$study == 'Rickard 1985' & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2_SE * sagepercC, 
                                       ifelse(studymeans$study == 'Driese and Reiners 1997' & studymeans$veg == 'salt_desert',studymeans$AGB_g_m2_SE * saltpercC, studymeans$AGBC_g_m2_SE)))
 
@@ -926,3 +926,18 @@ alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
 write.csv(alldata, file = "alldata.csv")
 
 
+
+#check summary stats to look for errors
+alldata <- as.data.frame(alldata)
+sum1 <- summaryBy(litterC_g_m2 ~ Article_ID , data = alldata)
+sum2 <- summaryBy(orgsoilC_g_m2 ~ Article_ID , data = alldata)
+sum3 <- summaryBy(totsoilC_g_m2 ~ Article_ID , data = alldata)
+sum4 <- summaryBy(BGBC_g_m2 ~ Article_ID , data = alldata)
+sum5 <- summaryBy(AGBC_g_m2 ~ Article_ID , data = alldata)
+
+combo11 <- left_join(sum1, sum2, by = c("Article_ID"))
+combo12 <- left_join(combo11, sum3, by = c("Article_ID"))
+combo13 <- left_join(combo12, sum4, by = c("Article_ID"))
+combo14 <- left_join(combo13, sum5, by = c("Article_ID"))
+
+write.csv(combo14, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sumstats.csv")
