@@ -35,9 +35,7 @@ write.csv(clean_study, file = "clean_study.csv")
 
 #create Article_ID
 alldata$Article_IDs <- str_sub(alldata$study,1,4)
-unique(alldata$Article_IDs)
 alldata$Article_IDe <- str_sub(alldata$study,-4,-1)
-unique(alldata$Article_IDe)
 alldata$Article_ID <- paste(toupper(alldata$Article_IDs),alldata$Article_IDe)
 alldata$Article_ID <- gsub(" ", "", alldata$Article_ID) 
 alldata$Article_ID <- gsub("MAHOpub1", "MAHO2018a", alldata$Article_ID) 
@@ -51,8 +49,7 @@ head(alldata)
 
 #creates study_ID, pool, and setup for Bethany's meta-analysis format (long format)
 studyid <- alldata %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilperC","orgsoilperC","BD_g_cm3",
-                "totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilperC","orgsoilperC","BD_g_cm3","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
   mutate(pool = case_when(
     AGBC_g_m2 > 0 ~ "AGB", 
     BGBC_g_m2 > 0 ~ "BGB", 
@@ -64,10 +61,12 @@ studyid <- alldata %>%
          Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) 
 #check nested ifelse statements to make sure it is creating 'pool'
 
-# To keep the long orientation 
+
+
+
+# To keep the wide orientation 
 studyid <- alldata %>%
-  dplyr::select(site,yr_samp,AGBC_g_m2,BGBC_g_m2,litterC_g_m2,totsoilperC,orgsoilperC,BD_g_cm3,
-                totsoilC_g_m2,orgsoilC_g_m2,topdepth_cm,bottomdepth_cm,BD_estimated,veg,study,lat,long,thick,Article_ID) %>%
+  dplyr::select(site,yr_samp,AGBC_g_m2,BGBC_g_m2,litterC_g_m2,totsoilperC,orgsoilperC,BD_g_cm3,totsoilC_g_m2,orgsoilC_g_m2,topdepth_cm,bottomdepth_cm,BD_estimated,veg,study,lat,long,thick,Article_ID) %>%
   mutate(pool = case_when(
     AGBC_g_m2 > 0 ~ "AGB", 
     BGBC_g_m2 > 0 ~ "BGB", 
