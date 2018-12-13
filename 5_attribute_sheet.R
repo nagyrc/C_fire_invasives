@@ -22,6 +22,11 @@ write.csv(att1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/at
 #att2 <- unique(studyid[c("Article_ID", "Study_ID", "soilC_g_m2", "BGBC_g_m2", "litterC_g_m2", "AGBC_g_m2")])
 #head(att2)
 
+unique(studyid$Study_ID)
+as.factor(studyid$Study_ID)
+
+studyid <- as.data.frame(studyid)
+
 sum71 <- summaryBy(litterC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 sum72 <- summaryBy(orgsoilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 sum72b <- summaryBy(totsoilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
@@ -48,6 +53,10 @@ combo3$Carbon_pool <- ifelse(combo3$orgsoilC_g_m2.mean > 0, "organic soil",
 write.csv(combo3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/attributes2.csv")
 
 
+
+
+plot(AGBC_g_m2.mean ~ Study_ID, data = combo3)
+###########################
 soilsubby <- subset.data.frame(alldata, study == "Rau et al. 2011"| study == "Johnson et al. 2011")
 unique(soilsubby$study)
 
