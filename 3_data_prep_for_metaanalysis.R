@@ -77,13 +77,29 @@ studyid <- alldata %>%
   mutate(Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) %>%
   mutate_if(is.character, as.factor)
 
-#to show points
+#export for later use
+write.csv(studyid, file = "studyid.csv")
+
+
+
+
+####################
+#bring in shapefile of US states
+usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
+  filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
+  st_transform(4326) %>%  # e.g. US National Atlas Equal Area
+  dplyr::select(STATEFP, STUSPS) %>%
+  setNames(tolower(names(.)))
+
+#to show data points across the study area
 studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
                        crs = "+init=epsg:4326") %>%
   st_transform(crs = st_crs(usa_shp))
 
 
+#now try to show with pool as the color
+plot(studyid_pt["pool"])
+plot(usa_shp["geometry"], add = TRUE)
 
-
-
-write.csv(studyid, file = "studyid.csv")
+#does the same as above line
+#plot(st_geometry(usa_shp), add = TRUE)
