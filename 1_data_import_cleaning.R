@@ -927,17 +927,4 @@ write.csv(alldata, file = "alldata.csv")
 
 
 
-#check summary stats to look for errors
-alldata <- as.data.frame(alldata)
-sum1 <- summaryBy(litterC_g_m2 ~ Article_ID , data = alldata)
-sum2 <- summaryBy(orgsoilC_g_m2 ~ Article_ID , data = alldata)
-sum3 <- summaryBy(totsoilC_g_m2 ~ Article_ID , data = alldata)
-sum4 <- summaryBy(BGBC_g_m2 ~ Article_ID , data = alldata)
-sum5 <- summaryBy(AGBC_g_m2 ~ Article_ID , data = alldata)
 
-combo11 <- left_join(sum1, sum2, by = c("Article_ID"))
-combo12 <- left_join(combo11, sum3, by = c("Article_ID"))
-combo13 <- left_join(combo12, sum4, by = c("Article_ID"))
-combo14 <- left_join(combo13, sum5, by = c("Article_ID"))
-
-write.csv(combo14, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sumstats.csv")
