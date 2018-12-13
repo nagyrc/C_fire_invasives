@@ -912,7 +912,7 @@ alldata <- rbind.all.columns(bind13, studymeans)
 #making sure all numeric fields are numeric
 str(alldata)
 
-#alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
+alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
 #alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
 #alldata$elevation <- as.numeric(alldata$elevation)
 #alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
@@ -921,7 +921,7 @@ alldata$BGB_g_m2_SE <- as.numeric(alldata$BGB_g_m2_SE)
 alldata$litter_g_m2 <- as.numeric(alldata$litter_g_m2)
 alldata$litter_g_m2_SE <- as.numeric(alldata$litter_g_m2_SE)
 alldata$n_sampled <- as.numeric(alldata$n_sampled)
-alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
+#alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
 
 write.csv(alldata, file = "alldata.csv")
 
