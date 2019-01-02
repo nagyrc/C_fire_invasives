@@ -20,43 +20,50 @@ colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 #alldata$check <- alldata$bottomdepth_cm - alldata$topdepth_cm
 #identical(alldata$check, alldata$thick)
 
+unique(alldata$yr_samp)
+
 #slims dataframe to key variables...still wide format to use with spatial data in script 4 (adding fire data)
 clean_study <- alldata %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","orgsoilperC", "totsoilperC", "BD_g_cm3","orgsoilC_g_m2","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
   mutate(site = as.factor(site),
          veg = as.factor(veg)) %>%
-  mutate(yr_samp = as.numeric(ifelse(is.na(yr_samp), 0, yr_samp))) %>%
-  mutate(id = row_number(),
-         study_year = str_sub(study,-4,-1),
-         study_year = ifelse(study_year == 'pub1', 2017, study_year),
-         yr_samp = ifelse(is.na(yr_samp) | yr_samp == 0, study_year, yr_samp))
+  mutate(study_year = str_sub(study,-4,-1),
+         study_year = ifelse(study_year == 'pub1', 2017, study_year)) %>%
+  mutate(yr_samp = as.factor(ifelse(is.na(yr_samp), study_year, yr_samp))) 
+
+is.na(clean_study$yr_samp)
 
 write.csv(clean_study, file = "clean_study.csv")
 
 #create Article_ID
-alldata$Article_IDs <- str_sub(alldata$study,1,4)
-alldata$Article_IDe <- str_sub(alldata$study,-4,-1)
-alldata$Article_ID <- paste(toupper(alldata$Article_IDs),alldata$Article_IDe)
-alldata$Article_ID <- gsub(" ", "", alldata$Article_ID) 
-alldata$Article_ID <- gsub("MAHOpub1", "MAHO2018a", alldata$Article_ID) 
-alldata$Article_ID <- gsub("MAHOpub2", "MAHO2018b", alldata$Article_ID) 
-alldata$Article_ID <- gsub("RICK985a", "RICK1985b", alldata$Article_ID)
-alldata$Article_ID <- gsub("RICK985b", "RICK1985b", alldata$Article_ID)
+clean_study$Article_IDs <- str_sub(clean_study$study,1,4)
+clean_study$Article_IDe <- str_sub(clean_study$study,-4,-1)
+clean_study$Article_ID <- paste(toupper(clean_study$Article_IDs),clean_study$Article_IDe)
+clean_study$Article_ID <- gsub(" ", "", clean_study$Article_ID) 
+clean_study$Article_ID <- gsub("MAHOpub1", "MAHO2018a", clean_study$Article_ID) 
+clean_study$Article_ID <- gsub("MAHOpub2", "MAHO2018b", clean_study$Article_ID) 
+clean_study$Article_ID <- gsub("RICK985a", "RICK1985b", clean_study$Article_ID)
+clean_study$Article_ID <- gsub("RICK985b", "RICK1985b", clean_study$Article_ID)
+clean_study$Article_ID <- as.factor(clean_study$Article_ID)
 
-unique(alldata$Article_ID)
+unique(clean_study$Article_ID)
 #these look great
 head(alldata)
 
 
 #creates study_ID, pool, and setup for Bethany's meta-analysis format (long format)
-studyid <- alldata %>%
+studyid <- clean_study %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilperC","orgsoilperC","BD_g_cm3","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -BD_g_cm3, -Article_ID) %>%
   mutate_if(is.character, as.factor) %>%
   mutate(Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp")))
 
-###
-#plotting pool value by year sampled, colored by pool         
+unique(studyid$pool)
+
+#export long format for later use
+write.csv(studyid, file = "studyid.csv")
+
+###plotting example: pool value by year sampled, colored by pool         
 studyid %>%
   ggplot(aes(x = pool, y = pool_value)) +
   geom_line() +
@@ -71,30 +78,18 @@ studyid %>%
          
 
 
-# To keep the wide orientation 
-studyidwide <- alldata %>%
-  dplyr::select(site,yr_samp,AGBC_g_m2,BGBC_g_m2,litterC_g_m2,totsoilperC,orgsoilperC,BD_g_cm3,totsoilC_g_m2,orgsoilC_g_m2,topdepth_cm,bottomdepth_cm,BD_estimated,veg,study,lat,long,thick,Article_ID) %>%
-  mutate(pool = case_when(
-    AGBC_g_m2 > 0 ~ "AGB", 
-    BGBC_g_m2 > 0 ~ "BGB", 
-    litterC_g_m2 > 0 ~ "litter", 
-    totsoilC_g_m2 > 0 ~ "total soil",
-    TRUE ~ "organic soil")) %>%
-  mutate(Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) %>%
-  mutate_if(is.character, as.factor)
 
-#export for later use
-write.csv(studyid, file = "studyid.csv")
+
 
 
 ####################
 #check summary stats to look for errors
-alldata <- as.data.frame(alldata)
-sum1 <- summaryBy(litterC_g_m2 ~ Article_ID , data = alldata)
-sum2 <- summaryBy(orgsoilC_g_m2 ~ Article_ID , data = alldata)
-sum3 <- summaryBy(totsoilC_g_m2 ~ Article_ID , data = alldata)
-sum4 <- summaryBy(BGBC_g_m2 ~ Article_ID , data = alldata)
-sum5 <- summaryBy(AGBC_g_m2 ~ Article_ID , data = alldata)
+clean_study <- as.data.frame(clean_study)
+sum1 <- summaryBy(litterC_g_m2 ~ Article_ID , data = clean_study)
+sum2 <- summaryBy(orgsoilC_g_m2 ~ Article_ID , data = clean_study)
+sum3 <- summaryBy(totsoilC_g_m2 ~ Article_ID , data = clean_study)
+sum4 <- summaryBy(BGBC_g_m2 ~ Article_ID , data = clean_study)
+sum5 <- summaryBy(AGBC_g_m2 ~ Article_ID , data = clean_study)
 
 combo11 <- left_join(sum1, sum2, by = c("Article_ID"))
 combo12 <- left_join(combo11, sum3, by = c("Article_ID"))
@@ -108,7 +103,7 @@ write.csv(combo14, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results
 
 ####################
 #bring in shapefile of US states
-usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
+usa_shp <- st_read(file.path('data/states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
   st_transform(4326) %>%  # e.g. US National Atlas Equal Area
   dplyr::select(STATEFP, STUSPS) %>%
@@ -123,6 +118,7 @@ studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
 #now try to show with pool as the color
 plot(studyid_pt["pool"])
 plot(usa_shp["geometry"], add = TRUE)
+
 
 #does the same as above line
 #plot(st_geometry(usa_shp), add = TRUE)
