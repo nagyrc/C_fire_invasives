@@ -115,10 +115,11 @@ studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
   st_transform(crs = st_crs(usa_shp))
 
 
-#now try to show with pool as the color
+#plot with pool as the color
 plot(studyid_pt["pool"])
 plot(usa_shp["geometry"], add = TRUE)
 
-
-#does the same as above line
-#plot(st_geometry(usa_shp), add = TRUE)
+#plot with Study_ID as the color
+plot(studyid_pt["Study_ID"])
+plot(usa_shp["geometry"], add = TRUE)
+#more than 2000 'studies'
