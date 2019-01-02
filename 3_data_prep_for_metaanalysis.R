@@ -63,6 +63,20 @@ studyid <- alldata %>%
 
 
 
+#use this or the one above...then delete the other
+#this one gathers first to make long format then assigns the pool...this should assign pools correctly
+#creates study_ID, pool, and setup for Bethany's meta-analysis format (long format)
+studyid <- alldata %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilperC","orgsoilperC","BD_g_cm3","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
+  tidyr::gather(key = variable, value = value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -totsoilperC, -orgsoilperC, -BD_g_cm3, -Article_ID) %>%
+  mutate(variable = as.factor(variable), 
+         pool = ifelse(AGBC_g_m2 > 0, "AGB", 
+                       ifelse(BGBC_g_m2 > 0, "BGB", 
+                              ifelse(litterC_g_m2 > 0, "litter", 
+                                     ifelse(totsoilC_g_m2 > 0, "total soil", "organic soil")))), 
+        Study_ID = group_indices_(., .dots = c("study","lat", "long", "veg", "site", "bottomdepth_cm", "pool","yr_samp"))) 
+#check nested ifelse statements to make sure it is creating 'pool'
+
 
 # To keep the wide orientation 
 studyid <- alldata %>%
