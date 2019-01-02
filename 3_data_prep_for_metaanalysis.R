@@ -122,4 +122,4 @@ plot(usa_shp["geometry"], add = TRUE)
 #plot with Study_ID as the color
 plot(studyid_pt["Study_ID"])
 plot(usa_shp["geometry"], add = TRUE)
-#more than 2000 'studies'
+#more than 1500 'studies'
