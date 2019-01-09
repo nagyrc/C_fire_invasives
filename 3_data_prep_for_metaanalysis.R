@@ -74,7 +74,12 @@ write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/st
 
 #get idea about how many observations of each pool, mean values, etc.
 sum98 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = "pool")
+write.csv(sum98, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
 
+
+unique(studyid$veg)
+sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("pool", "veg"))
+write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
 
 
 ###plotting example: pool value by year sampled, colored by pool         
