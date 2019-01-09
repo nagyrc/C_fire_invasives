@@ -432,7 +432,7 @@ Mahood1ll$totsoilC_g_m2 <- Mahood1ll$`totsoil%C` * Mahood1ll$BD_g_cm3 * Mahood1l
 head(Mahood1ll)
 
 
-kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated")]
+kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated", "yr_samp")]
 head(kpMahood1)
 
 
