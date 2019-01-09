@@ -68,6 +68,7 @@ Jones_vls2$lat <- ifelse(Jones_vls2$Site == 'E' , 41.229507,41.536094)
 Jones_vls2$long <- ifelse(Jones_vls2$Site == 'E' , -117.4019367,-117.7637079)
 Jones_vls2$Month_sampled <- c("June")
 Jones_vls2$last_year_burned <- ifelse(Jones_vls2$Site == 'E' , 1999, 1985)
+Jones_vls2$veg <- c("cheatgrass")
 
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'BD estimated'] <- 'BD_estimated'
 colnames(Jones_vls2)[colnames(Jones_vls2) == '%C'] <- 'totsoil%C'
