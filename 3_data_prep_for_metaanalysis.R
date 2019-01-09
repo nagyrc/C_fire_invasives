@@ -33,7 +33,7 @@ clean_study <- alldata %>%
 
 is.na(clean_study$yr_samp)
 
-write.csv(clean_study, file = "clean_study.csv")
+write.csv(clean_study, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/clean_study.csv")
 
 #create Article_ID
 clean_study$Article_IDs <- str_sub(clean_study$study,1,4)
@@ -61,7 +61,7 @@ studyid <- clean_study %>%
 unique(studyid$pool)
 
 #export long format for later use
-write.csv(studyid, file = "studyid.csv")
+write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
 
 ###plotting example: pool value by year sampled, colored by pool         
 studyid %>%
