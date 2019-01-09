@@ -30,7 +30,7 @@ Jones_veg_litter <- merge(Jones_veg_only, Jones_litter_only,
 #rm(Jones_vls)
 #merge veg_litter and soil dataframes
 Jones_vls <- merge(Jones_veg_litter, Jones_soil, 
-                          by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"))
+                          by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"), all = TRUE)
 
 unique(Jones_vls$Burn_trt)
 unique(Jones_vls$Year)
@@ -83,6 +83,8 @@ colnames(Jones_vls2)[colnames(Jones_vls2) == 'Barrel'] <- 'barrel'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'Site'] <- 'site'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'Burn_trt'] <- 'burn_trt'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'Rep'] <- 'rep'
+
+Jones_vls2$BD_estimated <- c("no")
 
 Jones_vls2$thick <- Jones_vls2$bottomdepth_cm - Jones_vls2$topdepth_cm
 
