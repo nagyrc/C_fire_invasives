@@ -4,7 +4,7 @@
 
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
+x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 # Read in alldata.csv
@@ -59,6 +59,15 @@ studyid <- clean_study %>%
   mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp")))
 
 unique(studyid$pool)
+
+studyid <- as.data.frame(studyid)
+
+#remove rows with NA in pool_value column
+cc <- is.na(studyid$pool_value)
+m <- which(cc == c("TRUE"))
+studyid <- studyid[-m,]
+
+sum98 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = "pool")
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
