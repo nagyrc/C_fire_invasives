@@ -140,6 +140,9 @@ studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
 
 
 #plot with pool as the color
+#this should work, but is not displaying the colors (factors) properly
+is.factor(studyid_pt$pool)
+levels(studyid_pt$pool)
 plot(studyid_pt["pool"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
 
