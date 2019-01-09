@@ -59,6 +59,8 @@ studyid <- clean_study %>%
   mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp")))
 
 unique(studyid$pool)
+unique(studyid$Study_ID)
+#372 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 
 studyid <- as.data.frame(studyid)
 
@@ -82,11 +84,14 @@ sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("poo
 write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
 
 
+
+
 ###plotting example: pool value by year sampled, colored by pool         
 studyid %>%
   ggplot(aes(x = pool, y = pool_value)) +
-  geom_line() +
+  geom_point() +
   facet_wrap(~Article_ID)
+
 ###
 
 #example code to change NAs to zeros (if needed) and create a function (if needed)
@@ -135,10 +140,14 @@ studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
 
 
 #plot with pool as the color
-plot(studyid_pt["pool"])
+plot(studyid_pt["pool"], key.pos = 1)
+plot(usa_shp["geometry"], add = TRUE)
+
+#plot with veg as the color
+plot(studyid_pt["veg"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
 
 #plot with Study_ID as the color
 plot(studyid_pt["Study_ID"])
 plot(usa_shp["geometry"], add = TRUE)
-#more than 1500 'studies'
+#more than 1500 'studies'; actually only 372 once the rows with NA's were removed
