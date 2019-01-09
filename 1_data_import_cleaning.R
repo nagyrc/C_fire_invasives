@@ -35,6 +35,7 @@ Jones_vls <- merge(Jones_veg_litter, Jones_soil,
 
 unique(Jones_vls$Burn_trt)
 unique(Jones_vls$Year)
+unique(Jones_vls$veg)
 
 #remove B, C, R treatments after initial year (after burning and seeding with cheatgrass)
 Jones_vls2008 <- subset.data.frame(Jones_vls, Year == 2008)
@@ -84,9 +85,8 @@ colnames(Jones_vls2)[colnames(Jones_vls2) == 'Burn_trt'] <- 'burn_trt'
 colnames(Jones_vls2)[colnames(Jones_vls2) == 'Rep'] <- 'rep'
 
 Jones_vls2$thick <- Jones_vls2$bottomdepth_cm - Jones_vls2$topdepth_cm
-head(Jones_vls2)
 
-
+unique(Jones_vls2$veg)
 kpJones <- Jones_vls2[,c("barrel", "site", "burn_trt","rep","yr_samp","AGBC_g_m2","litterC_g_m2","totsoil%C","BD_g_cm3","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Month_sampled")]
 head(kpJones)
 
