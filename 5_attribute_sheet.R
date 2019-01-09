@@ -19,6 +19,11 @@ att1 <- unique(studyid[c("Article_ID", "Study_ID", "veg", "topdepth_cm", "bottom
 write.csv(att1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/attributes1.csv")
 
 
+
+
+
+#############################
+#don't know if any of this below is needed
 #att2 <- unique(studyid[c("Article_ID", "Study_ID", "soilC_g_m2", "BGBC_g_m2", "litterC_g_m2", "AGBC_g_m2")])
 #head(att2)
 
@@ -27,7 +32,9 @@ as.factor(studyid$Study_ID)
 
 studyid <- as.data.frame(studyid)
 
-sum71 <- summaryBy(litterC_g_m2 ~ Article_ID + Study_ID, data = studyid)
+litter <- studyid[ which(studyid$pool == 'litterC_g_m2'), ]
+sum71 <- summaryBy(pool_value ~ Article_ID + Study_ID, data = litter)
+sum71
 sum72 <- summaryBy(orgsoilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 sum72b <- summaryBy(totsoilC_g_m2 ~ Article_ID + Study_ID, data = studyid)
 sum73 <- summaryBy(BGBC_g_m2 ~ Article_ID + Study_ID, data = studyid)
@@ -56,33 +63,6 @@ write.csv(combo3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/
 
 
 plot(AGBC_g_m2.mean ~ Study_ID, data = combo3)
-###########################
-soilsubby <- subset.data.frame(alldata, study == "Rau et al. 2011"| study == "Johnson et al. 2011")
-unique(soilsubby$study)
 
-ggplot(soilsubby, aes(x = veg, y = soilC_g_m2, color=study)) + geom_violin()
-
-#quantiles
-quantile(soilsubby$soilC_g_m2, 0.9, na.rm=TRUE)
-
-summaryBy(soilC_g_m2~ study, data = soilsubby, FUN = c(meanfxn))
-summaryBy(soilC_g_m2~ veg, data = soilsubby, FUN = c(meanfxn))
-
-sdfxn <- function(x)base::sd(x, na.rm = TRUE)
-maxfxn <- function(x)base::max(x, na.rm = TRUE)
-
-soilsubby2 <- soilsubby %>%
-  mutate(soilC_SD = sd(soilC_g_m2, na.rm=TRUE))
-
-soilsubby2 <- soilsubby %>% group_by(veg,study) %>%
-  summarize(soilC_SD = sd(soilC_g_m2, na.rm = TRUE),
-            soilC_mean = mean(soilC_g_m2, na.rm = TRUE),
-            soilC_SE = sqrt(var(soilC_g_m2, na.rm = TRUE)/sum(!is.na(soilC_g_m2))))
-
-
-head(soilsubby2)
-
-#summaryBy(soilC_g_m2~ study, data = soilsubby, FUN = c(sdfxn))
-#summaryBy(soilC_g_m2~ veg, data = soilsubby, FUN = c(sdfxn))
 
 
