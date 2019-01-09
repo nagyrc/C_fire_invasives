@@ -140,16 +140,10 @@ studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
 
 
 #plot with pool as the color
-#this should work, but is not displaying the colors (factors) properly
 is.factor(studyid_pt$pool)
 levels(studyid_pt$pool)
 plot(studyid_pt["pool"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
-
-#this should work, but is not displaying the colors (factors) properly
-p <- ggplot(data = studyid, aes(x = long, y = lat, col = pool))
-p + geom_point()
-p
 
 #count(studyid$pool == "AGBC_g_m2") = 218
 #count(studyid$pool == "BGBC_g_m2") = 88
