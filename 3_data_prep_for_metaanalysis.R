@@ -146,6 +146,17 @@ levels(studyid_pt$pool)
 plot(studyid_pt["pool"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
 
+#this should work, but is not displaying the colors (factors) properly
+p <- ggplot(data = studyid, aes(x = long, y = lat, col = pool))
+p + geom_point()
+p
+
+#count(studyid$pool == "AGBC_g_m2") = 218
+#count(studyid$pool == "BGBC_g_m2") = 88
+#count(studyid$pool == "litterC_g_m2") = 81
+#count(studyid$pool == "orgsoilC_g_m2") = 687
+#count(studyid$pool == "totsoilC_g_m2") = 239
+
 #plot with veg as the color
 plot(studyid_pt["veg"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
