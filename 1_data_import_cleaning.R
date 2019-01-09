@@ -29,7 +29,6 @@ Jones_veg_litter <- merge(Jones_veg_only, Jones_litter_only,
 
 #rm(Jones_vls)
 #merge veg_litter and soil dataframes
-#this code excludes data in years/treatments uncommon to both datasets (R, 2010, 2011)
 Jones_vls <- merge(Jones_veg_litter, Jones_soil, 
                           by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"))
 
