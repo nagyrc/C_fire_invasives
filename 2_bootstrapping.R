@@ -13,6 +13,37 @@ studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 
 
+###########################
+soilsubby <- subset.data.frame(alldata, study == "Rau et al. 2011"| study == "Johnson et al. 2011")
+unique(soilsubby$study)
+
+ggplot(soilsubby, aes(x = veg, y = soilC_g_m2, color=study)) + geom_violin()
+
+#quantiles
+quantile(soilsubby$soilC_g_m2, 0.9, na.rm=TRUE)
+
+summaryBy(soilC_g_m2~ study, data = soilsubby, FUN = c(meanfxn))
+summaryBy(soilC_g_m2~ veg, data = soilsubby, FUN = c(meanfxn))
+
+sdfxn <- function(x)base::sd(x, na.rm = TRUE)
+maxfxn <- function(x)base::max(x, na.rm = TRUE)
+
+soilsubby2 <- soilsubby %>%
+  mutate(soilC_SD = sd(soilC_g_m2, na.rm=TRUE))
+
+soilsubby2 <- soilsubby %>% group_by(veg,study) %>%
+  summarize(soilC_SD = sd(soilC_g_m2, na.rm = TRUE),
+            soilC_mean = mean(soilC_g_m2, na.rm = TRUE),
+            soilC_SE = sqrt(var(soilC_g_m2, na.rm = TRUE)/sum(!is.na(soilC_g_m2))))
+
+
+head(soilsubby2)
+
+#summaryBy(soilC_g_m2~ study, data = soilsubby, FUN = c(sdfxn))
+#summaryBy(soilC_g_m2~ veg, data = soilsubby, FUN = c(sdfxn))
+
+
+
 
 #########################
 # Parametric Bootstrap sample
