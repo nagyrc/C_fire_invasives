@@ -165,12 +165,13 @@ colnames(Blank)[colnames(Blank) == 'BD estimated'] <- 'BD_estimated'
 Blank$thick <- Blank$bottomdepth_cm - Blank$topdepth_cm
 Blank$pr_burned <- c("no")
 Blank$seeded <- c("no")
+Blank$yr_samp <- "2006"
 
 #apply mean BD to calculate soil carbon content
 Blank$BD_g_cm3 <- ifelse(Blank$topdepth_cm == 0 , 1.422, 1.35)
 Blank$orgsoilC_g_m2 <- Blank$BD_g_cm3*Blank$`orgsoil%C`*Blank$thick*100
 
-kpBlank <- Blank[,c("site","treatment","rep","orgsoil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","orgsoilC_g_m2")]
+kpBlank <- Blank[,c("site","treatment","rep","orgsoil%C","topdepth_cm","bottomdepth_cm","BD_estimated","lat","long","veg","study","thick","pr_burned","seeded","BD_g_cm3","orgsoilC_g_m2", "yr_samp")]
 head(kpBlank)
 
 
