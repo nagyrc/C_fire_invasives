@@ -792,7 +792,6 @@ cheatBGBpercC010 <- 0.31 #from Svejcar and Sheley 2001 Table 3
 sageBGBpercC1030 <- 0.314 #from Svejcar and Sheley 2001 Table 3
 cheatBGBpercC1030 <- 0.337 #from Svejcar and Sheley 2001 Table 3
 
-saltBGBpercC <-
 
 ###########################################
 rbind.all.columns <- function(x, y) {
