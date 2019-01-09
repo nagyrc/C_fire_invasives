@@ -67,10 +67,15 @@ cc <- is.na(studyid$pool_value)
 m <- which(cc == c("TRUE"))
 studyid <- studyid[-m,]
 
-sum98 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = "pool")
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
+
+
+#get idea about how many observations of each pool, mean values, etc.
+sum98 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = "pool")
+
+
 
 ###plotting example: pool value by year sampled, colored by pool         
 studyid %>%
