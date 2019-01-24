@@ -28,10 +28,18 @@ if (!file.exists(us_shp)) {
 }
 
 
+#bring in shapefile of US states
+usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
+  filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
+  st_transform(4326) %>%  # e.g. US National Atlas Equal Area
+  dplyr::select(STATEFP, STUSPS) %>%
+  setNames(tolower(names(.)))
+
+
 ###########################
 #MTBS
 #Download the MTBS fire polygons
-mtbs_shp <- file.path('mtbs', 'mtbs_perimeter_data_v2', 'dissolve_mtbs_perims_1984-2015_DD_20170501.shp')
+mtbs_shp <- file.path('mtbs', 'mtbs_perims_DD.shp')
 if (!file.exists(mtbs_shp)) {
   loc <- "https://edcintl.cr.usgs.gov/downloads/sciweb1/shared/MTBS_Fire/data/composite_data/burned_area_extent_shapefile/mtbs_perimeter_data.zip"
   dest <- paste0('mtbs', ".zip")
@@ -41,12 +49,6 @@ if (!file.exists(mtbs_shp)) {
   assert_that(file.exists(mtbs_shp))
 }
 
-#bring in shapefile of US states
-usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
-  filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
-  st_transform(4326) %>%  # e.g. US National Atlas Equal Area
-  dplyr::select(STATEFP, STUSPS) %>%
-  setNames(tolower(names(.)))
 
 #bring in MTBS data
 mtbs_fire <- st_read(dsn = 'mtbs',
@@ -56,6 +58,11 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)
 
+#transform dataframe into equal area projection
+clean_study_laea <- clean_study %>%
+  st_transform('+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs')
+
+#extract discovery year for points in clean_study
 mtbs_test <- mtbs_fire  %>%
   sf::st_intersection(., clean_study) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
@@ -64,6 +71,7 @@ mtbs_test <- mtbs_fire  %>%
   group_by(id) %>%
   summarise(last_burn_year = max(MTBS_DISCOVERY_YEAR))
 
+#adding MTBS last year burn to clean_study
 mtbs_clean <- clean_study %>%
   left_join(., as.data.frame(mtbs_test) %>% dplyr::select(-geometry), by = 'id')
 
@@ -109,24 +117,25 @@ yearly_modis <- layer_reclass(dir = dir)
 
 library(velox)
 
+#transform dataframe into equal area projection
 clean_study_laea <- clean_study %>%
   st_transform('+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs')
 
+###option #1
+#extract modis at points in clean_study
 modis_df <- velox(yearly_modis)$extract_points(sp = clean_study_laea) %>%
   as_tibble()
 colnames(modis_df) <- names(yearly_modis)
 
+#create last year burned at points in clean_study
 modis_df2 <- modis_df   %>%
   mutate(id = as.data.frame(clean_study)$id) %>%
   gather(key = key, value = last_burn_year_modis , -id) %>%
   dplyr::select(-key) %>%
   filter(last_burn_year_modis != 0)
+###
 
-
-clean_study_laea <- clean_study %>%
-  st_transform('+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs') %>%
-  st_buffer(dis = 10)
-
+###option #2
 modis_df <- velox(yearly_modis)$extract(sp = clean_study_laea, fun = function(x) max(x, na.rm=TRUE), small = TRUE, df = TRUE) %>%
   as_tibble()
 colnames(modis_df) <- c('ID_sp', names(yearly_modis))
@@ -137,11 +146,21 @@ modis_df2 <- modis_df   %>%
   gather(key = key, value = last_burn_year_modis , -id) %>%
   dplyr::select(-key) %>%
   filter(last_burn_year_modis != 0)
+###
 
 
 ###########################
 #BAECV
+#bring in BAECV last year burned from Adam
+library(raster)
 
+baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
 
+str(clean_study)
 
+#convert to shapefile
 
+#then clean_study$baecvlyb <- raster::extract (baecvlyb, clean_study)
+
+#find points where yr_samp < lyb, then need time -1
+#give Adam a shapefile of these points 
