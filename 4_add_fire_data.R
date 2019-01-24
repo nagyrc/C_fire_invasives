@@ -59,12 +59,14 @@ mtbs_fire <- st_read(dsn = 'mtbs',
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)
 
 #transform dataframe into equal area projection
-clean_study_laea <- clean_study %>%
-  st_transform('+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs')
+crs <- '+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs'
+
+#convert dataframe to sf object
+clean_study_sf  <-  st_as_sf(clean_study, coords = c('long', 'lat'), crs = crs)
 
 #extract discovery year for points in clean_study
 mtbs_test <- mtbs_fire  %>%
-  sf::st_intersection(., clean_study) %>%
+  sf::st_intersection(., clean_study_sf) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) %>%
   dplyr::select(-mtbs_keep) %>%
