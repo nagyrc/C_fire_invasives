@@ -4,7 +4,7 @@
 
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc")
+x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc", "dplyr")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 # Read in alldata.csv
@@ -69,10 +69,8 @@ cc <- is.na(studyid$pool_value)
 m <- which(cc == c("TRUE"))
 studyid <- studyid[-m,]
 
-library(dplyr)
-checkorg <- studyid %>%
-  filter(pool == "orgsoilC_g_m2") %>%
-  summarise(length(unique(Article_ID)))
+
+check <- dplyr::count(studyid, pool, Article_ID)
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
