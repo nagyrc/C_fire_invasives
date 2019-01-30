@@ -81,6 +81,10 @@ write.csv(check, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/c
 checkwithveg <- dplyr::count(studyid, pool, Article_ID, veg)
 write.csv(checkwithveg, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/checkwithveg.csv")
 
+checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
+write.csv(checkwithveg2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/checkwithveg2.csv")
+
+
 #get idea about how many observations of each pool, mean values, etc.
 sum98 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = "pool")
 write.csv(sum98, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
