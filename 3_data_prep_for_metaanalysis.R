@@ -69,11 +69,14 @@ cc <- is.na(studyid$pool_value)
 m <- which(cc == c("TRUE"))
 studyid <- studyid[-m,]
 
-
-check <- dplyr::count(studyid, pool, Article_ID)
-
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
+
+
+
+#to get a count of mean values vs. raw data
+check <- dplyr::count(studyid, pool, Article_ID)
+write.csv(check, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/check.csv")
 
 
 #get idea about how many observations of each pool, mean values, etc.
