@@ -9,6 +9,8 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 setwd("data/")
 getwd()
 
+#set crs for all data layers
+crs <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs'
 
 #Download US shapefile
 us_shp <- file.path('states_shp', "cb_2016_us_state_20m.shp")
@@ -28,10 +30,10 @@ if (!file.exists(us_shp)) {
 }
 
 
-#bring in shapefile of US states
+#bring in shapefile of US states; select 48 contiguous; tranform to match crs of other layers
 usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
-  st_transform(4326) %>%  # e.g. US National Atlas Equal Area
+  st_transform(st_crs(crs)) %>%  # set to Albers equal area
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.)))
 
@@ -53,20 +55,25 @@ if (!file.exists(mtbs_shp)) {
 #bring in MTBS data
 mtbs_fire <- st_read(dsn = 'mtbs',
                      layer = "mtbs_perims_DD", quiet = TRUE) %>%
-  st_transform(st_crs(usa_shp)) %>%
+  st_transform(st_crs(crs)) %>%
   mutate(MTBS_ID = Fire_ID,
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR)
 
-#transform dataframe into equal area projection
-crs <- '+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs'
 
-#convert dataframe to sf object
-clean_study_sf  <-  st_as_sf(clean_study, coords = c('long', 'lat'), crs = crs)
+#bring in dataframe and convert dataframe to sf object with Albers equal area projection
+studyid = read_csv("studyid.csv")
+studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = crs)
 
-#extract discovery year for points in clean_study
+#make sure they all match
+crs(studyid_sf)
+crs(usa_shp)
+crs(mtbs_fire)
+#all are NAs...why?
+
+#extract discovery year for points in studyid
 mtbs_test <- mtbs_fire  %>%
-  sf::st_intersection(., clean_study_sf) %>%
+  sf::st_intersection(., studyid_sf) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) %>%
   dplyr::select(-mtbs_keep) %>%
