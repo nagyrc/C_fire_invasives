@@ -12,6 +12,8 @@ getwd()
 #set crs for all data layers: epsg projection 4326 - wgs 84
 crs1 <- 4326
 
+
+###########################
 #Download US shapefile
 us_shp <- file.path('states_shp', "cb_2016_us_state_20m.shp")
 if (!file.exists(us_shp)) {
@@ -35,12 +37,12 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.))) %>% 
-  st_set_crs(4269) %>% 
   st_transform(.,crs1)
 
 class(usa_shp)
+usa_shp
 
-crs(usa_shp)
+
 ###########################
 #MTBS
 #Download the MTBS fire polygons
@@ -62,25 +64,29 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
   st_transform(., crs1)
-
+mtbs_fire
 
 #bring in dataframe and convert dataframe to sf object with epsg projection 4326 - wgs 84
 studyid = read_csv("studyid.csv")
-studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = crs1)
+studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326)
+studyid_sf
 
-#make sure they all match
-crs(studyid_sf)
-crs(usa_shp)
-crs(mtbs_fire)
-#all are NAs...why?
 
-#extract discovery year for points in studyid
+#extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
 mtbs_test <- mtbs_fire  %>%
-  sf::st_intersection(., studyid) %>%
+  sf::st_intersection(., studyid_sf)
+#so 524/1313 points have had fire and the rest have not
+
+#keep those where fire date is before sampling date
+mtbs_keep <- mtbs_test %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
-  filter(mtbs_keep != 0) %>%
-  dplyr::select(-mtbs_keep) %>%
-  group_by(id) %>%
+  filter(mtbs_keep != 0) 
+
+unique(mtbs_keep$MTBS_ID)
+#31
+
+mtbs_keep <- mtbs_keep
+  group_by(MTBS_ID) %>%
   summarise(last_burn_year = max(MTBS_DISCOVERY_YEAR))
 
 #adding MTBS last year burn to studyid_df
