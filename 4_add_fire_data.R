@@ -78,6 +78,9 @@ mtbs_int <- mtbs_fire  %>%
 #so 524/1313 points have had fire and the rest have not
 #does this have any points with multiple fires???
 
+unique(mtbs_int$X1)
+#461...where did this field come from???
+
 
 #keep those where fire date is before sampling date
 mtbs_keep <- mtbs_int %>%
