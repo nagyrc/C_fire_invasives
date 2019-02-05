@@ -73,25 +73,35 @@ studyid_sf
 
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
-mtbs_test <- mtbs_fire  %>%
+mtbs_int <- mtbs_fire  %>%
   sf::st_intersection(., studyid_sf)
 #so 524/1313 points have had fire and the rest have not
+#does this have any points with multiple fires???
+
 
 #keep those where fire date is before sampling date
-mtbs_keep <- mtbs_test %>%
+mtbs_keep <- mtbs_int %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
+#466 obs of the 524 had fires before the sampling date, which is what we care about
 
 unique(mtbs_keep$MTBS_ID)
 #31
 
-mtbs_keep <- mtbs_keep
-  group_by(MTBS_ID) %>%
-  summarise(last_burn_year = max(MTBS_DISCOVERY_YEAR))
+unique(mtbs_keep$geometry)
+#36
+
+unique(mtbs_keep$MTBS_DISCOVERY_YEAR)
+#17
+
+mtbs_keep <- mtbs_keep %>%
+  mutate(MTBS_lyb = MTBS_DISCOVERY_YEAR)
+#note: may need to group by MTBS_ID?
 
 #adding MTBS last year burn to studyid_df
-mtbs_clean <- studyid_sf %>%
-  left_join(., as.data.frame(mtbs_test) %>% dplyr::select(-geometry), by = 'id')
+mtbs_add <- studyid_sf %>%
+  left_join(., as.data.frame(mtbs_keep) %>% dplyr::select(-geometry), by = c('pool_value','Study_ID','Article_ID','site','yr_samp','pool','thick','study','topdepth_cm','bottomdepth_cm','BD_estimated','veg')) %>%
+  dplyr::select(-MTBS_ID, -MTBS_DISCOVERY_YEAR, -mtbs_keep, -X1.x, -X1.y)
 
 
 ###########################
