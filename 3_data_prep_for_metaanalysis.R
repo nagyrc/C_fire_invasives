@@ -140,7 +140,7 @@ write.csv(combo14, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results
 #bring in shapefile of US states
 usa_shp <- st_read(file.path('data/states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
-  st_transform(4326) %>%  # e.g. US National Atlas Equal Area
+  st_transform(4326) %>%  #WGS 84
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.)))
 
