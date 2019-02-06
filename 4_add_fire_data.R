@@ -146,9 +146,49 @@ layer_reclass <- function(dir) {
 
 yearly_modis <- layer_reclass(dir = dir)
 
+crs(yearly_modis)
+#+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs 
+#does not match above; need to reproject
 
+########################
+#need to reproject raster to match CRS of dataframe
+crs1b <- '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
 
+yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
+#Warning message:
+#In .Internal(gc(verbose, reset)) :
+  #closing unused connection 3 (/var/folders/b5/w0ns98qx6qj57p36w47z6cv40000gn/T//RtmpcpHtIu/raster///r_tmp_2019-02-06_184307_1718_19366.gri)
 
+crs(yearly_modis_trans)
+
+#extract modis values at points
+modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
+  as_tibble()
+colnames(modis_df) <- names(yearly_modis)
+
+is.numeric(modis_df$modis_2001)
+
+#get max value of columns
+modis_max <- modis_df %>% mutate(mak = do.call(pmax, (.)))
+is.numeric(modis_max$mak)
+
+#get column name for max value
+year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
+
+test <- as.data.frame(cbind(modis_max$mak, year))
+unique(test$year)
+
+test$mak <- as.numeric(test$mak)
+is.numeric(test$mak)
+
+modyr <- ifelse(test$mak == 0, NA, test$year)
+
+#this also works to extract
+#extract modis values at points and add to studyid_sf
+modistest <- raster::extract(yearly_modis, studyid_sf, sp = TRUE)
+#df = TRUE
+
+########################
 ###option #1
 #extract modis at points in studyid
 modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
@@ -164,7 +204,7 @@ modis_df2 <- modis_df   %>%
 ###
 
 ###option #2
-modis_df <- velox(yearly_modis)$extract(sp = studyid_sf, fun = function(x) max(x, na.rm=TRUE), small = TRUE, df = TRUE) %>%
+modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf, fun = function(x) max(x, na.rm=TRUE), small = TRUE, df = TRUE) %>%
   as_tibble()
 colnames(modis_df) <- c('ID_sp', names(yearly_modis))
 
