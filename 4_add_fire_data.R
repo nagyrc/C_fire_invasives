@@ -228,12 +228,20 @@ str(studyid_sf)
 
 str(baecvlyb)
 
+###
+#look at the data and make sure these values make sense
+#this runs forever
 hist(baecvlyb)
 
 plot(baecvlyb)
 
 test2 <- baecvlyb@data
+head(test2)
+###
 
+
+###
+#intersection of BAECV lyb with studyid_sf
 #this crashed R repeatedly
 #baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
   #as_tibble()
@@ -245,18 +253,21 @@ lll <- studyid_sf
 lll$baecvlyb <- raster::extract(baecvlyb, lll)
 
 unique(lll$baecvlyb)
-#only 2010...why???
+#only 2010...why is there only 1 year???
 
+
+###
 baecv_lll <- lll %>%
   mutate(baecv_lll = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
   filter(baecv_lll != 0)
 #243 observations
+#these ones are keepers
 
 baecv_no <- lll %>%
   mutate(baecv_no = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
   filter(baecv_no == 0)
 #1070 observations
+#these are either burn date after sample collection or ????
+#these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
 
 
-#find points where yr_samp < lyb, then need time -1
-#give Adam a shapefile of these points 
