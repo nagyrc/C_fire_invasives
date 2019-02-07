@@ -12,6 +12,11 @@ getwd()
 #set crs for all data layers: epsg projection 4326 - wgs 84
 crs1 <- 4326
 
+#bring in dataframe and convert dataframe to sf object with epsg projection 4326 - wgs 84
+studyid = read_csv("studyid.csv")
+studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326)
+
+
 
 ###########################
 #Download US shapefile
@@ -64,10 +69,6 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
   st_transform(., crs1)
-
-#bring in dataframe and convert dataframe to sf object with epsg projection 4326 - wgs 84
-studyid = read_csv("studyid.csv")
-studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326)
 
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
