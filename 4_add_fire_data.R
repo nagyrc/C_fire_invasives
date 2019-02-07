@@ -226,6 +226,14 @@ baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
 crs(baecvlyb)
 str(studyid_sf)
 
+str(baecvlyb)
+
+hist(baecvlyb)
+
+plot(baecvlyb)
+
+test2 <- baecvlyb@data
+
 #this crashed R repeatedly
 #baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
   #as_tibble()
@@ -235,6 +243,9 @@ lll <- studyid_sf
 
 #extract lyb from BAECV to the points in studyid_sf
 lll$baecvlyb <- raster::extract(baecvlyb, lll)
+
+unique(lll$baecvlyb)
+#only 2010...why???
 
 baecv_lll <- lll %>%
   mutate(baecv_lll = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
