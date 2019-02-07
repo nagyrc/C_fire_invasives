@@ -18,6 +18,7 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 studyid = read_csv("studyid.csv")
 studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = crs1b)
 
+st_crs(studyid_sf)
 
 ###########################
 #Download US shapefile
@@ -46,8 +47,7 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
   st_transform(.,crs1b)
 #the transform statment did not work here
 
-class(usa_shp)
-usa_shp
+st_crs(usa_shp)
 
 
 ###########################
@@ -72,6 +72,7 @@ mtbs_fire <- st_read(dsn = 'mtbs',
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
   st_transform(., crs1b)
 
+st_crs(mtbs_fire)
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
 mtbs_int <- mtbs_fire  %>%
