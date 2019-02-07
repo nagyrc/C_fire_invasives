@@ -45,7 +45,7 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.))) %>% 
   st_transform(.,crs1b)
-#the transform statment did not work here
+#not sure if the transform statment worked here
 
 st_crs(usa_shp)
 
@@ -71,6 +71,7 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
   st_transform(., crs1b)
+#not sure if the transform statment worked here
 
 st_crs(mtbs_fire)
 
@@ -229,9 +230,21 @@ str(studyid_sf)
 #baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
   #as_tibble()
 
-#extract lyb from BAECV to the points in studyid_sf
-studyid_sf$baecvlyb <- raster::extract(baecvlyb, studyid_sf)
+#copy of dataframe
+lll <- studyid_sf
 
+#extract lyb from BAECV to the points in studyid_sf
+lll$baecvlyb <- raster::extract(baecvlyb, lll)
+
+baecv_lll <- lll %>%
+  mutate(baecv_lll = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
+  filter(baecv_lll != 0)
+#243 observations
+
+baecv_no <- lll %>%
+  mutate(baecv_no = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
+  filter(baecv_no == 0)
+#1070 observations
 
 
 #find points where yr_samp < lyb, then need time -1
