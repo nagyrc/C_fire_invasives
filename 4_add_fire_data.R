@@ -64,12 +64,10 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
   st_transform(., crs1)
-mtbs_fire
 
 #bring in dataframe and convert dataframe to sf object with epsg projection 4326 - wgs 84
 studyid = read_csv("studyid.csv")
 studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326)
-studyid_sf
 
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
@@ -224,7 +222,8 @@ baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
 
 str(studyid_sf)
 
-#convert to shapefile
+baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
+  as_tibble()
 
 #then studyid$baecvlyb <- raster::extract (baecvlyb, studyid)
 
