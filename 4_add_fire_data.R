@@ -9,13 +9,14 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 setwd("data/")
 getwd()
 
-#set crs for all data layers: epsg projection 4326 - wgs 84
-crs1 <- 4326
+#set crs for all data layers: Albers Equal Area
+crs1 <- 'ESRI:102003'
+crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs'
+
 
 #bring in dataframe and convert dataframe to sf object with epsg projection 4326 - wgs 84
 studyid = read_csv("studyid.csv")
-studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326)
-
+studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = crs1b)
 
 
 ###########################
@@ -42,7 +43,8 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.))) %>% 
-  st_transform(.,crs1)
+  st_transform(.,crs1b)
+#the transform statment did not work here
 
 class(usa_shp)
 usa_shp
@@ -68,7 +70,7 @@ mtbs_fire <- st_read(dsn = 'mtbs',
   mutate(MTBS_ID = Fire_ID,
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
-  st_transform(., crs1)
+  st_transform(., crs1b)
 
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
@@ -151,7 +153,6 @@ crs(yearly_modis)
 
 ########################
 #need to reproject raster to match CRS of dataframe
-crs1b <- '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
 
 yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
 #Warning message:
@@ -220,13 +221,17 @@ modis_df2 <- modis_df   %>%
 #BAECV
 #bring in BAECV last year burned from Adam
 baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
-
+crs(baecvlyb)
 str(studyid_sf)
 
-baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
-  as_tibble()
+#this crashed R repeatedly
+#baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
+  #as_tibble()
 
-#then studyid$baecvlyb <- raster::extract (baecvlyb, studyid)
+#extract lyb from BAECV to the points in studyid_sf
+studyid_sf$baecvlyb <- raster::extract(baecvlyb, studyid_sf)
+
+
 
 #find points where yr_samp < lyb, then need time -1
 #give Adam a shapefile of these points 

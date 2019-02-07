@@ -137,16 +137,21 @@ write.csv(combo14, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results
 
 
 ####################
+#set crs for all data layers: Albers Equal Area
+crs1 <- 'ESRI:102003'
+crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs'
+
+
 #bring in shapefile of US states
 usa_shp <- st_read(file.path('data/states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
-  st_transform(4326) %>%  #WGS 84
+  st_transform(crs1b) %>%  #Albers equal area
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.)))
 
 #to show data points across the study area
 studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
-                       crs = "+init=epsg:4326") %>%
+                       crs = crs1b) %>%
   st_transform(crs = st_crs(usa_shp))
 
 
