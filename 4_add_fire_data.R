@@ -172,11 +172,11 @@ colnames(modis_df) <- names(yearly_modis)
 
 is.numeric(modis_df$modis_2001)
 
-#get max value of columns
+#get max value of columns within a row
 modis_max <- modis_df %>% mutate(mak = do.call(pmax, (.)))
 is.numeric(modis_max$mak)
 
-#get column name for max value
+#get column name for max value (indicates year)
 year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
 
 #combine max value and name of column where max value is found to get last year burned
