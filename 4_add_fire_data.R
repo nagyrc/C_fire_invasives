@@ -112,7 +112,7 @@ mtbs_add <- studyid_sf %>%
 
 ###########################
 #MODIS
-#bring in MODIS data
+#bring in MODIS data; create stack of rasters
 dir <- 'modis_events'
 
 layer_reclass <- function(dir) {
@@ -154,13 +154,15 @@ crs(yearly_modis)
 #does not match above; need to reproject
 
 ########################
-#need to reproject raster to match CRS of dataframe
 
+#reproject raster to match CRS of dataframe
+#this runs forever then throws this warning message
 yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
 #Warning message:
 #In .Internal(gc(verbose, reset)) :
   #closing unused connection 3 (/var/folders/b5/w0ns98qx6qj57p36w47z6cv40000gn/T//RtmpcpHtIu/raster///r_tmp_2019-02-06_184307_1718_19366.gri)
 
+#did this actually reproject?
 crs(yearly_modis_trans)
 
 #extract modis values at points
@@ -177,13 +179,14 @@ is.numeric(modis_max$mak)
 #get column name for max value
 year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
 
-test <- as.data.frame(cbind(modis_max$mak, year))
-unique(test$year)
+#combine max value and name of column where max value is found to get last year burned
+lastyr <- as.data.frame(cbind(modis_max$mak, year))
+unique(lastyr$year)
 
-test$mak <- as.numeric(test$mak)
-is.numeric(test$mak)
+lastyr$mak <- as.numeric(lastyr$mak)
+is.numeric(lastyr$mak)
 
-modyr <- ifelse(test$mak == 0, NA, test$year)
+modyr <- ifelse(lastyr$mak == 0, NA, lastyr$year)
 
 #this also works to extract
 #extract modis values at points and add to studyid_sf
@@ -255,6 +258,10 @@ lll$baecvlyb <- raster::extract(baecvlyb, lll)
 unique(lll$baecvlyb)
 #only 2010...why is there only 1 year???
 
+summary(lll$baecvlyb)
+#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#2010    2010    2010    2010    2010    2010 
+#only 2010...why is there only 1 year???
 
 ###
 baecv_lll <- lll %>%
