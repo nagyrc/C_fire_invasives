@@ -3,7 +3,7 @@
 #created August 30, 2018
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp")
+x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp", "rpgm")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
@@ -164,17 +164,38 @@ yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
 
 #did this actually reproject?
 crs(yearly_modis_trans)
+#CRS arguments:
+#+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80
+#+datum=NAD83 +units=m +no_defs +towgs84=0,0,0
+#so, I think it did reproject
 
+###Extract option #1
 #extract modis values at points
 modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
   as_tibble()
 colnames(modis_df) <- names(yearly_modis)
 
 is.numeric(modis_df$modis_2001)
+###
 
+###Extract option #2
+#this also works to extract
+#extract modis values at points and add to studyid_sf
+modistest <- raster::extract(yearly_modis, studyid_sf, sp = TRUE)
+#df = TRUE
+###
+
+###Get max value option #1
 #get max value of columns within a row
 modis_max <- modis_df %>% mutate(mak = do.call(pmax, (.)))
 is.numeric(modis_max$mak)
+
+#checking numbers to make sure they are reasonable.
+unique(modis_max$mak)
+summary(modis_max$mak)
+#hmmm...these are all zeros. so no, this didn't work
+
+
 
 #get column name for max value (indicates year)
 year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
@@ -187,13 +208,34 @@ lastyr$mak <- as.numeric(lastyr$mak)
 is.numeric(lastyr$mak)
 
 modyr <- ifelse(lastyr$mak == 0, NA, lastyr$year)
+###
 
-#this also works to extract
-#extract modis values at points and add to studyid_sf
-modistest <- raster::extract(yearly_modis, studyid_sf, sp = TRUE)
-#df = TRUE
+
+###Get max value option #2
+#alternate method for finding the max value across columms
+#modis_df %>% 
+  #mutate(mak = do.call(pmax, (.))) %>%
+  #dplyr::select(mak) %>% 
+  #cbind(modis_df)
+
+#need to get the year that corresponds to this max value
+modis_max <- modis_df %>% 
+  rownames_to_column('id') %>%
+  left_join(
+    modis_max %>% 
+      #rownames_to_column('id') %>%
+      gather(max_year, max_cnt, modis_2001:modis_2017) %>% 
+      group_by(id) %>% 
+      slice(which.max(max_cnt)), 
+    by = 'id'
+  )
+#just need to check and see how this is dealing with ties
+
+unique(modis_max$max_cnt)
+#still all zeros
 
 ########################
+#old text here
 ###option #1
 #extract modis at points in studyid
 modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
@@ -220,6 +262,8 @@ modis_df2 <- modis_df   %>%
   dplyr::select(-key) %>%
   filter(last_burn_year_modis != 0)
 ###
+#end old text
+###########################
 
 
 ###########################
