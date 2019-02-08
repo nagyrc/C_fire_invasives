@@ -3,7 +3,7 @@
 #created August 30, 2018
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp", "rpgm")
+x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
