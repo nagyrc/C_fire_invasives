@@ -154,15 +154,14 @@ crs(yearly_modis)
 #this runs forever then throws this warning message
 yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
 #Warning message:
-#In .Internal(gc(verbose, reset)) :
-  #closing unused connection 3 (/var/folders/b5/w0ns98qx6qj57p36w47z6cv40000gn/T//RtmpcpHtIu/raster///r_tmp_2019-02-06_184307_1718_19366.gri)
-
+  #In as.POSIXlt.POSIXct(x, tz) :
+  #unknown timezone 'zone/tz/2018i.1.0/zoneinfo/America/Denver'
 #did this actually reproject?
 crs(yearly_modis_trans)
 #CRS arguments:
 #+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80
 #+datum=NAD83 +units=m +no_defs +towgs84=0,0,0
-#so, I think it did reproject
+#so, I think it did reproject...but I wonder if the warning message is important?
 
 ###Extract option #1
 #extract modis values at points
