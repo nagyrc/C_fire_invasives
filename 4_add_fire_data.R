@@ -78,28 +78,23 @@ st_crs(mtbs_fire)
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
 mtbs_int <- mtbs_fire  %>%
   sf::st_intersection(., studyid_sf)
-#so 524/1313 points have had fire and the rest have not
-#does this have any points with multiple fires???
+#6565 observations; so some of these are multiple fires at the same point
 
 unique(mtbs_int$X1)
-#461...where did this field come from???
+#where did this field come from???
 
 
 #keep those where fire date is before sampling date
 mtbs_keep <- mtbs_int %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
-#466 obs of the 524 had fires before the sampling date, which is what we care about
+#1797 had fires before the sampling date
 
-unique(mtbs_keep$MTBS_ID)
-#31
+#there must be multiple fires (years) for the same point OR several parts of fires that should be joined since there are more fires than observations
+#need to either join fires into complexes or remove fires that are not the last year burned
+#not sure how to do this
 
-unique(mtbs_keep$geometry)
-#36
-
-unique(mtbs_keep$MTBS_DISCOVERY_YEAR)
-#17
-
+#after I have done the above (line 94) then...
 mtbs_keep <- mtbs_keep %>%
   mutate(MTBS_lyb = MTBS_DISCOVERY_YEAR)
 #note: may need to group by MTBS_ID?
