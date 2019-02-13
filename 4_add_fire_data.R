@@ -187,7 +187,7 @@ is.numeric(modis_max$mak)
 #checking numbers to make sure they are reasonable.
 unique(modis_max$mak)
 summary(modis_max$mak)
-#hmmm...these are all zeros. so no, this didn't work
+#hmmm...these are all zeros. so no, this didn't work...some of these should be 1s
 
 
 
@@ -199,7 +199,9 @@ lastyr <- as.data.frame(cbind(modis_max$mak, year))
 unique(lastyr$year)
 
 lastyr$mak <- as.numeric(lastyr$mak)
-is.numeric(lastyr$mak)
+#Error in `$<-.data.frame`(`*tmp*`, mak, value = numeric(0)) : 
+#replacement has 0 rows, data has 1313
+#is.numeric(lastyr$mak)
 
 modyr <- ifelse(lastyr$mak == 0, NA, lastyr$year)
 ###
@@ -223,7 +225,8 @@ modis_max <- modis_df %>%
       slice(which.max(max_cnt)), 
     by = 'id'
   )
-#just need to check and see how this is dealing with ties
+#Error in grouped_df_impl(data, unname(vars), drop) : 
+#Column `id` is unknown
 
 unique(modis_max$max_cnt)
 #still all zeros
