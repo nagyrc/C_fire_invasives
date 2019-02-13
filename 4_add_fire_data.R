@@ -3,7 +3,7 @@
 #created August 30, 2018
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp")
+x <- c("sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp", "tidyverse")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
@@ -16,7 +16,8 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 
 #bring in dataframe and convert dataframe to sf object with ESRI projection 102003
 studyid = read_csv("studyid.csv")
-studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = crs1b)
+studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs1b)
 
 st_crs(studyid_sf)
 
@@ -71,38 +72,42 @@ mtbs_fire <- st_read(dsn = 'mtbs',
          MTBS_DISCOVERY_YEAR = Year) %>%
   dplyr::select(MTBS_ID, MTBS_DISCOVERY_YEAR) %>%
   st_transform(., crs1b)
-#not sure if the transform statment worked here
 
 st_crs(mtbs_fire)
+#yes, this was correctly transformed
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
-mtbs_int <- mtbs_fire  %>%
-  sf::st_intersection(., studyid_sf)
-#6565 observations; so some of these are multiple fires at the same point
+mtbs_int <- sf::st_intersection(studyid_sf, mtbs_fire)
+#524 observations; so some points didn't burn
 
 unique(mtbs_int$X1)
 #where did this field come from???
+
+unique(mtbs_fire$MTBS_DISCOVERY_YEAR)
+unique(mtbs_int$MTBS_DISCOVERY_YEAR)
+#these look good
 
 
 #keep those where fire date is before sampling date
 mtbs_keep <- mtbs_int %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
-#1797 had fires before the sampling date
+#466 had fires before the sampling date
 
-#there must be multiple fires (years) for the same point OR several parts of fires that should be joined since there are more fires than observations
-#need to either join fires into complexes or remove fires that are not the last year burned
-#not sure how to do this
-
-#after I have done the above (line 94) then...
 mtbs_keep <- mtbs_keep %>%
-  mutate(MTBS_lyb = MTBS_DISCOVERY_YEAR)
-#note: may need to group by MTBS_ID?
+  group_by(X1) %>%
+  dplyr::mutate(max_yr = max(MTBS_DISCOVERY_YEAR)) %>%
+  filter(MTBS_DISCOVERY_YEAR == max_yr) %>%
+  dplyr::select(-max_yr) %>%
+  ungroup
+
+
 
 #adding MTBS last year burn to studyid_df
 mtbs_add <- studyid_sf %>%
-  left_join(., as.data.frame(mtbs_keep) %>% dplyr::select(-geometry), by = c('pool_value','Study_ID','Article_ID','site','yr_samp','pool','thick','study','topdepth_cm','bottomdepth_cm','BD_estimated','veg')) %>%
-  dplyr::select(-MTBS_ID, -MTBS_DISCOVERY_YEAR, -mtbs_keep, -X1.x, -X1.y)
+  left_join(as.data.frame(mtbs_keep) %>% 
+              dplyr::select(-geometry)) %>%
+  dplyr::select(-mtbs_keep)
 
 
 ###########################
@@ -162,6 +167,20 @@ crs(yearly_modis_trans)
 #+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80
 #+datum=NAD83 +units=m +no_defs +towgs84=0,0,0
 #so, I think it did reproject...but I wonder if the warning message is important?
+
+modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
+
+projection(yearly_modis_trans)
+projection(as(studyid_sf, 'Spatial'))
+
+extent(yearly_modis_trans)
+extent(as(studyid_sf, 'Spatial'))
+
+# explore the raster
+modis_study_area
+
+plot(yearly_modis_trans[[1]])
+
 
 ###Extract option #1
 #extract modis values at points
