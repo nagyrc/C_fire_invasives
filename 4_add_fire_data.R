@@ -14,7 +14,7 @@ crs1 <- 'ESRI:102003'
 crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs'
 
 
-#bring in dataframe and convert dataframe to sf object with epsg projection 4326 - wgs 84
+#bring in dataframe and convert dataframe to sf object with ESRI projection 102003
 studyid = read_csv("studyid.csv")
 studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = crs1b)
 
