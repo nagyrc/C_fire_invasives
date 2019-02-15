@@ -195,7 +195,7 @@ colnames(modis_df) <- names(yearly_modis)
 
 is.numeric(modis_df$modis_2001)
 
-unique(modis_df$modis_2017)
+unique(modis_df$modis_2015)
 #the only years that have fires are 2007 and 2015
 #this can't be right.
 ###
@@ -207,12 +207,11 @@ modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
-unique(modistest$modis_2017)
+unique(modistest$modis_2016)
 #only fires in 2001, 2010, 2011, 2016
 
 ############################
-#so, the two different extraction methods give very different results
-#I'm not sure I trust either of them; I would expect to find fires in more years than this 
+#these two extraction methods finally give the same results!
 
 
 
