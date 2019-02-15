@@ -217,7 +217,7 @@ unique(modistest$modis_2016)
 
 
 
-
+#now that MODIS is extracted; need to get link this df back to studyid_sf so that I have yr_samp 
 ###Get max value option #1
 #get max value of columns within a row
 modis_max <- modis_df %>% mutate(mak = do.call(pmax, (.)))
