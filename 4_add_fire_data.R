@@ -176,6 +176,8 @@ projection(as(studyid_sf, 'Spatial'))
 extent(yearly_modis_trans)
 extent(as(studyid_sf, 'Spatial'))
 
+#good, these all look similar
+
 # explore the raster
 modis_study_area
 
@@ -189,6 +191,10 @@ modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
 colnames(modis_df) <- names(yearly_modis)
 
 is.numeric(modis_df$modis_2001)
+
+unique(modis_df$modis_2017)
+#the only years that have fires are 2007 and 2015
+#this can't be right.
 ###
 
 ###Extract option #2
@@ -198,6 +204,9 @@ modistest <- raster::extract(yearly_modis, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
+unique(modistest$modis_2017)
+#only fires in 2001, 2010, 2011, 2016
+
 ###Get max value option #1
 #get max value of columns within a row
 modis_max <- modis_df %>% mutate(mak = do.call(pmax, (.)))
@@ -205,8 +214,8 @@ is.numeric(modis_max$mak)
 
 #checking numbers to make sure they are reasonable.
 unique(modis_max$mak)
-summary(modis_max$mak)
-#hmmm...these are all zeros. so no, this didn't work...some of these should be 1s
+#only 0, NA, and 2015
+#hmmm...this isn't working...there should be some other years too.
 
 
 
