@@ -168,6 +168,7 @@ crs(yearly_modis_trans)
 #+datum=NAD83 +units=m +no_defs +towgs84=0,0,0
 #so, I think it did reproject...but I wonder if the warning message is important?
 
+#can use this to decrease run time
 modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
 
 projection(yearly_modis_trans)
@@ -175,6 +176,8 @@ projection(as(studyid_sf, 'Spatial'))
 
 extent(yearly_modis_trans)
 extent(as(studyid_sf, 'Spatial'))
+#x's of studyid_sf are all -; x's of modis are some - and some +
+#y's of studyid_sf are all +; y's of modis are some - and some +
 
 #good, these all look similar
 
@@ -186,7 +189,7 @@ plot(yearly_modis_trans[[1]])
 
 ###Extract option #1
 #extract modis values at points
-modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
+modis_df <- velox(modis_study_area)$extract_points(sp = studyid_sf) %>%
   as_tibble()
 colnames(modis_df) <- names(yearly_modis)
 
@@ -200,12 +203,21 @@ unique(modis_df$modis_2017)
 ###Extract option #2
 #this also works to extract
 #extract modis values at points and add to studyid_sf
-modistest <- raster::extract(yearly_modis, studyid_sf, sp = TRUE)
+modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
 unique(modistest$modis_2017)
 #only fires in 2001, 2010, 2011, 2016
+
+############################
+#so, the two different extraction methods give very different results
+#I'm not sure I trust either of them; I would expect to find fires in more years than this 
+
+
+
+
+
 
 ###Get max value option #1
 #get max value of columns within a row
