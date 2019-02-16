@@ -189,38 +189,68 @@ plot(yearly_modis_trans[[1]])
 
 ###Extract option #1
 #extract modis values at points
-modis_df <- velox(modis_study_area)$extract_points(sp = studyid_sf) %>%
-  as_tibble()
-colnames(modis_df) <- names(yearly_modis)
+#modis_df <- velox(modis_study_area)$extract_points(sp = studyid_sf) %>%
+  #as_tibble()
+#colnames(modis_df) <- names(yearly_modis)
 
-is.numeric(modis_df$modis_2001)
+#is.numeric(modis_df$modis_2001)
 
-unique(modis_df$modis_2015)
-#the only years that have fires are 2007 and 2015
+#unique(modis_df$modis_2015)
 #this can't be right.
 ###
 
 ###Extract option #2
 #this also works to extract
+#and this has the original fields still in it (need yr_samp)
 #extract modis values at points and add to studyid_sf
 modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
-unique(modistest$modis_2016)
-#only fires in 2001, 2010, 2011, 2016
+unique(modistest$modis_2010)
 
 ############################
-#these two extraction methods finally give the same results!
+#I'm not sure these numbers are correct because in 2016, 2010, there are values = 2016.0000 and 2010.0000
+#this seems weird
 
 
 
 
 
-#now that MODIS is extracted; need to get link this df back to studyid_sf so that I have yr_samp 
+
 ###Get max value option #1
 #get max value of columns within a row
-modis_max <- modis_df %>% mutate(mak = do.call(pmax, (.)))
+#but need this relative to yr_samp...
+#I need column name of last year that has value other than 0 or NA prior to yr_samp
+modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs1b)
+
+modis_last <- modistest_sf %>%
+  group_by(X1) %>%
+  dplyr::mutate(mak = pmax(!is.na(modis_2001:modis_2017))) %>%
+  mutate(modis_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
+  filter(modis_keep != 0)
+
+  
+###
+  mtbs_keep <- mtbs_int %>%
+  mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
+  filter(mtbs_keep != 0) 
+#466 had fires before the sampling date
+
+mtbs_keep <- mtbs_keep %>%
+  group_by(X1) %>%
+  dplyr::mutate(max_yr = max(MTBS_DISCOVERY_YEAR)) %>%
+  filter(MTBS_DISCOVERY_YEAR == max_yr) %>%
+  dplyr::select(-max_yr) %>%
+  ungroup
+  
+
+  
+###    
+
+modis_max <- modistest %>% 
+  mutate(mak = pmax(modis_2001:modis_2017))
 is.numeric(modis_max$mak)
 
 #checking numbers to make sure they are reasonable.
