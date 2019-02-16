@@ -228,22 +228,13 @@ modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
 modis_last <- modistest_sf %>%
   group_by(X1) %>%
   dplyr::mutate(mak = pmax(!is.na(modis_2001:modis_2017))) %>%
-  mutate(modis_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
+  mutate(modis_keep = ifelse(mak <= yr_samp, 1, 0)) %>%
   filter(modis_keep != 0)
 
   
 ###
-  mtbs_keep <- mtbs_int %>%
-  mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
-  filter(mtbs_keep != 0) 
-#466 had fires before the sampling date
 
-mtbs_keep <- mtbs_keep %>%
-  group_by(X1) %>%
-  dplyr::mutate(max_yr = max(MTBS_DISCOVERY_YEAR)) %>%
-  filter(MTBS_DISCOVERY_YEAR == max_yr) %>%
-  dplyr::select(-max_yr) %>%
-  ungroup
+
   
 
   
@@ -261,74 +252,20 @@ unique(modis_max$mak)
 
 
 #get column name for max value (indicates year)
-year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
+#year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
 
 #combine max value and name of column where max value is found to get last year burned
-lastyr <- as.data.frame(cbind(modis_max$mak, year))
-unique(lastyr$year)
+#lastyr <- as.data.frame(cbind(modis_max$mak, year))
+#unique(lastyr$year)
 
-lastyr$mak <- as.numeric(lastyr$mak)
+#lastyr$mak <- as.numeric(lastyr$mak)
 #Error in `$<-.data.frame`(`*tmp*`, mak, value = numeric(0)) : 
 #replacement has 0 rows, data has 1313
 #is.numeric(lastyr$mak)
 
-modyr <- ifelse(lastyr$mak == 0, NA, lastyr$year)
+#modyr <- ifelse(lastyr$mak == 0, NA, lastyr$year)
 ###
 
-
-###Get max value option #2
-#alternate method for finding the max value across columms
-#modis_df %>% 
-  #mutate(mak = do.call(pmax, (.))) %>%
-  #dplyr::select(mak) %>% 
-  #cbind(modis_df)
-
-#need to get the year that corresponds to this max value
-modis_max <- modis_df %>% 
-  rownames_to_column('id') %>%
-  left_join(
-    modis_max %>% 
-      #rownames_to_column('id') %>%
-      gather(max_year, max_cnt, modis_2001:modis_2017) %>% 
-      group_by(id) %>% 
-      slice(which.max(max_cnt)), 
-    by = 'id'
-  )
-#Error in grouped_df_impl(data, unname(vars), drop) : 
-#Column `id` is unknown
-
-unique(modis_max$max_cnt)
-#still all zeros
-
-########################
-#old text here
-###option #1
-#extract modis at points in studyid
-modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf) %>%
-  as_tibble()
-colnames(modis_df) <- names(yearly_modis)
-
-#create last year burned at points in studyid
-modis_df2 <- modis_df   %>%
-  mutate(id = as.data.frame(studyid_sf)$id) %>%
-  gather(key = key, value = last_burn_year_modis , -id) %>%
-  dplyr::select(-key) %>%
-  filter(last_burn_year_modis != 0)
-###
-
-###option #2
-modis_df <- velox(yearly_modis)$extract_points(sp = studyid_sf, fun = function(x) max(x, na.rm=TRUE), small = TRUE, df = TRUE) %>%
-  as_tibble()
-colnames(modis_df) <- c('ID_sp', names(yearly_modis))
-
-modis_df2 <- modis_df   %>%
-  mutate(id = as.data.frame(studyid_sf)$id) %>%
-  dplyr::select(-ID_sp) %>%
-  gather(key = key, value = last_burn_year_modis , -id) %>%
-  dplyr::select(-key) %>%
-  filter(last_burn_year_modis != 0)
-###
-#end old text
 ###########################
 
 
