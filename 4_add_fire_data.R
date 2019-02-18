@@ -189,7 +189,7 @@ modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
-unique(modistest$modis_2010)
+unique(modistest$modis_2004)
 #I'm not sure these numbers are correct because in 2016, 2010, there are values = 2016.0000 and 2010.0000
 #this seems a bit weird
 
@@ -226,13 +226,13 @@ keepmodlyb <- keep %>%
   dplyr::group_by(X1) %>%
   mutate(the_rank  = rank(-burn, ties.method = "last")) %>%
   filter(the_rank == 1) %>% dplyr::select(-the_rank)
-#this is not grouping by X1
+#this appears to be working; just need to make sure MODIS data extracted properly
   
 
 #adding MODIS last year burn to mtbs_add
 modis_add <- mtbs_add %>%
   left_join(as.data.frame(keepmodlyb) %>% 
-              dplyr::select(-geometry, -almost, -first)) 
+              dplyr::select(-geometry, -almost, -first, -burn, -yr_samp)) 
 
 
 
