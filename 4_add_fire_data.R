@@ -194,13 +194,10 @@ unique(modistest$modis_2010)
 #this seems a bit weird
 
 
-
-
-
 ###Find last year burned for modis that occurred before sampling
 #I need the column name of last year that has value other than 0 or NA prior to yr_samp
 
-#first transform
+#create sf object from extracted values
 modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
@@ -215,13 +212,16 @@ modisselect <- modistest_sf %>%
   
 
 #create subset of data where burn happens before sampling
+#any burns that happened after sampling date, we don't care about
 keep <- modisselect %>% 
   separate(year, c("first", "almost"), sep = "_") %>%
   mutate(modis_yr = as.numeric(almost)) %>%
   filter(modis_yr <= yr_samp)
 #this removes quite a few rows...are these all burns after sampling?  or am I removing NAs?
+#removing NAs is ok, that means no burn
 
 #need to return the modis_yr where burn is maximized
+#for ties, choose the last year
 keepmodlyb <- keep %>%
   dplyr::group_by(X1) %>%
   mutate(the_rank  = rank(-burn, ties.method = "last")) %>%
@@ -229,7 +229,10 @@ keepmodlyb <- keep %>%
 #this is not grouping by X1
   
 
-
+#adding MODIS last year burn to mtbs_add
+modis_add <- mtbs_add %>%
+  left_join(as.data.frame(keepmodlyb) %>% 
+              dplyr::select(-geometry, -almost, -first)) 
 
 
 
