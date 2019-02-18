@@ -218,19 +218,37 @@ unique(modistest$modis_2010)
 
 
 
-###Get max value option #1
-#get max value of columns within a row
-#but need this relative to yr_samp...
+###Find last year burned for modis that occurred before sampling
 #I need the column name of last year that has value other than 0 or NA prior to yr_samp
 modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
 names(modistest_sf) <- c("X1", "site", "yr_samp", "topdepth_cm", "bottomdepth_cm", "BD_estimated","veg",
-                         "study","thick","Article_ID","pool","pool_value","Study_ID",2001, 2002, 2003, 2004,
+                         "study","thick","Article_ID","pool","pool_value","Study_ID", 2001, 2002, 2003, 2004,
                          2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, "geometry")
 
+#transform modis data into long format, keeping X1 so I can group by this later
+modisselect <- modistest_sf %>%
+  dplyr::select(X1, yr_samp, modis_2001:modis_2017) %>%
+  gather("year", "burn", -X1, -yr_samp, -geometry) 
+  
+
+#create subset of data where burn happens before sampling
+keep <- modisselect %>% 
+  separate(year, c("first", "almost"), sep = "_") %>%
+  mutate(modis_yr = as.numeric(almost)) %>%
+  filter(modis_yr <= yr_samp)
+
+#need to return the modis_yr where burn is maximized
+
+
+###########################
 modis_last <- modistest_sf %>%
   group_by(X1) %>%
+  mutate(last = )
+  mutate(last = ifelse(mak <= yr_samp, 1, 0))
+  
+  
   dplyr::mutate(mak = pmax(!is.na(modis_2001:modis_2017))) %>%
   mutate(modis_keep = ifelse(mak <= yr_samp, 1, 0)) %>%
   filter(modis_keep != 0)
@@ -240,6 +258,7 @@ modis_last <- modistest_sf %>%
   mutate(modis_keep = ifelse(mak <= yr_samp, 1, 0)) %>%
   filter(modis_keep != 0)  
 ###
+
 
 
   
