@@ -173,7 +173,7 @@ extent(as(studyid_sf, 'Spatial'))
 #x's of studyid_sf are all -; x's of modis are some - and some +
 #y's of studyid_sf are all +; y's of modis are some - and some +
 
-#good, these all look similar
+
 
 plot(yearly_modis_trans[[1]])
 
