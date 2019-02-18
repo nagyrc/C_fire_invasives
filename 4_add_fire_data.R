@@ -156,20 +156,14 @@ crs(yearly_modis)
 ########################
 
 #reproject raster to match CRS of dataframe
-#this runs forever then throws this warning message
 yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
-#Warning message:
-  #In as.POSIXlt.POSIXct(x, tz) :
-  #unknown timezone 'zone/tz/2018i.1.0/zoneinfo/America/Denver'
+
 #did this actually reproject?
 crs(yearly_modis_trans)
 #CRS arguments:
 #+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80
 #+datum=NAD83 +units=m +no_defs +towgs84=0,0,0
-#so, I think it did reproject...but I wonder if the warning message is important?
 
-#can use this to decrease run time
-modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
 
 projection(yearly_modis_trans)
 projection(as(studyid_sf, 'Spatial'))
@@ -181,38 +175,23 @@ extent(as(studyid_sf, 'Spatial'))
 
 #good, these all look similar
 
+plot(yearly_modis_trans[[1]])
+
+#can use this to decrease run time; cropped version of modis data
+modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
+
 # explore the raster
 modis_study_area
 
-plot(yearly_modis_trans[[1]])
 
-
-###Extract option #1
-#extract modis values at points
-#modis_df <- velox(modis_study_area)$extract_points(sp = studyid_sf) %>%
-  #as_tibble()
-#colnames(modis_df) <- names(yearly_modis)
-
-#is.numeric(modis_df$modis_2001)
-
-#unique(modis_df$modis_2015)
-#this can't be right.
-###
-
-###Extract option #2
-#this also works to extract
-#and this has the original fields still in it (need yr_samp)
 #extract modis values at points and add to studyid_sf
 modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
 unique(modistest$modis_2010)
-
-############################
 #I'm not sure these numbers are correct because in 2016, 2010, there are values = 2016.0000 and 2010.0000
-#this seems weird
-
+#this seems a bit weird
 
 
 
@@ -220,12 +199,14 @@ unique(modistest$modis_2010)
 
 ###Find last year burned for modis that occurred before sampling
 #I need the column name of last year that has value other than 0 or NA prior to yr_samp
+
+#first transform
 modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
-names(modistest_sf) <- c("X1", "site", "yr_samp", "topdepth_cm", "bottomdepth_cm", "BD_estimated","veg",
-                         "study","thick","Article_ID","pool","pool_value","Study_ID", 2001, 2002, 2003, 2004,
-                         2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, "geometry")
+#names(modistest_sf) <- c("X1", "site", "yr_samp", "topdepth_cm", "bottomdepth_cm", "BD_estimated","veg",
+                         #"study","thick","Article_ID","pool","pool_value","Study_ID", 2001, 2002, 2003, 2004,
+                         #2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, "geometry")
 
 #transform modis data into long format, keeping X1 so I can group by this later
 modisselect <- modistest_sf %>%
@@ -241,57 +222,20 @@ keep <- modisselect %>%
 #this removes quite a few rows...are these all burns after sampling?  or am I removing NAs?
 
 #need to return the modis_yr where burn is maximized
-
-
-###########################
-modis_last <- modistest_sf %>%
-  group_by(X1) %>%
-  mutate(last = )
-  mutate(last = ifelse(mak <= yr_samp, 1, 0))
-  
-  
-  dplyr::mutate(mak = pmax(!is.na(modis_2001:modis_2017))) %>%
-  mutate(modis_keep = ifelse(mak <= yr_samp, 1, 0)) %>%
-  filter(modis_keep != 0)
-
-modis_last <- modistest_sf %>%
-  group_by(X1) %>%
-  mutate(modis_keep = ifelse(mak <= yr_samp, 1, 0)) %>%
-  filter(modis_keep != 0)  
-###
-
-
-
+keepmodlyb <- keep %>%
+  dplyr::group_by(X1) %>%
+  mutate(the_rank  = rank(-burn, ties.method = "last")) %>%
+  filter(the_rank == 1) %>% dplyr::select(-the_rank)
+#this is not grouping by X1
   
 
-  
-###    
-
-modis_max <- modistest %>% 
-  mutate(mak = pmax(modis_2001:modis_2017))
-is.numeric(modis_max$mak)
-
-#checking numbers to make sure they are reasonable.
-unique(modis_max$mak)
-#only 0, NA, and 2015
-#hmmm...this isn't working...there should be some other years too.
 
 
 
-#get column name for max value (indicates year)
-#year <- colnames(modis_df)[max.col(modis_df,ties.method  = "last")]
 
-#combine max value and name of column where max value is found to get last year burned
-#lastyr <- as.data.frame(cbind(modis_max$mak, year))
-#unique(lastyr$year)
 
-#lastyr$mak <- as.numeric(lastyr$mak)
-#Error in `$<-.data.frame`(`*tmp*`, mak, value = numeric(0)) : 
-#replacement has 0 rows, data has 1313
-#is.numeric(lastyr$mak)
 
-#modyr <- ifelse(lastyr$mak == 0, NA, lastyr$year)
-###
+
 
 ###########################
 
