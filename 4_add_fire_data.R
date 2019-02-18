@@ -238,6 +238,7 @@ keep <- modisselect %>%
   separate(year, c("first", "almost"), sep = "_") %>%
   mutate(modis_yr = as.numeric(almost)) %>%
   filter(modis_yr <= yr_samp)
+#this removes quite a few rows...are these all burns after sampling?  or am I removing NAs?
 
 #need to return the modis_yr where burn is maximized
 
