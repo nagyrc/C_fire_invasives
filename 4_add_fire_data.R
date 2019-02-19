@@ -277,15 +277,18 @@ baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
 ###
-baecv_keep <- lll %>%
+baecv_keep <- baecvtest_sf %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#243 observations
+#1186 observations
 #these ones are keepers
 
-baecv_no <- lll %>%
+baecv_no <- baecvtest_sf  %>%
   filter(lyb_usa_baecv_1984_2015 > yr_samp)
-#1070 observations
-#these are either burn date after sample collection or ????
+#127 observations
+#these are burn date after sample collection
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
 
-
+baecv_add <- modis_add %>%
+  left_join(as.data.frame(baecv_keep) %>% 
+              dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
+#MTBS and BAECV look good; still need to fix MODIS
