@@ -270,11 +270,15 @@ head(test2)
 #baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
   #as_tibble()
 
+#reproject raster to match CRS of dataframe
+baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
+
 #copy of dataframe
 lll <- studyid_sf
 
 #extract lyb from BAECV to the points in studyid_sf
-lll$baecvlyb <- raster::extract(baecvlyb, lll)
+lll$baecvlyb <- raster::extract(baecvlyb, lll, sp = TRUE)
+#modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 
 unique(lll$baecvlyb)
 #only 2010...why is there only 1 year???
