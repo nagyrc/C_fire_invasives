@@ -283,10 +283,20 @@ baecv_keep <- baecvtest_sf %>%
 #these ones are keepers
 
 baecv_no <- baecvtest_sf  %>%
-  filter(lyb_usa_baecv_1984_2015 > yr_samp)
+  filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
+  select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
 #127 observations
 #these are burn date after sample collection
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
+
+#join these no points back to studyid_sf for Adam
+Xkeep <- unique(baecv_no$X1)
+baecv_no_Adam <- studyid_sf %>%
+  filter(X1 == Xkeep)
+
+write.csv(baecv_no_Adam, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no.csv")
+
+
 
 baecv_add <- modis_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
