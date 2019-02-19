@@ -248,20 +248,7 @@ modis_add <- mtbs_add %>%
 #bring in BAECV last year burned from Adam
 baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
 crs(baecvlyb)
-str(studyid_sf)
-
-str(baecvlyb)
-
-###
-#look at the data and make sure these values make sense
-#this runs forever
-hist(baecvlyb)
-
-plot(baecvlyb)
-
-test2 <- baecvlyb@data
-head(test2)
-###
+crs(studyid_sf)
 
 
 ###
@@ -272,32 +259,31 @@ head(test2)
 
 #reproject raster to match CRS of dataframe
 baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
+crs(baecvlyb_trans)
 
-#copy of dataframe
-lll <- studyid_sf
+#try transforming the points instead to the projection of baecv then transform back later???
+
 
 #extract lyb from BAECV to the points in studyid_sf
-lll$baecvlyb <- raster::extract(baecvlyb, lll, sp = TRUE)
-#modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
+lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
 
-unique(lll$baecvlyb)
-#only 2010...why is there only 1 year???
+unique(lll$lyb_usa_baecv_1984_2015)
+#many years when I used the original version (baecvlyb); when I used the reprojected version (baecvlyb_trans), only 0 and NA
+#something weird is happening here
 
-summary(lll$baecvlyb)
-#Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#2010    2010    2010    2010    2010    2010 
-#only 2010...why is there only 1 year???
+
+#create sf object from extracted values
+baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs1b)
 
 ###
-baecv_lll <- lll %>%
-  mutate(baecv_lll = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
-  filter(baecv_lll != 0)
+baecv_keep <- lll %>%
+  filter(lyb_usa_baecv_1984_2015 <= yr_samp)
 #243 observations
 #these ones are keepers
 
 baecv_no <- lll %>%
-  mutate(baecv_no = ifelse(baecvlyb <= yr_samp, 1, 0)) %>%
-  filter(baecv_no == 0)
+  filter(lyb_usa_baecv_1984_2015 > yr_samp)
 #1070 observations
 #these are either burn date after sample collection or ????
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
