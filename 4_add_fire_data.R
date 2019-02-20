@@ -266,7 +266,8 @@ crs(baecvlyb_trans)
 lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
 
 unique(lll$lyb_usa_baecv_1984_2015)
-#many years when I used the original version (baecvlyb); when I used the reprojected version (baecvlyb_trans), only 0 and NA
+#there are many years when I used the original version (baecvlyb) which is what I would expect
+#when I used the reprojected version (baecvlyb_trans), only 0 and NA
 #something weird is happening here
 
 
