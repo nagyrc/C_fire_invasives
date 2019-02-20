@@ -253,9 +253,6 @@ crs(studyid_sf)
 
 ###
 #intersection of BAECV lyb with studyid_sf
-#this crashed R repeatedly
-#baecv_int <- velox(baecvlyb)$extract_points(sp = studyid_sf) %>%
-  #as_tibble()
 
 #reproject raster to match CRS of dataframe
 baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
