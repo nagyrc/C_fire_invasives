@@ -1,0 +1,17 @@
+"","pool","invaded","burned","mean"
+"1","AGBC_g_m2","invaded","burned",42.5960699425287
+"2","AGBC_g_m2","invaded","unburned",96.0666856321839
+"3","AGBC_g_m2","native","burned",340.356666666667
+"4","AGBC_g_m2","native","unburned",329.458666666667
+"5","BGBC_g_m2","invaded","burned",50.9771428571429
+"6","BGBC_g_m2","native","burned",176.943037037037
+"7","litterC_g_m2","invaded","burned",155.756761761905
+"8","litterC_g_m2","invaded","unburned",98.812645
+"9","litterC_g_m2","native","burned",140.0418125
+"10","orgsoilC_g_m2","invaded","burned",1807.95414517422
+"11","orgsoilC_g_m2","native","burned",1717.1902437927
+"12","orgsoilC_g_m2","native","unburned",1015.58294673784
+"13","totsoilC_g_m2","invaded","burned",1129.57111003898
+"14","totsoilC_g_m2","invaded","unburned",1943.93088
+"15","totsoilC_g_m2","native","burned",1163.27000377178
+"16","totsoilC_g_m2","native","unburned",1468.44769090909
