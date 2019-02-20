@@ -26,7 +26,7 @@ invadedmeans <- invaded %>%
 invadedburned1 <- invaded %>%
   mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0, "burned", "unburned")) %>%
   group_by(pool, invaded, burned) %>%
-  summarise(mean = mean(pool_value))
+  summarise(mean = mean(pool_value), n = n())
 
 write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_MTBS.csv")
 
@@ -36,8 +36,19 @@ write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/
 invadedburned2 <- invaded %>%
   mutate(burned = ifelse(!is.na(lyb_usa_baecv_1984_2015) > 0, "burned", "unburned")) %>%
   group_by(pool, invaded, burned) %>%
-  summarise(mean = mean(pool_value))
+  summarise(mean = mean(pool_value), n = n())
 
 write.csv(invadedburned2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
+
+
+#try to combine MTBS and BAECV
+invadedburned3 <- invaded %>%
+  mutate(burned = ifelse(!is.na(lyb_usa_baecv_1984_2015) > 0 & !is.na(lyb_usa_baecv_1984_2015) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
+
+
 
 
