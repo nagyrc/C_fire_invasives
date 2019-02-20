@@ -307,4 +307,11 @@ baecv_add <- modis_add %>%
               dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
 #MTBS and BAECV look good; still need to fix MODIS
 
-write.csv(baecv_add, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
+#add lat/long back in just for funsies
+ll <- studyid %>%
+  select(lat, long, X1)
+
+baecv_add_ll <- baecv_add %>%
+  left_join(as.data.frame(ll))
+
+write.csv(baecv_add_ll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
