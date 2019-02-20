@@ -51,6 +51,10 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
 st_crs(usa_shp)
 
 
+
+
+###########################
+
 ###########################
 #MTBS
 #Download the MTBS fire polygons
@@ -102,13 +106,16 @@ mtbs_keep <- mtbs_keep %>%
   ungroup
 
 
-
 #adding MTBS last year burn to studyid_df
 mtbs_add <- studyid_sf %>%
   left_join(as.data.frame(mtbs_keep) %>% 
               dplyr::select(-geometry)) %>%
   dplyr::select(-mtbs_keep)
 
+
+
+
+###########################
 
 ###########################
 #MODIS
@@ -153,7 +160,7 @@ crs(yearly_modis)
 #+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 +a=6370997 +b=6370997 +units=m +no_defs 
 #does not match above; need to reproject
 
-########################
+###
 
 #reproject raster to match CRS of dataframe
 yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
@@ -246,6 +253,7 @@ modis_add <- mtbs_add %>%
 ###########################
 #BAECV
 #bring in BAECV last year burned from Adam
+#will need to bring in his code on how he created last year burn eventually
 baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
 crs(baecvlyb)
 crs(studyid_sf)
