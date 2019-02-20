@@ -290,11 +290,14 @@ baecv_no <- baecvtest_sf  %>%
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
 
 #join these no points back to studyid_sf for Adam
-Xkeep <- unique(baecv_no$X1)
+Xno <- unique(baecv_no$X1)
 baecv_no_Adam <- studyid_sf %>%
-  filter(X1 == Xkeep)
-
+  filter(X1 %in% Xno)
 write.csv(baecv_no_Adam, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no.csv")
+
+baecv_no_Adamll <- studyid %>%
+  filter(X1 %in% Xno)
+write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
 
 
 
@@ -302,3 +305,5 @@ baecv_add <- modis_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
               dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
 #MTBS and BAECV look good; still need to fix MODIS
+
+write.csv(baecv_add, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
