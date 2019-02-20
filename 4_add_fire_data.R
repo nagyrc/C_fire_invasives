@@ -208,9 +208,6 @@ unique(modistest$modis_2004)
 modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
-#names(modistest_sf) <- c("X1", "site", "yr_samp", "topdepth_cm", "bottomdepth_cm", "BD_estimated","veg",
-                         #"study","thick","Article_ID","pool","pool_value","Study_ID", 2001, 2002, 2003, 2004,
-                         #2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, "geometry")
 
 #transform modis data into long format, keeping X1 so I can group by this later
 modisselect <- modistest_sf %>%
