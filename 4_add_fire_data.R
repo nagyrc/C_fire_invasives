@@ -261,8 +261,6 @@ crs(studyid_sf)
 baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
 crs(baecvlyb_trans)
 
-#try transforming the points instead to the projection of baecv then transform back later???
-
 
 #extract lyb from BAECV to the points in studyid_sf
 lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
