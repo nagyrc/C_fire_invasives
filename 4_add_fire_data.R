@@ -3,7 +3,7 @@
 #created August 30, 2018
 
 #load multiple libraries 
-x <- c("sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp", "tidyverse")
+x <- c("sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "sp", "tidyverse","rgdal")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
@@ -292,14 +292,10 @@ baecv_no <- baecvtest_sf  %>%
 
 #join these no points back to studyid_sf for Adam
 Xno <- unique(baecv_no$X1)
-baecv_no_Adam <- studyid_sf %>%
-  filter(X1 %in% Xno)
-write.csv(baecv_no_Adam, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no.csv")
-
 baecv_no_Adamll <- studyid %>%
   filter(X1 %in% Xno)
 write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
-
+#go to Adams' script for dealing with these points; then come back here
 
 
 baecv_add <- modis_add %>%
@@ -307,11 +303,28 @@ baecv_add <- modis_add %>%
               dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
 #MTBS and BAECV look good; still need to fix MODIS
 
-#add lat/long back in just for funsies
+#add lat/long back in for plotting, quick id, etc.
 ll <- studyid %>%
   select(lat, long, X1)
 
 baecv_add_ll <- baecv_add %>%
   left_join(as.data.frame(ll))
 
-write.csv(baecv_add_ll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
+write.csv(baecv_add_ll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire_almost.csv")
+
+
+#adding in BAECV info (second to last year burned) from Adam's script
+#open data
+baecv_gpkg <- readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
+
+#turn this into a dataframe
+as.data.frame(baecv_gpkg)
+
+#add these points from Adam
+baecv_rep <- baecv_add_ll %>%
+  mutate(baecvlyb = ifelse(Study_ID == 154, 2001,lyb_usa_baecv_1984_2015)) %>%
+  mutate(baecv_lyb = ifelse(Study_ID == 226, 1986, baecvlyb)) %>%
+  select(-lyb_usa_baecv_1984_2015, -baecvlyb)
+
+write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
+
