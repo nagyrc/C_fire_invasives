@@ -444,7 +444,8 @@ head(kpMahood1)
 write.csv(kpMahood1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood1.csv")
 
 
-
+unique(kpMahood1$site)
+unique(kpMahood1$lat)
 
 #Mahood2
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
@@ -941,7 +942,7 @@ str(alldata)
 alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
 alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
 alldata$elevation <- as.numeric(alldata$elevation)
-alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+#alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 alldata$BGB_g_m2 <- as.numeric(alldata$BGB_g_m2)
 alldata$BGB_g_m2_SE <- as.numeric(alldata$BGB_g_m2_SE)
 alldata$litter_g_m2 <- as.numeric(alldata$litter_g_m2)
