@@ -12,9 +12,11 @@ setwd("data/")
 siwf = read_csv("studyid_with_fire.csv")
 
 #or load from script 4
+#siwf <- studyid_sf
 siwf <- baecv_rep
 
 #remove extra X1 column that was added (I believe with export)
+#might not need this step
 siwf <- siwf %>%
   select(-X1_1) %>%
 
@@ -81,7 +83,7 @@ smeans <- unique(studymeans$study)
 meansonly <- siwf_sep %>%
   filter(study %in% smeans) %>%
   group_by(study) %>%
-  mutate(paired = ifelse(length(unique(veg)) > 1, "paired", "unpaired")) %>%
+  #mutate(paired = ifelse(length(unique(veg)) > 1, "paired", "unpaired")) %>%
   mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native")) %>%
   mutate(burned = ifelse(yr_samp - MTBS_DISCOVERY_YEAR < 10, "burned", "unburned"))
 #109 obs
@@ -99,7 +101,7 @@ rawsonly <- siwf_sep %>%
 #this is using MTBS only; can include other fire products
 rawsonly2 <- rawsonly %>%
   group_by(study) %>%
-  mutate(paired = ifelse(length(unique(veg)) > 1, "paired", "unpaired")) %>%
+  #mutate(paired = ifelse(length(unique(veg)) > 1, "paired", "unpaired")) %>%
   mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native")) %>%
   mutate(burned = ifelse(yr_samp - MTBS_DISCOVERY_YEAR < 10, "burned", "unburned")) %>%
   mutate(yrssinceb = yr_samp - MTBS_DISCOVERY_YEAR)
