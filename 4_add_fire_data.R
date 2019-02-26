@@ -109,7 +109,7 @@ mtbs_keep <- mtbs_keep %>%
 #adding MTBS last year burn to studyid_df
 mtbs_add <- studyid_sf %>%
   left_join(as.data.frame(mtbs_keep) %>% 
-              dplyr::select(-geometry)) %>%
+  dplyr::select(-geometry)) %>%
   dplyr::select(-mtbs_keep)
 
 
@@ -236,7 +236,7 @@ keepmodlyb <- keep %>%
 #adding MODIS last year burn to mtbs_add
 modis_add <- mtbs_add %>%
   left_join(as.data.frame(keepmodlyb) %>% 
-              dplyr::select(-geometry, -almost, -first, -burn, -yr_samp)) 
+  dplyr::select(-geometry, -almost, -first, -burn, -yr_samp)) 
 
 
 
@@ -300,7 +300,7 @@ write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 
 baecv_add <- modis_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
-              dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
+  dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
 #MTBS and BAECV look good; still need to fix MODIS
 
 #add lat/long back in for plotting, quick id, etc.
@@ -320,7 +320,7 @@ baecv_gpkg <- readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
 #turn this into a dataframe
 as.data.frame(baecv_gpkg)
 
-#add these points from Adam
+#add these points from Adam by replacing values
 baecv_rep <- baecv_add_ll %>%
   mutate(baecvlyb = ifelse(Study_ID == 154, 2001,lyb_usa_baecv_1984_2015)) %>%
   mutate(baecv_lyb = ifelse(Study_ID == 226, 1986, baecvlyb)) %>%
