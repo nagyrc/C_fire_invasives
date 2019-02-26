@@ -22,6 +22,9 @@ colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 
 unique(alldata$yr_samp)
 
+
+
+####
 #pull last year burned from alldata as overwriting the last year burned
 unique(alldata$last_year_burned)
 yrbn <- alldata %>%
@@ -33,6 +36,10 @@ yrbn <- alldata %>%
 unique(yrbn$last_year_burned)
 
 write.csv(yrbn, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/last_year_burn_overwrite.csv")
+###
+
+
+
 
 #slims dataframe to key variables...still wide format to use with spatial data in script 4 (adding fire data)
 #retain SE and n's here
