@@ -117,6 +117,91 @@ mtbs_add <- studyid_sf %>%
 
 ###########################
 
+
+
+
+###########################
+#BAECV
+#bring in BAECV last year burned from Adam
+#will need to bring in his code on how he created last year burn eventually
+baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
+crs(baecvlyb)
+crs(studyid_sf)
+
+
+###
+#intersection of BAECV lyb with studyid_sf
+
+#reproject raster to match CRS of dataframe
+baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
+crs(baecvlyb_trans)
+
+
+#extract lyb from BAECV to the points in studyid_sf
+lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
+
+unique(lll$lyb_usa_baecv_1984_2015)
+#there are many years when I used the original version (baecvlyb) which is what I would expect
+#when I used the reprojected version (baecvlyb_trans), only 0 and NA
+#something weird is happening here
+
+
+#create sf object from extracted values
+baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs1b)
+
+###
+baecv_keep <- baecvtest_sf %>%
+  filter(lyb_usa_baecv_1984_2015 <= yr_samp)
+#1186 observations
+#these ones are keepers
+
+baecv_no <- baecvtest_sf  %>%
+  filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
+  select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
+#127 observations
+#these are burn date after sample collection
+#these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
+
+#join these no points back to studyid_sf for Adam
+Xno <- unique(baecv_no$X1)
+baecv_no_Adamll <- studyid %>%
+  filter(X1 %in% Xno)
+write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
+#go to Adams' script for dealing with these points; then come back here
+
+
+baecv_add <- mtbs_add %>%
+  left_join(as.data.frame(baecv_keep) %>% 
+  dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
+#MTBS and BAECV look good; still need to fix MODIS
+
+#add lat/long back in for plotting, quick id, etc.
+ll <- studyid %>%
+  select(lat, long, X1)
+
+baecv_add_ll <- baecv_add %>%
+  left_join(as.data.frame(ll))
+
+write.csv(baecv_add_ll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire_almost.csv")
+
+
+#adding in BAECV info (second to last year burned) from Adam's script
+#open data
+baecv_gpkg <- readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
+
+#turn this into a dataframe
+as.data.frame(baecv_gpkg)
+
+#add these points from Adam by replacing values
+baecv_rep <- baecv_add_ll %>%
+  mutate(baecvlyb = ifelse(Study_ID == 154, 2001,lyb_usa_baecv_1984_2015)) %>%
+  mutate(baecv_lyb = ifelse(Study_ID == 226, 1986, baecvlyb)) %>%
+  select(-lyb_usa_baecv_1984_2015, -baecvlyb)
+
+write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
+
+
 ###########################
 #MODIS
 #bring in MODIS data; create stack of rasters
@@ -213,7 +298,7 @@ modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
 modisselect <- modistest_sf %>%
   dplyr::select(X1, yr_samp, modis_2001:modis_2017) %>%
   gather("year", "burn", -X1, -yr_samp, -geometry) 
-  
+
 
 #create subset of data where burn happens before sampling
 #any burns that happened after sampling date, we don't care about
@@ -231,12 +316,12 @@ keepmodlyb <- keep %>%
   mutate(the_rank  = rank(-burn, ties.method = "last")) %>%
   filter(the_rank == 1) %>% dplyr::select(-the_rank)
 #this appears to be working; just need to make sure MODIS data extracted properly
-  
+
 
 #adding MODIS last year burn to mtbs_add
-modis_add <- mtbs_add %>%
+modis_add <- baecv_rep %>%
   left_join(as.data.frame(keepmodlyb) %>% 
-  dplyr::select(-geometry, -almost, -first, -burn, -yr_samp)) 
+              dplyr::select(-geometry, -almost, -first, -burn, -yr_samp)) 
 
 
 
@@ -245,86 +330,3 @@ modis_add <- mtbs_add %>%
 
 
 ###########################
-
-
-###########################
-#BAECV
-#bring in BAECV last year burned from Adam
-#will need to bring in his code on how he created last year burn eventually
-baecvlyb <- raster("baecv/lyb_usa_baecv_1984_2015.tif")
-crs(baecvlyb)
-crs(studyid_sf)
-
-
-###
-#intersection of BAECV lyb with studyid_sf
-
-#reproject raster to match CRS of dataframe
-baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
-crs(baecvlyb_trans)
-
-
-#extract lyb from BAECV to the points in studyid_sf
-lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
-
-unique(lll$lyb_usa_baecv_1984_2015)
-#there are many years when I used the original version (baecvlyb) which is what I would expect
-#when I used the reprojected version (baecvlyb_trans), only 0 and NA
-#something weird is happening here
-
-
-#create sf object from extracted values
-baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
-  st_transform(crs1b)
-
-###
-baecv_keep <- baecvtest_sf %>%
-  filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1186 observations
-#these ones are keepers
-
-baecv_no <- baecvtest_sf  %>%
-  filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
-  select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
-#127 observations
-#these are burn date after sample collection
-#these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
-
-#join these no points back to studyid_sf for Adam
-Xno <- unique(baecv_no$X1)
-baecv_no_Adamll <- studyid %>%
-  filter(X1 %in% Xno)
-write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
-#go to Adams' script for dealing with these points; then come back here
-
-
-baecv_add <- modis_add %>%
-  left_join(as.data.frame(baecv_keep) %>% 
-  dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
-#MTBS and BAECV look good; still need to fix MODIS
-
-#add lat/long back in for plotting, quick id, etc.
-ll <- studyid %>%
-  select(lat, long, X1)
-
-baecv_add_ll <- baecv_add %>%
-  left_join(as.data.frame(ll))
-
-write.csv(baecv_add_ll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire_almost.csv")
-
-
-#adding in BAECV info (second to last year burned) from Adam's script
-#open data
-baecv_gpkg <- readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
-
-#turn this into a dataframe
-as.data.frame(baecv_gpkg)
-
-#add these points from Adam by replacing values
-baecv_rep <- baecv_add_ll %>%
-  mutate(baecvlyb = ifelse(Study_ID == 154, 2001,lyb_usa_baecv_1984_2015)) %>%
-  mutate(baecv_lyb = ifelse(Study_ID == 226, 1986, baecvlyb)) %>%
-  select(-lyb_usa_baecv_1984_2015, -baecvlyb)
-
-write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
-
