@@ -126,6 +126,12 @@ rawsonly3 <- rawsonly2 %>%
 
 write.csv(rawsonly3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
+#########
+#update paired info here
+#done manually
+
+#also check to see where veg changed in the paired info sheet and then update veg manually here
+
 
 
 #########
