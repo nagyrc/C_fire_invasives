@@ -43,7 +43,7 @@ clean_study$Article_ID <- paste(toupper(clean_study$Article_IDs),clean_study$Art
 clean_study$Article_ID <- gsub(" ", "", clean_study$Article_ID) 
 clean_study$Article_ID <- gsub("MAHOpub1", "MAHO2018a", clean_study$Article_ID) 
 clean_study$Article_ID <- gsub("MAHOpub2", "MAHO2018b", clean_study$Article_ID) 
-clean_study$Article_ID <- gsub("RICK985a", "RICK1985b", clean_study$Article_ID)
+clean_study$Article_ID <- gsub("RICK985a", "RICK1985a", clean_study$Article_ID)
 clean_study$Article_ID <- gsub("RICK985b", "RICK1985b", clean_study$Article_ID)
 clean_study$Article_ID <- as.factor(clean_study$Article_ID)
 
