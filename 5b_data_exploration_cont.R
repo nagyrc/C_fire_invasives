@@ -13,6 +13,7 @@ siwf = read_csv("studyid_with_fire.csv")
 
 #or load from script 4
 #siwf <- studyid_sf
+#note; as written, MODIS is not in here
 siwf <- baecv_rep
 
 #remove extra X1 column that was added (I believe with export)
