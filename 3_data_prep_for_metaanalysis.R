@@ -50,7 +50,7 @@ unique(clean_study$Article_ID)
 #these look great
 head(alldata)
 
-
+rm(studyid)
 #creates study_ID, pool, and setup for Bethany's meta-analysis format (long format)
 studyid <- clean_study %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
@@ -61,6 +61,15 @@ studyid <- clean_study %>%
 unique(studyid$pool)
 unique(studyid$Study_ID)
 #372 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+
+len <- studyid %>%
+  group_by(study) %>%
+  summarise(Unique_Elements = n_distinct(Study_ID)) 
+
+studyid2 <- studyid %>%
+  #group_by(study) %>%
+  unite("Study_ID2", Article_ID, Study_ID, remove = FALSE)
+
 
 studyid <- as.data.frame(studyid)
 

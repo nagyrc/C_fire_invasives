@@ -180,7 +180,7 @@ head(kpBlank)
 
 ###
 #Norton data
-Nortonpre <- as.data.frame(read_csv("Norton.csv"))
+Nortonpre <- as.data.frame(read_csv("Norton_updated.csv"))
 
 head(Nortonpre)
 #add fields that will be common across studies
@@ -190,7 +190,7 @@ Nortonpre$study <- "Norton et al. 2004"
 Norton <- Nortonpre %>%
   filter(!Site == "MW")
 
-Norton$veg <- ifelse(Norton$Site == 'N', 'sagebrush','sagecheat')
+#Norton$veg <- ifelse(Norton$Site == 'N', 'sagebrush','sagecheat')
 Norton$Month_sampled <- "July-September"
 Norton$yr_samp <- 2001
 #Norton$lat <- Norton$latitude
@@ -394,7 +394,7 @@ head(kpNorton2008)
 #Mahood data
 #need info on veg categories and burned/unburned and bottom depth sampled
 #make sure Jones data is not repeated from publication
-Mahood1 <- as.data.frame(read_csv("Mahood1.csv"))
+Mahood1 <- as.data.frame(read_csv("Mahood1_updated.csv"))
 head(Mahood1)
 
 #bring in lat/long for ff plots to merge in next step
@@ -420,7 +420,7 @@ Mahood1ll$bottomdepth_cm <- 10
 Mahood1ll$thick <- Mahood1ll$bottomdepth_cm - Mahood1ll$topdepth_cm
 
 #check this with Adam
-Mahood1ll$veg <- ifelse(Mahood1ll$native_shrub_cover > 0, 'sagecheat','cheatgrass')
+#Mahood1ll$veg <- ifelse(Mahood1ll$native_shrub_cover > 0, 'sagecheat','cheatgrass')
 Mahood1ll$BD_estimated <- c("no")
 
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'Elevation'] <- 'elevation'
@@ -428,13 +428,14 @@ colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'totsoil%C'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
 #these calculations are not correct- he didn't multiply by the depth
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'do_not_use'
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'Site'] <- 'site'
 
 Mahood1ll$totsoilC_g_m2 <- Mahood1ll$`totsoil%C` * Mahood1ll$BD_g_cm3 * Mahood1ll$thick * 100
 
 head(Mahood1ll)
 
 
-kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated", "yr_samp")]
+kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated", "yr_samp","site")]
 head(kpMahood1)
 
 write.csv(kpMahood1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood1.csv")
@@ -501,7 +502,7 @@ write.csv(kpMahood2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/
 #Rau data# need soil depths
 #need burn info for lat/longs
 #check with Ben on treatments
-Rau_inv <- as.data.frame(read_csv("Rau_invaded.csv"))
+Rau_inv <- as.data.frame(read_csv("Rau_invaded_akaGoergon2011_updated.csv"))
 Rau_inv$study <- c("Goergen et al. 2011")
 #Goergen et al. 2011 says 0-90 cm
 #check this depth with Ben
@@ -518,7 +519,7 @@ unique(Rau_inv$Region)
 unique(Rau_inv$Site)
 #BF, LH, MP, TP
 
-Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe.csv"))
+Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe_updated.csv"))
 Rau_sage$study <- c("Rau et al. 2011")
 
 #check this year with Ben
@@ -545,7 +546,7 @@ Rau <- rbind(Rau_inv, Rau_sage2)
 
 #add veg category
 #check with Ben and then update this with other treatments???
-Rau$veg <- ifelse(Rau$Annual_grass > 2, 'sagecheat','sagebrush')
+#Rau$veg <- ifelse(Rau$Annual_grass > 2, 'sagecheat','sagebrush')
 Rau$BD_estimated <- c("no")
 Rau$pr_burned <- c("no")
 
