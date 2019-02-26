@@ -437,6 +437,7 @@ head(Mahood1ll)
 kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated", "yr_samp")]
 head(kpMahood1)
 
+write.csv(kpMahood1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood1.csv")
 
 
 
@@ -491,6 +492,7 @@ head(kpMahood2)
 
 str(kpMahood2)
 
+write.csv(kpMahood2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood2.csv")
 
 
 

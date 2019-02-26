@@ -95,6 +95,16 @@ rawsonly <- siwf_sep %>%
 #1204 obs
 
 
+
+#this is using MTBS only; can include other fire products
+rawsonly2 <- rawsonly %>%
+  group_by(study) %>%
+  mutate(paired = ifelse(length(unique(veg)) > 1, "paired", "unpaired")) %>%
+  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native")) %>%
+  mutate(burned = ifelse(yr_samp - MTBS_DISCOVERY_YEAR < 10, "burned", "unburned")) %>%
+  mutate(yrssinceb = yr_samp - MTBS_DISCOVERY_YEAR)
+
+
 #need to add variance here
 sumz <- rawsonly %>%
   #fill in all variables that we need to group by here
@@ -103,14 +113,72 @@ sumz <- rawsonly %>%
   group_by(Study_ID) %>%
   summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value))
 
+write.csv(sumz, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meanz.csv")
+
+
 #then use sumz to left_join with rawsonly based on Study_ID
-#this is using MTBS only; can include other fire products
-rawsonly2 <- rawsonly %>%
+#did not remove geometry
+rawsonly3 <- rawsonly2 %>%
   left_join(as.data.frame(sumz) %>%
-  dplyr::select(-geometry)) %>%
-  group_by(study) %>%
-  mutate(paired = ifelse(length(unique(veg)) > 1, "paired", "unpaired")) %>%
-  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native")) %>%
-  mutate(burned = ifelse(yr_samp - MTBS_DISCOVERY_YEAR < 10, "burned", "unburned"))
+              dplyr::select(-geometry))
+
+write.csv(rawsonly3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+
+
+
+#########
+#######################
+#make a second script out of this
+#for meta-analysis
+#select only paired studies
+rawp <- rawsonly2 %>%
+  filter(paired == "paired") %>%
+  group_by(Study_ID, pool) %>%
+  summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  dplyr::select(-geometry)
+
+joiny <- rawsonly3 %>%
+  group_by(Study_ID, veg, yrssinceb) %>%
+  summarise() 
+
+st_geometry(rawp) = NULL
+
+#add back in the yrs since burn and veg type
+rawpj <- rawp %>%
+  left_join(as.data.frame(joiny)) 
+
+#transpose to wide format means first
+rawpjmw <- rawpj %>%
+  select(Study_ID, meanpv, veg, pool) %>%
+  spread(key = veg, value = meanpv) %>%
+  rename(meancheat = cheatgrass, meansage = sagebrush, meansagecheat = sagecheat, meansalt = salt_desert)
+
+#transpose to wide format n 
+rawpjnw <- rawpj %>%
+  select(Study_ID, n, veg, pool) %>%
+  spread(key = veg, value = n) %>%
+  rename(ncheat = cheatgrass, nsage = sagebrush, nsagecheat = sagecheat, nsalt = salt_desert)
+
+
+#transpose to wide format var 
+rawpjvw <- rawpj %>%
+  select(Study_ID, var, veg, pool) %>%
+  spread(key = veg, value = var) %>%
+  rename(varcheat = cheatgrass, varsage = sagebrush, varsagecheat = sagecheat, varsalt = salt_desert)
+
+#join the three tables together
+step1 <- rawpjmw %>%
+  left_join(rawpjnw)
+
+step2 <- step1 %>%
+  left_join(rawpjvw)
+
+rawsonly4 <- step2 %>%
+  left_join(joiny)
+
+write.csv(rawsonly4, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawsonly4.csv")
+
+
+
+
   
-write.csv(rawsonly2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
