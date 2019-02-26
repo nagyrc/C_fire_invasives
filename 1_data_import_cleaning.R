@@ -413,8 +413,8 @@ Mahood1ll$study <- c("Mahood et al. unpub1")
 Mahood1ll$seeded <- c("no")
 Mahood1ll$pr_burned <- c("no")
 #check this year with Adam
-Mahood1ll$yr_samp <- c(2017)
-Mahood1ll$burned <- ifelse(Mahood1ll$burn_status == 'burned', 'yes','no')
+Mahood1ll$yr_samp <- 2017
+#Mahood1ll$burned <- ifelse(Mahood1ll$burn_status == 'burned', 'yes','no')
 Mahood1ll$topdepth_cm <- 0
 Mahood1ll$bottomdepth_cm <- 10
 Mahood1ll$thick <- Mahood1ll$bottomdepth_cm - Mahood1ll$topdepth_cm
@@ -434,8 +434,11 @@ Mahood1ll$totsoilC_g_m2 <- Mahood1ll$`totsoil%C` * Mahood1ll$BD_g_cm3 * Mahood1l
 
 head(Mahood1ll)
 
+Mahood1ll <- subset(Mahood1ll, select = -c(lat.y, long.y))
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'lat.x'] <- 'lat'
+colnames(Mahood1ll)[colnames(Mahood1ll) == 'long.x'] <- 'long'
 
-kpMahood1 <- Mahood1ll[,c("plot","BD_g_cm3","totsoil%C","last_year_severity","elevation","fire_frequency","last_year_burned","time_since_fire","allotment","mean_fire_interval","totsoilC_g_m2","lat","long","study","seeded","pr_burned","burned","bottomdepth_cm","topdepth_cm","thick","veg","BD_estimated", "yr_samp","site")]
+kpMahood1 <- Mahood1ll[,c("plot", "BD_g_cm3", "totsoil%C", "last_year_severity", "elevation", "fire_frequency", "last_year_burned", "time_since_fire", "allotment", "mean_fire_interval", "totsoilC_g_m2", "lat", "long", "study", "seeded", "pr_burned", "bottomdepth_cm", "topdepth_cm", "thick", "veg", "BD_estimated", "yr_samp", "site")]
 head(kpMahood1)
 
 write.csv(kpMahood1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood1.csv")
@@ -484,7 +487,7 @@ colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
 colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
 
 #check this year with Adam
-Mahood2BDll$yr_samp <- c(2017)
+Mahood2BDll$yr_samp <- 2017
 
 head(Mahood2BDll)
 
@@ -508,7 +511,7 @@ Rau_inv$study <- c("Goergen et al. 2011")
 #check this depth with Ben
 
 #check this year with Ben
-Rau_inv$yr_samp <- c(2008)
+Rau_inv$yr_samp <- 2008
 Rau_inv$topdepth_cm <- 0
 Rau_inv$bottomdepth_cm <- 90
 Rau_inv$thick <- Rau_inv$bottomdepth_cm - Rau_inv$topdepth_cm
@@ -523,7 +526,7 @@ Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe_updated.csv"))
 Rau_sage$study <- c("Rau et al. 2011")
 
 #check this year with Ben
-Rau_sage$yr_samp <- c(2011)
+Rau_sage$yr_samp <- 2011
 Rau_sage$topdepth_cm <- 0
 Rau_sage$bottomdepth_cm <- 90
 Rau_sage$thick <- Rau_sage$bottomdepth_cm - Rau_sage$topdepth_cm
@@ -541,6 +544,9 @@ head(Rau_sage)
 #should FI have a different study_id???
 Rau_sage2 <- Rau_sage[which(Rau_sage$Treatment == "CO" | Rau_sage$Treatment == "FI"),]
 unique(Rau_sage2$Treatment)
+
+#get rid of Site_old in Rau_inv
+#Rau_inv <- subset(Rau_inv, select = -c(Site_old))
 
 Rau <- rbind(Rau_inv, Rau_sage2)
 
@@ -933,15 +939,15 @@ alldata <- rbind.all.columns(bind13, studymeans)
 str(alldata)
 
 alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
-#alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
-#alldata$elevation <- as.numeric(alldata$elevation)
-#alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
+alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
+alldata$elevation <- as.numeric(alldata$elevation)
+alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
 alldata$BGB_g_m2 <- as.numeric(alldata$BGB_g_m2)
 alldata$BGB_g_m2_SE <- as.numeric(alldata$BGB_g_m2_SE)
 alldata$litter_g_m2 <- as.numeric(alldata$litter_g_m2)
 alldata$litter_g_m2_SE <- as.numeric(alldata$litter_g_m2_SE)
 alldata$n_sampled <- as.numeric(alldata$n_sampled)
-#alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
+alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
 
 write.csv(alldata, file = "alldata.csv")
 

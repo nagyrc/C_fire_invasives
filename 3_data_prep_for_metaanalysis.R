@@ -23,6 +23,7 @@ colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 unique(alldata$yr_samp)
 
 #slims dataframe to key variables...still wide format to use with spatial data in script 4 (adding fire data)
+#retain SE and n's here
 clean_study <- alldata %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","orgsoilperC", "totsoilperC", "BD_g_cm3","orgsoilC_g_m2","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick") %>%
   mutate(site = as.factor(site),
@@ -55,28 +56,35 @@ rm(studyid)
 studyid <- clean_study %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID) %>%
-  mutate_if(is.character, as.factor) %>%
-  mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp")))
+  dplyr::mutate_if(is.character, as.factor) %>%
+  dplyr::mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
+  filter(!is.na(pool_value))
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
 #372 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 
+
+
+#######
 len <- studyid %>%
   group_by(study) %>%
   summarise(Unique_Elements = n_distinct(Study_ID)) 
 
 studyid2 <- studyid %>%
-  #group_by(study) %>%
-  unite("Study_ID2", Article_ID, Study_ID, remove = FALSE)
-
+  group_by(study) %>%
+  #group_by(Study_ID) %>%
+  mutate(Study_ID2a = 1:n()) %>%
+  unite("Study_ID2b", Article_ID, Study_ID2a, remove = FALSE)
 
 studyid <- as.data.frame(studyid)
 
+######
+
 #remove rows with NA in pool_value column
-cc <- is.na(studyid$pool_value)
-m <- which(cc == c("TRUE"))
-studyid <- studyid[-m,]
+#cc <- is.na(studyid$pool_value)
+#m <- which(cc == c("TRUE"))
+#studyid <- studyid[-m,]
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
