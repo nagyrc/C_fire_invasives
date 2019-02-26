@@ -446,6 +446,11 @@ write.csv(kpMahood1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/
 
 unique(kpMahood1$site)
 unique(kpMahood1$lat)
+unique(kpMahood1$veg)
+unique(kpMahood1$study)
+unique(kpMahood1$yr_samp)
+unique(kpMahood1$bottomdepth_cm)
+unique(kpMahood1$long)
 
 #Mahood2
 Mahood2 <- as.data.frame(read_csv("Mahood2.csv")) 
