@@ -91,9 +91,12 @@ unique(mtbs_fire$MTBS_DISCOVERY_YEAR)
 unique(mtbs_int$MTBS_DISCOVERY_YEAR)
 #these look good
 
-
+is.numeric(mtbs_int$MTBS_DISCOVERY_YEAR)
+is.numeric(mtbs_int$yr_samp)
+as.numeric(mtbs_int$yr_samp)
 #keep those where fire date is before sampling date
 mtbs_keep <- mtbs_int %>%
+  mutate(yr_samp = as.numeric(yr_samp)) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
 #466 had fires before the sampling date
