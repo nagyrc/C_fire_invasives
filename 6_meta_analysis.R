@@ -3,16 +3,11 @@
 #created February 20, 2019
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
+x <- c("MCMCglmm", "MCMCvis", "metafor")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-require(MCMCglmm)
-require(MCMCvis)
-require(metafor)
-
-setwd("C:\\Users\\Localadmin\\Dropbox\\Research\\Current projects\\Invasion and Global Change Meta\\Analysis\\Data")
 
 ## get full dataset from github (includes all cases and studies)
 d1 <- read.csv("Inv_GC_database_19Oct2018.csv", header = T)
