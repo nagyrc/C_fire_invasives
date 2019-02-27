@@ -100,30 +100,28 @@ head(clean_study)
 ######################################
 #to retain SEs and n_sampled
 
-clean_study <- alldata %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","orgsoilperC", "totsoilperC", "BD_g_cm3","orgsoilC_g_m2","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick", "orgsoilC_g_m2_SE", "totsoilC_g_m2_SE", "litterC_g_m2_SE", "BGBC_g_m2_SE", "AGBC_g_m2_SE") %>%
+clean_studynvar <- alldata %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","orgsoilperC", "totsoilperC", "BD_g_cm3","orgsoilC_g_m2","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick", "orgsoilC_g_m2_SE", "totsoilC_g_m2_SE", "litterC_g_m2_SE", "BGBC_g_m2_SE", "AGBC_g_m2_SE", "n_sampled") %>%
   mutate(site = as.factor(site),
          veg = as.factor(veg)) %>%
   mutate(study_year = str_sub(study,-4,-1),
          study_year = ifelse(study_year == 'pub1', 2017, study_year)) %>%
   mutate(yr_samp = ifelse(is.na(yr_samp), study_year, yr_samp))
 
-is.na(clean_study$yr_samp)
 
-write.csv(clean_study, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/clean_study.csv")
 
 #create Article_ID
-clean_study$Article_IDs <- str_sub(clean_study$study,1,4)
-clean_study$Article_IDe <- str_sub(clean_study$study,-4,-1)
-clean_study$Article_ID <- paste(toupper(clean_study$Article_IDs),clean_study$Article_IDe)
-clean_study$Article_ID <- gsub(" ", "", clean_study$Article_ID) 
-clean_study$Article_ID <- gsub("MAHOpub1", "MAHO2018a", clean_study$Article_ID) 
-clean_study$Article_ID <- gsub("MAHOpub2", "MAHO2018b", clean_study$Article_ID) 
-clean_study$Article_ID <- gsub("RICK985a", "RICK1985a", clean_study$Article_ID)
-clean_study$Article_ID <- gsub("RICK985b", "RICK1985b", clean_study$Article_ID)
-clean_study$Article_ID <- as.factor(clean_study$Article_ID)
+clean_studynvar$Article_IDs <- str_sub(clean_studynvar$study,1,4)
+clean_studynvar$Article_IDe <- str_sub(clean_studynvar$study,-4,-1)
+clean_studynvar$Article_ID <- paste(toupper(clean_studynvar$Article_IDs),clean_studynvar$Article_IDe)
+clean_studynvar$Article_ID <- gsub(" ", "", clean_studynvar$Article_ID) 
+clean_studynvar$Article_ID <- gsub("MAHOpub1", "MAHO2018a", clean_studynvar$Article_ID) 
+clean_studynvar$Article_ID <- gsub("MAHOpub2", "MAHO2018b", clean_studynvar$Article_ID) 
+clean_studynvar$Article_ID <- gsub("RICK985a", "RICK1985a", clean_studynvar$Article_ID)
+clean_studynvar$Article_ID <- gsub("RICK985b", "RICK1985b", clean_studynvar$Article_ID)
+clean_studynvar$Article_ID <- as.factor(clean_studynvar$Article_ID)
 
-studyidSE <- clean_study %>%
+studyidSE <- clean_studynvar %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE) %>%
   #dplyr::mutate_if(is.character, as.factor) %>%
