@@ -14,6 +14,10 @@ setwd("data/")
 siwf <- studyid_sf
 
 
+#bring in paired Study_IDs
+pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
+pairs <- as.data.frame(read_csv("paired_studyIDs.csv"))
+
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
