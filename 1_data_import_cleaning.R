@@ -305,7 +305,7 @@ head(Bradley_soil)
 head(Bradley_AGB)
 
 Bradley_AGB$veg <- ifelse(Bradley_AGB$Site == 'Rye' & Bradley_AGB$burned == 'no', 'salt_desert',
-                          ifelse(Bradley_AGB$burned == 'yes','cheatgrass', 'sagebrush'))
+                          ifelse(Bradley_AGB$burned == 'yes','cheatgrass', 'sagecheat'))
 Bradley_AGB$study <- c("Bradley et al. 2006")
 Bradley_AGB$lat <- ifelse(Bradley_AGB$Site == 'Button' , 41.0000000,
                            ifelse(Bradley_AGB$Site == 'Rye', 40.5700000, 40.9900000))
