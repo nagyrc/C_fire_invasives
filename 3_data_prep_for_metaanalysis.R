@@ -122,11 +122,24 @@ clean_studynvar$Article_ID <- gsub("RICK985b", "RICK1985b", clean_studynvar$Arti
 clean_studynvar$Article_ID <- as.factor(clean_studynvar$Article_ID)
 
 studyidSE <- clean_studynvar %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
-  tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE) %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
+  tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, -litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE, -n_sampled) %>%
   #dplyr::mutate_if(is.character, as.factor) %>%
   dplyr::mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
   filter(!is.na(pool_value))
+
+#split data into means and raw data
+studymeans <- as.data.frame(read_csv("study_means.csv"))
+smeans <- unique(studymeans$study)
+
+meansonlynvar <- studyidSE %>%
+  filter(study %in% smeans) %>%
+  group_by(study) %>%
+  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native")) #%>%
+#mutate(burned = ifelse(yr_samp - MTBS_DISCOVERY_YEAR < 10, "burned", "unburned"))
+#109 obs
+
+write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv")
 
 ######################################
 
