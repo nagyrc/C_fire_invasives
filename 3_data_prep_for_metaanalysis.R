@@ -88,7 +88,14 @@ unique(studyid$pool)
 unique(studyid$Study_ID)
 #372 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 
+#export long format for later use
+write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
 
+
+
+
+######################################
+######################################
 
 
 
@@ -114,8 +121,6 @@ studyid <- as.data.frame(studyid)
 #m <- which(cc == c("TRUE"))
 #studyid <- studyid[-m,]
 
-#export long format for later use
-write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
 
 
 
