@@ -10,16 +10,11 @@ setwd("data/")
 
 
 ## get full dataset from github (includes all cases and studies)
-d1 <- read.csv("Inv_GC_database_19Oct2018.csv", header = T)
+d1 <- read.csv("Meta_analysis_sheet_manual.csv", header = T)
 head(d1)
 summary(d1) # no missing values in n, mean, variance
-dim(d1) #183 cases
+dim(d1) #39 x 14
 
-## simplify taxon classes to one taxon level per study
-d1$taxon1[d1$species_taxon == "plant" | d1$species_taxon == "algae"] = "Producer"
-d1$taxon1[d1$species_taxon == "crustacean" | d1$species_taxon == "fish" | 
-            d1$species_taxon == "insect"| d1$species_taxon == "mollusc"] = "Consumer"
-table(d1$taxon1)
 
 ###################################################################
 ## Calculate Effect Sizes-- Hedge's g
