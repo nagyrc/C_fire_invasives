@@ -13,15 +13,21 @@ setwd("data/")
 #no fire data; #bring in studyid dataframe
 siwf <- studyid_sf
 
+#need to add years since burn to this
+joiny <- siwf %>%
+  group_by(Study_ID, veg) %>%
+  summarise() 
+
 
 #bring in paired Study_IDs
 #pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
 pairs <- as.data.frame(read_csv("paired_studyIDs.csv"))
-pairs %>%
+pairs <- pairs %>%
   dplyr::select(-Article_ID, -pool)
 
 
 p1 <- list(pairs)
+p1
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
@@ -32,46 +38,32 @@ smeans <- unique(studymeans$study)
 rawsonly <- siwf %>%
   filter(Study_ID == 530 | Study_ID == 535)
 
-#need to add variance here
-sumz <- rawsonly %>%
-  group_by(Study_ID) %>%
-  summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value))
+x <- 1:nrows(pairs)
 
-#then use sumz to left_join with rawsonly based on Study_ID
-#did not remove geometry
-rawsonly2 <- rawsonly %>%
-  left_join(as.data.frame(sumz) %>%
-              dplyr::select(-geometry))
-
-write.csv(rawsonly2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
-
-################
-
-
-
-
-
-#######################
-#select only paired studies
-rawp <- rawsonly2 %>%
-  filter(paired == "paired") %>%
+#summarise for the pairs
+rawp <- rawsonly %>%
+  filter(x) %>%
   group_by(Study_ID, pool) %>%
   summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   dplyr::select(-geometry)
 
-joiny <- rawsonly3 %>%
-  group_by(Study_ID, veg, yrssinceb) %>%
-  summarise() 
+st_geometry(joiny) <- NULL
 
-st_geometry(rawp) = NULL
-
-#add back in the yrs since burn and veg type
+#add back in veg type
 rawpj <- rawp %>%
-  left_join(as.data.frame(joiny)) 
+  left_join(as.data.frame(joiny)) %>%
+  dplyr::select(-geometry)
+
+st_geometry(rawpj) <- NULL
+######
+
+
+
+
 
 #transpose to wide format means first
 rawpjmw <- rawpj %>%
-  select(Study_ID, meanpv, veg, pool) %>%
+  dplyr::select(Study_ID, meanpv, veg, pool) %>%
   spread(key = veg, value = meanpv) %>%
   rename(meancheat = cheatgrass, meansage = sagebrush, meansagecheat = sagecheat, meansalt = salt_desert)
 
@@ -80,7 +72,6 @@ rawpjnw <- rawpj %>%
   select(Study_ID, n, veg, pool) %>%
   spread(key = veg, value = n) %>%
   rename(ncheat = cheatgrass, nsage = sagebrush, nsagecheat = sagecheat, nsalt = salt_desert)
-
 
 #transpose to wide format var 
 rawpjvw <- rawpj %>%
@@ -122,6 +113,8 @@ write.csv(meansonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/
 
 
 ####################
+
+
 
 
 
