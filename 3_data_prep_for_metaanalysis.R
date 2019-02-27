@@ -49,7 +49,7 @@ clean_study <- alldata %>%
          veg = as.factor(veg)) %>%
   mutate(study_year = str_sub(study,-4,-1),
          study_year = ifelse(study_year == 'pub1', 2017, study_year)) %>%
-  mutate(yr_samp = as.factor(ifelse(is.na(yr_samp), study_year, yr_samp))) 
+  mutate(yr_samp = ifelse(is.na(yr_samp), study_year, yr_samp))
 
 is.na(clean_study$yr_samp)
 
