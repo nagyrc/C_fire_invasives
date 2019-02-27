@@ -201,6 +201,12 @@ baecv_rep <- baecv_add_ll %>%
 
 write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
 
+yrbn = read_csv("yrbn.csv")
+
+baecv_rep %>%
+  mutate(lyb = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb)) %>%
+  filter(study %in% yrbn) %>%
+  mutate(lyb = last_year_burned)
 
 ###########################
 #MODIS
