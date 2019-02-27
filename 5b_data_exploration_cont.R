@@ -23,26 +23,48 @@ joiny <- siwf %>%
 #pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
 pairs <- as.data.frame(read_csv("paired_studyIDs.csv"))
 pairs <- pairs %>%
-  dplyr::select(-Article_ID, -pool)
+  dplyr::select(-Article_ID, -pool) %>%
+  mutate(pairnum = 1:nrow(pairs))
+
+#not quite right; need to remove NAs from the names
+StudyIDp <- pairs %>%
+  mutate(Study_IDp = paste(cheatgrass_studyID, sagecheat_studyID, sagebrush_studyID, sep = '_'))
 
 
-p1 <- list(pairs)
-p1
+
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 
 
+pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
+
+#remove rows with NAs
+pairs_long2 <- na.omit(pairs_long)
+
+pairs_long3 <- pairs_long2 %>%
+  dplyr::select(Study_ID)
+
+as.list(pairs_long3)
 ####################
 #create raw data only dataframe for paired studies
 rawsonly <- siwf %>%
   filter(Study_ID == 530 | Study_ID == 535)
 
-x <- 1:nrows(pairs)
+rawpairsonly <- siwf %>%
+  filter(Study_ID %in% pairs_long3)
+
+rawpairsonly <- siwf[siwf$Study_ID %in% pairs_long3, ] 
+
+
+#then create pair number
+
+
+x <- rowwise(pairs)
+
 
 #summarise for the pairs
 rawp <- rawsonly %>%
-  filter(x) %>%
   group_by(Study_ID, pool) %>%
   summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   dplyr::select(-geometry)
@@ -65,29 +87,55 @@ st_geometry(rawpj) <- NULL
 rawpjmw <- rawpj %>%
   dplyr::select(Study_ID, meanpv, veg, pool) %>%
   spread(key = veg, value = meanpv) %>%
-  rename(meancheat = cheatgrass, meansage = sagebrush, meansagecheat = sagecheat, meansalt = salt_desert)
+  rename(meancheat = cheatgrass, meansagecheat = sagecheat)
+  
+
+#rename(meansage = sagebrush, meansalt = salt_desert)
 
 #transpose to wide format n 
 rawpjnw <- rawpj %>%
-  select(Study_ID, n, veg, pool) %>%
+  dplyr::select(Study_ID, n, veg, pool) %>%
   spread(key = veg, value = n) %>%
-  rename(ncheat = cheatgrass, nsage = sagebrush, nsagecheat = sagecheat, nsalt = salt_desert)
+  rename(ncheat = cheatgrass, nsagecheat = sagecheat)
+
+#rename(nsage = sagebrush, nsalt = salt_desert)
 
 #transpose to wide format var 
 rawpjvw <- rawpj %>%
-  select(Study_ID, var, veg, pool) %>%
+  dplyr::select(Study_ID, var, veg, pool) %>%
   spread(key = veg, value = var) %>%
-  rename(varcheat = cheatgrass, varsage = sagebrush, varsagecheat = sagecheat, varsalt = salt_desert)
+  rename(varcheat = cheatgrass, varsagecheat = sagecheat)
 
+#rename(varsage = sagebrush, varsalt = salt_desert)
+  
 #join the three tables together
+
+st_geometry(rawpjmw) <- NULL
+st_geometry(rawpjvw) <- NULL
+st_geometry(rawpjnw) <- NULL
+
 step1 <- rawpjmw %>%
   left_join(rawpjnw)
 
 step2 <- step1 %>%
-  left_join(rawpjvw)
+  left_join(rawpjvw) 
 
-rawsonly4 <- step2 %>%
-  left_join(joiny)
+#step2$Study_ID <- NULL
+
+coalesce_by_column <- function(df) {
+  return(coalesce(step2[3], step2[4], step2[5], step2[6], step2[7], step2[8]))
+}
+
+step3 <- step2 %>%
+  group_by(meancheat) %>%
+  #dplyr::select(-Study_ID) %>%
+  summarise_all(coalesce_by_column)
+
+
+#rename(meancheat = cheatgrass, meansage = sagebrush, meansagecheat = sagecheat, meansalt = salt_desert)
+#rename(ncheat = cheatgrass, nsage = sagebrush, nsagecheat = sagecheat, nsalt = salt_desert)
+#rename(varcheat = cheatgrass, varsage = sagebrush, varsagecheat = sagecheat, varsalt = salt_desert)
+
 
 write.csv(rawsonly4, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawsonly4.csv")
 
