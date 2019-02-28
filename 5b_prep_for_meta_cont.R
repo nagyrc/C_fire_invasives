@@ -10,9 +10,8 @@ setwd("data/")
 
 #bring in studyid dataframe
 studyid = read_csv("studyid.csv")
-########################################################
-#this doesn't actually have fire data; the real one will eventually
-siwf <- studyid_sf
+siwf = read_csv("siwf.csv")
+
 
 
 #bring in paired Study_IDs
