@@ -8,15 +8,11 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-siwf = read_csv("studyid.csv")
+#bring in studyid dataframe
+studyid = read_csv("studyid.csv")
 ########################################################
-#no fire data; #bring in studyid dataframe
+#this doesn't actually have fire data; the real one will eventually
 siwf <- studyid_sf
-
-#need to add years since burn to this
-joiny <- siwf %>%
-  group_by(Study_ID, veg) %>%
-  summarise() 
 
 
 #bring in paired Study_IDs
@@ -33,11 +29,13 @@ pairscheat <- pairs %>%
 
 pairssage <- pairs %>%
   dplyr::select(sagebrush_studyID) %>%
-  rename(Study_ID = sagebrush_studyID)
+  mutate(Study_ID = as.factor(sagebrush_studyID)) %>%
+  dplyr::select(-sagebrush_studyID)
 
 pairssagecheat <- pairs %>%
   dplyr::select(sagecheat_studyID) %>%
-  rename(Study_ID = sagecheat_studyID)
+  mutate(Study_ID = as.factor(sagecheat_studyID)) %>%
+  dplyr::select(-sagecheat_studyID)
 
 #############
 #not quite right; need to remove NAs from the names
@@ -51,15 +49,6 @@ studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 
 
-pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
-
-#remove rows with NAs
-pairs_long2 <- na.omit(pairs_long)
-
-pairs_long3 <- pairs_long2 %>%
-  dplyr::select(Study_ID)
-
-as.list(pairs_long3)
 
 
 #####
@@ -67,35 +56,56 @@ rawsonly <- siwf %>%
   filter(!study %in% smeans) %>%
   mutate(Study_ID = factor(Study_ID))
 
+unique(rawsonly$Study_ID)
+
+pcheat <- pairscheat %>%
+  filter(!is.na(Study_ID))
+
+pcheat2 <- semi_join(pcheat, rawsonly)
+pcheat2
+
 rawsonlycheat <- rawsonly %>%
-  filter(Study_ID == 416 | Study_ID == 1371 | Study_ID == 1391 | Study_ID == 1411)
+  filter(Study_ID == 226 | Study_ID == 206 | Study_ID == 382 | Study_ID == 392 | Study_ID == 372 | Study_ID == 402 | Study_ID == 384 | Study_ID == 394 | Study_ID == 374 | Study_ID == 404 | Study_ID == 1089 | Study_ID == 1102 | Study_ID == 1103 | Study_ID == 1304 | Study_ID == 1309 | Study_ID == 1314 | Study_ID == 1319 | Study_ID == 1454 | Study_ID == 1459 | Study_ID == 205 | Study_ID == 225 | Study_ID == 505 | Study_ID == 530)
 
-rawsonlysagecheat <- rawsonly %>%
-  filter(Study_ID %in% !is.na(pairssagecheat))
 
-psage <- as.list(416, 1371, 1391, 1411, 1372, 1392, 1412, NA, NA, 417)
+
+
+psage <- pairssage %>%
+  filter(!is.na(Study_ID))
+
+psage2 <- semi_join(psage, rawsonly)
+psage2
 
 rawsonlysage <- rawsonly %>%
-  filter(Study_ID %in% psage)
-
-rawcheat <- rawsonly %>%
-  filter(Study_ID %in% !is.na(pairssagecheat)) %>%
-  group_by(Study_ID) %>%
-  summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value))
+  filter(Study_ID == 144 | Study_ID == 149 | Study_ID == 124 | Study_ID == 129 | Study_ID == 104 | Study_ID == 109 | Study_ID == 84 | Study_ID == 89 | Study_ID == 44 | Study_ID == 49 | Study_ID == 64 | Study_ID == 69 | Study_ID == 1112 | Study_ID == 1113 | Study_ID == 1324 | Study_ID == 1329 | Study_ID == 1334 | Study_ID == 1339 | Study_ID == 1464 | Study_ID == 1469)
 
 
 
-####
 
-####################
-#create raw data only dataframe for paired studies
-rawsonly <- siwf %>%
-  filter(Study_ID == 530 | Study_ID == 535)
+psagecheat <- pairssagecheat %>%
+  filter(!is.na(Study_ID))
 
-rawpairsonly <- siwf %>%
-  filter(Study_ID %in% pairs_long3)
+psagecheat2 <- semi_join(psagecheat, rawsonly)
+psagecheat2
 
-rawpairsonly <- siwf[siwf$Study_ID %in% pairs_long3, ] 
+rawsonlysagecheat <- rawsonly %>%
+  filter(Study_ID == 387 | Study_ID == 397 | Study_ID == 377 | Study_ID == 407 | Study_ID == 154 | Study_ID == 159 | Study_ID == 134 | Study_ID == 139 | Study_ID == 114 | Study_ID == 119 | Study_ID == 94 | Study_ID == 99 | Study_ID == 54 | Study_ID == 59 | Study_ID == 74 | Study_ID == 79 | Study_ID == 389 | Study_ID == 399 | Study_ID == 379 | Study_ID == 409 | Study_ID == 1094 | Study_ID == 1344 | Study_ID == 1349 | Study_ID == 1354 | Study_ID == 1359 | Study_ID == 510 | Study_ID == 535)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #then create pair number
