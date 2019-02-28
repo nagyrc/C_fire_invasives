@@ -100,9 +100,39 @@ rawsonlysagecheat <- rawsonly %>%
 
 
 ####
+#total of rawsonlycheat + rawsonlysage + rawsonlysagecheat = 281 + 230 + 166 = 677 != 1176 rawsonly
+#this is because I'm subsetting for just the paired raw data
 #use these three (rawsonlycheat, rawsonlysage, rawsonlysagecheat) to calculate wide dataframe for meta-analysis
 
 
+#####
+cheatpmeans <- rawsonlycheat %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(cheatpmeans) = NULL
+
+
+
+sagepmeans <- rawsonlysage %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(sagepmeans) = NULL
+
+
+
+sagecheatpmeans <- rawsonlysagecheat %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(sagecheatpmeans) = NULL
+
+
+####
 
 
 
@@ -110,9 +140,7 @@ rawsonlysagecheat <- rawsonly %>%
 
 
 
-
-
-
+####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
 st_geometry(joiny) = NULL
 
