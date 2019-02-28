@@ -99,6 +99,7 @@ head(clean_study)
 
 ######################################
 #to retain SEs and n_sampled
+#this works, but has some remnant values in other pool fields of SE that might be confusing
 
 clean_studynvar <- alldata %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","orgsoilperC", "totsoilperC", "BD_g_cm3","orgsoilC_g_m2","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick", "orgsoilC_g_m2_SE", "totsoilC_g_m2_SE", "litterC_g_m2_SE", "BGBC_g_m2_SE", "AGBC_g_m2_SE", "n_sampled") %>%
@@ -133,38 +134,13 @@ studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 
 meansonlynvar <- studyidSE %>%
-  filter(study %in% smeans) %>%
-  group_by(study) %>%
-  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native")) #%>%
-#mutate(burned = ifelse(yr_samp - MTBS_DISCOVERY_YEAR < 10, "burned", "unburned"))
-#109 obs
+  filter(study %in% smeans) 
 
 write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv")
 
 ######################################
 
 
-
-#######
-#may or may not need this
-len <- studyid %>%
-  group_by(study) %>%
-  summarise(Unique_Elements = n_distinct(Study_ID)) 
-
-studyid2 <- studyid %>%
-  group_by(study) %>%
-  #group_by(Study_ID) %>%
-  mutate(Study_ID2a = 1:n()) %>%
-  unite("Study_ID2b", Article_ID, Study_ID2a, remove = FALSE)
-
-studyid <- as.data.frame(studyid)
-#may or may not need this
-######
-
-#remove rows with NA in pool_value column
-#cc <- is.na(studyid$pool_value)
-#m <- which(cc == c("TRUE"))
-#studyid <- studyid[-m,]
 
 
 
