@@ -39,6 +39,7 @@ write.csv(yrbn, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/last_
 ###
 
 
+###
 
 
 #slims dataframe to key variables...still wide format to use with spatial data in script 4 (adding fire data)
@@ -49,7 +50,7 @@ clean_study <- alldata %>%
          veg = as.factor(veg)) %>%
   mutate(study_year = str_sub(study,-4,-1),
          study_year = ifelse(study_year == 'pub1', 2017, study_year)) %>%
-  mutate(yr_samp = ifelse(is.na(yr_samp), study_year, yr_samp))
+  mutate(yr_samp = ifelse(is.na(yr_samp), study_year, yr_samp)) 
 
 is.na(clean_study$yr_samp)
 
@@ -127,7 +128,10 @@ studyidSE <- clean_studynvar %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, -litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE, -n_sampled) %>%
   #dplyr::mutate_if(is.character, as.factor) %>%
   dplyr::mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
-  filter(!is.na(pool_value))
+  filter(!is.na(pool_value)) %>%
+  separate(yr_samp, c("first", "sec"), sep = "-") %>%
+  mutate(yr_samp = as.numeric(first)) %>%
+  dplyr::select(-sec, -first)
 
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
