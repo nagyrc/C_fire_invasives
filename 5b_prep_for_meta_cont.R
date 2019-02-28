@@ -58,6 +58,8 @@ rawsonly <- siwf %>%
 
 unique(rawsonly$Study_ID)
 
+
+###
 pcheat <- pairscheat %>%
   filter(!is.na(Study_ID))
 
@@ -69,7 +71,7 @@ rawsonlycheat <- rawsonly %>%
 
 
 
-
+###
 psage <- pairssage %>%
   filter(!is.na(Study_ID))
 
@@ -81,7 +83,7 @@ rawsonlysage <- rawsonly %>%
 
 
 
-
+###
 psagecheat <- pairssagecheat %>%
   filter(!is.na(Study_ID))
 
@@ -95,6 +97,8 @@ rawsonlysagecheat <- rawsonly %>%
 
 
 
+####
+#use these three (rawsonlycheat, rawsonlysage, rawsonlysagecheat) to calculate wide dataframe for meta-analysis
 
 
 
@@ -107,28 +111,38 @@ rawsonlysagecheat <- rawsonly %>%
 
 
 
-
-#then create pair number
-
-
-x <- rowwise(pairs)
+joiny <- unique(rawsonly[c("Study_ID", "veg")])
+st_geometry(joiny) = NULL
 
 
-#summarise for the pairs
+#summarise mean, n, variance
 rawp <- rawsonly %>%
   group_by(Study_ID, pool) %>%
-  summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  dplyr::select(-geometry)
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
 
-st_geometry(joiny) <- NULL
+st_geometry(rawp) = NULL
 
 #add back in veg type
 rawpj <- rawp %>%
   left_join(as.data.frame(joiny)) %>%
   dplyr::select(-geometry)
 
-st_geometry(rawpj) <- NULL
+#st_geometry(rawpj) <- NULL
 ######
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
