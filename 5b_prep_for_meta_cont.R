@@ -8,7 +8,7 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-
+siwf = read_csv("studyid.csv")
 ########################################################
 #no fire data; #bring in studyid dataframe
 siwf <- studyid_sf
@@ -28,7 +28,8 @@ pairs <- pairs %>%
 
 pairscheat <- pairs %>%
   dplyr::select(cheatgrass_studyID) %>%
-  rename(Study_ID = cheatgrass_studyID)
+  mutate(Study_ID = as.factor(cheatgrass_studyID)) %>%
+  dplyr::select(-cheatgrass_studyID)
 
 pairssage <- pairs %>%
   dplyr::select(sagebrush_studyID) %>%
@@ -63,14 +64,11 @@ as.list(pairs_long3)
 
 #####
 rawsonly <- siwf %>%
-  filter(!study %in% smeans)
-
-l1 <- as.list(pairscheat)
-
-rawsonlycheat <- rawsonly[rawsonly$Study_ID %in% !is.na(l1), ] 
+  filter(!study %in% smeans) %>%
+  mutate(Study_ID = factor(Study_ID))
 
 rawsonlycheat <- rawsonly %>%
-  filter(Study_ID %in% pairscheat)
+  filter(Study_ID == 416 | Study_ID == 1371 | Study_ID == 1391 | Study_ID == 1411)
 
 rawsonlysagecheat <- rawsonly %>%
   filter(Study_ID %in% !is.na(pairssagecheat))
