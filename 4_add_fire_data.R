@@ -207,10 +207,19 @@ write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/
 yrbn = read_csv("yrbn.csv")
 
 baecv_rep %>%
-  mutate(lyb = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb)) %>%
-  filter(study %in% yrbn) %>%
-  mutate(lyb = last_year_burned)
+  mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb))
 
+siwf <- baecv_rep %>%
+  mutate(masterlyb = maxsat) %>%
+  filter(study %in% yrbn) %>%
+  mutate(masterlyb = last_year_burned)
+
+write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv")
+###
+
+
+
+###########################
 ###########################
 #MODIS
 #bring in MODIS data; create stack of rasters
