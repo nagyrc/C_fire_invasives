@@ -13,13 +13,6 @@ alldata = read_csv("data/alldata.csv")
 colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
 colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 
-#recalculate thickness- we saw some issues with it in the .csv file
-#is.numeric(alldata$topdepth_cm)
-#is.numeric(alldata$bottomdepth_cm)
-
-#alldata$check <- alldata$bottomdepth_cm - alldata$topdepth_cm
-#identical(alldata$check, alldata$thick)
-
 unique(alldata$yr_samp)
 
 
@@ -149,29 +142,9 @@ write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/d
 
 
 
-#to get a count of mean values vs. raw data
-check <- dplyr::count(studyid, pool, Article_ID)
-write.csv(check, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/check.csv")
-
-checkwithveg <- dplyr::count(studyid, pool, Article_ID, veg)
-write.csv(checkwithveg, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/checkwithveg.csv")
-
-checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
-write.csv(checkwithveg2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/checkwithveg2.csv")
 
 
-#get idea about how many observations of each pool, mean values, etc.
-sum98 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = "pool")
-write.csv(sum98, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
-
-
-unique(studyid$veg)
-sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("pool", "veg"))
-write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
-
-
-
-
+###################################
 ###plotting example: pool value by year sampled, colored by pool         
 studyid %>%
   ggplot(aes(x = pool, y = pool_value)) +
@@ -186,29 +159,6 @@ studyid %>%
   #mutate_if(is.numeric, funs(ifelse(is.na(.), 0, .))) %>%
   #mutate(content = BGBC_g_m2*orgsoilperC-topdepth_cm)
          
-
-
-
-
-
-
-####################
-#check summary stats to look for errors
-clean_study <- as.data.frame(clean_study)
-sum1 <- summaryBy(litterC_g_m2 ~ Article_ID , data = clean_study)
-sum2 <- summaryBy(orgsoilC_g_m2 ~ Article_ID , data = clean_study)
-sum3 <- summaryBy(totsoilC_g_m2 ~ Article_ID , data = clean_study)
-sum4 <- summaryBy(BGBC_g_m2 ~ Article_ID , data = clean_study)
-sum5 <- summaryBy(AGBC_g_m2 ~ Article_ID , data = clean_study)
-
-combo11 <- left_join(sum1, sum2, by = c("Article_ID"))
-combo12 <- left_join(combo11, sum3, by = c("Article_ID"))
-combo13 <- left_join(combo12, sum4, by = c("Article_ID"))
-combo14 <- left_join(combo13, sum5, by = c("Article_ID"))
-
-write.csv(combo14, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sumstats.csv")
-
-
 
 
 ####################
@@ -236,11 +186,6 @@ levels(studyid_pt$pool)
 plot(studyid_pt["pool"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
 
-#count(studyid$pool == "AGBC_g_m2") = 218
-#count(studyid$pool == "BGBC_g_m2") = 88
-#count(studyid$pool == "litterC_g_m2") = 81
-#count(studyid$pool == "orgsoilC_g_m2") = 687
-#count(studyid$pool == "totsoilC_g_m2") = 239
 
 #plot with veg as the color
 plot(studyid_pt["veg"], key.pos = 1)
