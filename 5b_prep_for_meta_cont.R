@@ -56,6 +56,9 @@ rawsonly <- siwf %>%
   filter(!study %in% smeans) %>%
   mutate(Study_ID = factor(Study_ID))
 
+write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+
+
 unique(rawsonly$Study_ID)
 
 
