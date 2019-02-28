@@ -8,8 +8,9 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-#no fire data; #bring in studyid dataframe
-siwf <- studyid_sf
+#bring in studyid or siwf dataframe
+studyid = read_csv("studyid.csv")
+siwf = read_csv("siwf.csv")
 
 rawsonly <- siwf %>%
   filter(!study %in% smeans)
