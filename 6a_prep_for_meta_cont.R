@@ -133,7 +133,7 @@ st_geometry(sagecheatpmeans) = NULL
 
 
 ####
-
+#now it's just a matter of putting these values in the correct order in the table so that the pairs line up
 
 
 
