@@ -63,7 +63,7 @@ tens <- rawsonly %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
-#97; 0 for total soil
+#97 for org soil; 0 for total soil
 
 unique(tens$bottomdepth_cm)
 #20
@@ -72,4 +72,25 @@ st_geometry(tens) = NULL
 write.csv(tens, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/tens.csv")
 
 
-  
+
+
+zerosorg <- rawsonly %>%
+  filter(topdepth_cm == 0 & pool == "orgsoilC_g_m2") %>%
+  group_by(veg) %>%
+  mutate(norm_value = pool_value / thick) %>%
+  dplyr::summarise(meanpv = mean(norm_value), n = n(), var = var(norm_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+write.csv(zerosorg, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerosorg.csv")
+
+
+
+zerostot <- rawsonly %>%
+  filter(topdepth_cm == 0 & pool == "totsoilC_g_m2") %>%
+  group_by(veg) %>%
+  mutate(norm_value = pool_value / thick) %>%
+  dplyr::summarise(meanpv = mean(norm_value), n = n(), var = var(norm_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+write.csv(zerostot, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerostot.csv")
+
