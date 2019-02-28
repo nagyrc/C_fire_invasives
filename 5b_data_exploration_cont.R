@@ -75,8 +75,10 @@ rawsonlycheat <- rawsonly %>%
 rawsonlysagecheat <- rawsonly %>%
   filter(Study_ID %in% !is.na(pairssagecheat))
 
+psage <- as.list(416, 1371, 1391, 1411, 1372, 1392, 1412, NA, NA, 417)
+
 rawsonlysage <- rawsonly %>%
-  filter(Study_ID %in% !is.na(pairssage))
+  filter(Study_ID %in% psage)
 
 rawcheat <- rawsonly %>%
   filter(Study_ID %in% !is.na(pairssagecheat)) %>%
