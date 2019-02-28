@@ -145,7 +145,6 @@ write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/d
 
 
 
-
 #######
 #may or may not need this
 len <- studyid %>%
