@@ -99,7 +99,7 @@ mtbs_keep <- mtbs_int %>%
   mutate(yr_samp = as.numeric(yr_samp)) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
-#466 had fires before the sampling date
+#465 had fires before the sampling date
 
 mtbs_keep <- mtbs_keep %>%
   group_by(X1) %>%
@@ -107,7 +107,7 @@ mtbs_keep <- mtbs_keep %>%
   filter(MTBS_DISCOVERY_YEAR == max_yr) %>%
   dplyr::select(-max_yr) %>%
   ungroup
-
+#432 observations once less recent burns are removed
 
 #adding MTBS last year burn to studyid_df
 mtbs_add <- studyid_sf %>%
