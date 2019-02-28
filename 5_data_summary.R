@@ -13,6 +13,15 @@ studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
 
+############################
+#to get a count of mean values vs. raw data
+checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
+write.csv(checkwithveg2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/checkwithveg2.csv")
+
+unique(studyid$veg)
+sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("pool", "veg"))
+write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/pool_means.csv")
+
 
 ############################
 #split into two dataframes of raws and means
