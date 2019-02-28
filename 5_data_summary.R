@@ -12,9 +12,21 @@ setwd("data/")
 studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
+
+
+############################
+#split into two dataframes of raws and means
 rawsonly <- siwf %>%
   filter(!study %in% smeans)
 
+write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+
+meansonly <- siwf %>%
+  filter(study %in% smeans) %>%
+
+write.csv(meansonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonly.csv")
+############################
+#summary of raws only
 #AGB, BGB, and litter only
 rawmeans <- rawsonly %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
@@ -95,3 +107,50 @@ zerostot <- rawsonly %>%
 
 write.csv(zerostot, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerostot.csv")
 
+
+
+
+
+
+########################################
+################################
+#for abstract values
+mean1 <- siwf %>%
+  group_by(pool) %>%
+  summarise(mean = mean(pool_value))
+
+invaded <- siwf %>%
+  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native"))
+
+invadedmeans <- invaded %>%  
+  group_by(pool, invaded) %>%
+  summarise(mean = mean(pool_value))
+
+#try this with MTBS as a test to see if it works
+#also may want to try a different threshold for burned here (e.g., burned in 10 yrs prior to sampling)
+invadedburned1 <- invaded %>%
+  mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_MTBS.csv")
+
+
+
+#try this with BAECV as a test to see if it works
+invadedburned2 <- invaded %>%
+  mutate(burned = ifelse(!is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
+
+
+#try to combine MTBS and BAECV
+invadedburned3 <- invaded %>%
+  mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0 & !is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
+################################
