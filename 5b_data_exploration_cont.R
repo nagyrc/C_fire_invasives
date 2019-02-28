@@ -26,6 +26,19 @@ pairs <- pairs %>%
   dplyr::select(-Article_ID, -pool) %>%
   mutate(pairnum = 1:nrow(pairs))
 
+pairscheat <- pairs %>%
+  dplyr::select(cheatgrass_studyID) %>%
+  rename(Study_ID = cheatgrass_studyID)
+
+pairssage <- pairs %>%
+  dplyr::select(sagebrush_studyID) %>%
+  rename(Study_ID = sagebrush_studyID)
+
+pairssagecheat <- pairs %>%
+  dplyr::select(sagecheat_studyID) %>%
+  rename(Study_ID = sagecheat_studyID)
+
+#############
 #not quite right; need to remove NAs from the names
 StudyIDp <- pairs %>%
   mutate(Study_IDp = paste(cheatgrass_studyID, sagecheat_studyID, sagebrush_studyID, sep = '_'))
@@ -46,6 +59,34 @@ pairs_long3 <- pairs_long2 %>%
   dplyr::select(Study_ID)
 
 as.list(pairs_long3)
+
+
+#####
+rawsonly <- siwf %>%
+  filter(!study %in% smeans)
+
+l1 <- as.list(pairscheat)
+
+rawsonlycheat <- rawsonly[rawsonly$Study_ID %in% !is.na(l1), ] 
+
+rawsonlycheat <- rawsonly %>%
+  filter(Study_ID %in% pairscheat)
+
+rawsonlysagecheat <- rawsonly %>%
+  filter(Study_ID %in% !is.na(pairssagecheat))
+
+rawsonlysage <- rawsonly %>%
+  filter(Study_ID %in% !is.na(pairssage))
+
+rawcheat <- rawsonly %>%
+  filter(Study_ID %in% !is.na(pairssagecheat)) %>%
+  group_by(Study_ID) %>%
+  summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value))
+
+
+
+####
+
 ####################
 #create raw data only dataframe for paired studies
 rawsonly <- siwf %>%
