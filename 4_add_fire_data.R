@@ -161,7 +161,7 @@ baecv_keep <- baecvtest_sf %>%
 
 baecv_no <- baecvtest_sf  %>%
   filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
-  select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
+  dplyr::select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
 #127 observations
 #these are burn date after sample collection
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
@@ -181,7 +181,7 @@ baecv_add <- mtbs_add %>%
 
 #add lat/long back in for plotting, quick id, etc.
 ll <- studyid %>%
-  select(lat, long, X1)
+  dplyr::select(lat, long, X1)
 
 baecv_add_ll <- baecv_add %>%
   left_join(as.data.frame(ll))
@@ -200,19 +200,26 @@ as.data.frame(baecv_gpkg)
 baecv_rep <- baecv_add_ll %>%
   mutate(baecvlyb = ifelse(Study_ID == 154, 2001,lyb_usa_baecv_1984_2015)) %>%
   mutate(baecv_lyb = ifelse(Study_ID == 226, 1986, baecvlyb)) %>%
-  select(-lyb_usa_baecv_1984_2015, -baecvlyb)
+  dplyr::select(-lyb_usa_baecv_1984_2015, -baecvlyb)
 
-write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
+#write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
 
-yrbn = read_csv("yrbn.csv")
+yrbn = read_csv("last_year_burn_overwrite.csv")
 
-baecv_rep %>%
+#the Mahood ones are using satellite data
+yrbn <- yrbn %>%
+  filter(!study == "Mahood et al. unpub1")
+
+#take the max
+baecv_rep <- baecv_rep %>%
   mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb))
 
+#need to replace the 6 values here with those in yrbn
+#this isn't quite working yet.
 siwf <- baecv_rep %>%
   mutate(masterlyb = maxsat) %>%
   filter(study %in% yrbn) %>%
-  mutate(masterlyb = last_year_burned)
+  mutate(masterlyb = yrbn$last_year_burned)
 
 write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv")
 ###
