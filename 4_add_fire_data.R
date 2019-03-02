@@ -210,6 +210,8 @@ yrbn = read_csv("last_year_burn_overwrite.csv")
 yrbn <- yrbn %>%
   filter(!study == "Mahood et al. unpub1")
 
+last_year_burned <- yrbn 
+
 #take the max
 baecv_rep <- baecv_rep %>%
   mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb))
