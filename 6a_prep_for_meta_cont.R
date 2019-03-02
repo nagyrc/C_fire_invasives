@@ -96,7 +96,9 @@ rawsonlysagecheat <- rawsonly %>%
   filter(Study_ID == 387 | Study_ID == 397 | Study_ID == 377 | Study_ID == 407 | Study_ID == 154 | Study_ID == 159 | Study_ID == 134 | Study_ID == 139 | Study_ID == 114 | Study_ID == 119 | Study_ID == 94 | Study_ID == 99 | Study_ID == 54 | Study_ID == 59 | Study_ID == 74 | Study_ID == 79 | Study_ID == 389 | Study_ID == 399 | Study_ID == 379 | Study_ID == 409 | Study_ID == 1094 | Study_ID == 1344 | Study_ID == 1349 | Study_ID == 1354 | Study_ID == 1359 | Study_ID == 510 | Study_ID == 535)
 
 
-
+#missing some Study_IDs...is this because they were re-created?
+rawsonly211 <- siwf %>%
+  filter(Study_ID == 211)
 
 
 ####
@@ -131,14 +133,19 @@ sagecheatpmeans <- rawsonlysagecheat %>%
 
 st_geometry(sagecheatpmeans) = NULL
 
+write.csv(cheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
+write.csv(sagepmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sagepmeans.csv")
+write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
 
 ####
 #now it's just a matter of putting these values in the correct order in the table so that the pairs line up
+#manually pasted in the correct spots in a .csv file
+
+#bring that file in here
+rawspmeans <- as.data.frame(read_csv("rawspmeans.csv"))
 
 
-
-
-
+dq2 <-rawspmeans
 
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
