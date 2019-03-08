@@ -14,6 +14,11 @@ crs1 <- 'ESRI:102003'
 crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs'
 
 
+#bring in dataframe and convert dataframe to sf object with ESRI projection 102003
+studyid = read_csv("studyid.csv")
+studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs1b)
+
 
 ###########################
 ###########################
@@ -61,7 +66,8 @@ crs(yearly_modis)
 
 ###
 
-#reproject raster to match CRS of dataframe
+#STEP 1 reproject raster to match dataframe or reproject dataframe to match raster
+#option 1:reproject raster to match CRS of dataframe
 yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
 
 #did this actually reproject?
@@ -95,7 +101,13 @@ modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
 modis_study_area
 
 
-#extract modis values at points and add to studyid_sf
+#option 2:reproject dataframe to match CRS of raster
+studyidsfrep2 <- st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs = st_crs(yearly_modis))
+
+#STEP 2: extract modis values at points and add to studyid_sf
+
+#option 1: using cropped and reprojected MODIS data
 modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
@@ -105,13 +117,19 @@ unique(modistest$modis_2004)
 #this seems a bit weird
 
 
-###Find last year burned for modis that occurred before sampling
-#I need the column name of last year that has value other than 0 or NA prior to yr_samp
+#option 2: using reprojected dataframe
+modistest <- raster::extract(yearly_modis, studyidsfrep2, sp = TRUE)
 
-#create sf object from extracted values
+
+
+#STEP 3: create sf object from extracted values
 modistest_sf  <-  st_as_sf(modistest, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
+###
+#once I choose an option above, go on with code
+###Find last year burned for modis that occurred before sampling
+#I need the column name of last year that has value other than 0 or NA prior to yr_samp
 
 #transform modis data into long format, keeping X1 so I can group by this later
 modisselect <- modistest_sf %>%
