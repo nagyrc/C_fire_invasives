@@ -157,7 +157,8 @@ unique(lll$lyb_usa_baecv_1984_2015)
 #option 2: do the extract with the reprojected points
 lllb <- raster::extract(baecvlyb, studyidsfrep, sp = TRUE)
 
-
+unique(lllb$lyb_usa_baecv_1984_2015)
+#there are many years here; these look like reasonable numbers for last year burn
 
 #STEP 3
 #option 1: create sf object from extracted values
@@ -165,7 +166,7 @@ baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
 #option 2: create sf object from extracted values
-baecvtest_sf  <-  lllb %>%
+baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
 
 
