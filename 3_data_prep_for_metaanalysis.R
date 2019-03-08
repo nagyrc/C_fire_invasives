@@ -21,10 +21,11 @@ unique(alldata$yr_samp)
 #pull last year burned from alldata as overwriting the last year burned
 unique(alldata$last_year_burned)
 yrbn <- alldata %>%
-  dplyr::select(study, site, lat, long, last_year_burned) %>%
-  group_by(study, site, lat, long) %>%
+  dplyr::select(study, site, lat, long, last_year_burned, X1) %>%
+  group_by(study, site, lat, long, X1) %>%
   distinct(last_year_burned) %>%
-  filter(!is.na(last_year_burned))
+  filter(!is.na(last_year_burned)) %>%
+  ungroup()
 
 unique(yrbn$last_year_burned)
 
