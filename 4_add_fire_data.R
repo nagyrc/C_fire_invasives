@@ -249,6 +249,7 @@ write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.
 
 ###########################
 ###########################
+#may not use MODIS code below; keep only MTBS and BAECV code above
 #MODIS
 #bring in MODIS data; create stack of rasters
 dir <- 'modis_events'
