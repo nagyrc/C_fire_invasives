@@ -206,15 +206,17 @@ baecv_rep <- baecv_add_ll %>%
 
 yrbn = read_csv("last_year_burn_overwrite.csv")
 
-#the Mahood ones are using satellite data
+#the Mahood ones are using satellite data, so I removed those
 yrbn <- yrbn %>%
   filter(!study == "Mahood et al. unpub1")
 
-last_year_burned <- yrbn 
+last_year_burned <- yrbn %>%
+  dplyr::select(X1, last_year_burned)
 
-#take the max
+#take the max of the satellite data
 baecv_rep <- baecv_rep %>%
-  mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb))
+  mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb)) %>%
+  left_join(last_year_burned)
 
 #need to replace the 6 values here with those in yrbn
 #this isn't quite working yet.
