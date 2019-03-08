@@ -136,8 +136,8 @@ crs(studyid_sf)
 
 #STEP 1: reproject raster to match points or points to match raster
 #option 1: reproject raster to match CRS of dataframe
-baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
-crs(baecvlyb_trans)
+#baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
+#crs(baecvlyb_trans)
 
 #option 2: or reproject points to match raster
 studyidsfrep <- st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
@@ -146,10 +146,10 @@ studyidsfrep <- st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
 
 #STEP 2: intersection of BAECV lyb with studyid_sf
 #option 1: extract lyb from BAECV to the points in studyid_sf
-lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
-lll <- raster::extract(baecvlyb_trans, studyid_sf, sp = TRUE)
+#lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
+#lll <- raster::extract(baecvlyb_trans, studyid_sf, sp = TRUE)
 
-unique(lll$lyb_usa_baecv_1984_2015)
+#unique(lll$lyb_usa_baecv_1984_2015)
 #there are many years when I used the original version (baecvlyb) which is what I would expect
 #when I used the reprojected version (baecvlyb_trans), only 0 and NA
 #something weird is happening here
@@ -162,8 +162,8 @@ unique(lllb$lyb_usa_baecv_1984_2015)
 
 #STEP 3
 #option 1: create sf object from extracted values
-baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
-  st_transform(crs1b)
+#baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
+  #st_transform(crs1b)
 
 #option 2: create sf object from extracted values
 baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
@@ -173,12 +173,12 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 
 
 ###
-baecv_keep <- baecvtest_sf %>%
+baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1186 observations
+#1155 observations
 #these ones are keepers
 
-baecv_no <- baecvtest_sf  %>%
+baecv_no <- baecvtest_sfb  %>%
   filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
   dplyr::select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
 #127 observations
