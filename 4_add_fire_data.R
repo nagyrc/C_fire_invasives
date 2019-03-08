@@ -177,7 +177,7 @@ write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 baecv_add <- mtbs_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
   dplyr::select(-geometry, -yr_samp, -site, -topdepth_cm, -bottomdepth_cm, -BD_estimated, -veg, -study, -thick, -Article_ID, -pool, -pool_value, -Study_ID)) 
-#MTBS and BAECV look good; still need to fix MODIS
+#MTBS and BAECV look good
 
 #add lat/long back in for plotting, quick id, etc.
 ll <- studyid %>%
@@ -220,8 +220,7 @@ baecv_rep <- baecv_rep %>%
 
 #need to replace the 6 values here with those in yrbn
 siwf <- baecv_rep %>%
-  mutate(masterlyb = ifelse(!is.na(last_year_burned) > 1900, last_year_burned, ifelse(!is.na(maxsat) > 1900, maxsat, NA))) 
-#this isn't picking up maxsat; only last_year_burned
+  mutate(masterlyb = case_when(last_year_burned > 1900 ~ last_year_burned, maxsat > 1900 ~ maxsat))
 
 write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv")
 ###
