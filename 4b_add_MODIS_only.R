@@ -68,51 +68,48 @@ crs(yearly_modis)
 
 #STEP 1 reproject raster to match dataframe or reproject dataframe to match raster
 #option 1:reproject raster to match CRS of dataframe
-yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
+#yearly_modis_trans <- projectRaster(yearly_modis, crs = crs1b)
 
 #did this actually reproject?
-crs(yearly_modis_trans)
+#crs(yearly_modis_trans)
 #CRS arguments:
 #+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80
 #+datum=NAD83 +units=m +no_defs +towgs84=0,0,0
 
+#projection(yearly_modis_trans)
+#projection(as(studyid_sf, 'Spatial'))
 
-projection(yearly_modis_trans)
-projection(as(studyid_sf, 'Spatial'))
-
-extent(yearly_modis_trans)
-extent(as(studyid_sf, 'Spatial'))
+#extent(yearly_modis_trans)
+#extent(as(studyid_sf, 'Spatial'))
 #x's of studyid_sf are all -; x's of modis are some - and some +
 #y's of studyid_sf are all +; y's of modis are some - and some +
-
 
 #Q: non-matching extents...is this ok?
 #A: It is fine - the extents do not need to be identical for raster::extract to work. 
 #A: The main thing to check would be that the extent of studyid_sf is bounded by the extent of the MODIS data.
 
-
-
-plot(yearly_modis_trans[[1]])
+#plot(yearly_modis_trans[[1]])
 
 #can use this to decrease run time; cropped version of modis data
-modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
+#modis_study_area <- crop(yearly_modis_trans, as(studyid_sf, 'Spatial'))
 
 # explore the raster
-modis_study_area
+#modis_study_area
 
 
 #option 2:reproject dataframe to match CRS of raster
 studyidsfrep2 <- st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs = st_crs(yearly_modis))
 
-#STEP 2: extract modis values at points and add to studyid_sf
 
+
+#STEP 2: extract modis values at points and add to studyid_sf
 #option 1: using cropped and reprojected MODIS data
-modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
+#modistest <- raster::extract(modis_study_area, studyid_sf, sp = TRUE)
 #df = TRUE
 ###
 
-unique(modistest$modis_2004)
+#unique(modistest$modis_2004)
 #I'm not sure these numbers are correct because in 2016, 2010, there are values = 2016.0000 and 2010.0000
 #this seems a bit weird
 
@@ -156,7 +153,7 @@ keepmodlyb <- keep %>%
 
 
 #adding MODIS last year burn to mtbs_add
-modis_add <- baecv_rep %>%
+siwf2 <- siwf %>%
   left_join(as.data.frame(keepmodlyb) %>% 
               dplyr::select(-geometry, -almost, -first, -burn, -yr_samp)) 
 
