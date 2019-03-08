@@ -72,7 +72,7 @@ rm(studyid)
 studyid <- clean_study %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID) %>%
-  #dplyr::mutate_if(is.character, as.factor) %>%
+  dplyr::mutate_if(is.character, as.factor) %>%
   dplyr::mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
   filter(!is.na(pool_value)) %>%
   separate(yr_samp, c("first", "sec"), sep = "-") %>%
@@ -175,11 +175,18 @@ usa_shp <- st_read(file.path('data/states_shp'), layer = 'cb_2016_us_state_20m')
   dplyr::select(STATEFP, STUSPS) %>%
   setNames(tolower(names(.)))
 
+plot(usa_shp["geometry"])
+
 #to show data points across the study area
 studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
-                       crs = crs1b) %>%
+                       crs = 4326) %>%
   st_transform(crs = st_crs(usa_shp))
 
+crs(usa_shp)
+crs(studyid_pt)
+
+identical(crs(usa_shp),crs(studyid_pt))
+#TRUE
 
 #plot with pool as the color
 is.factor(studyid_pt$pool)
