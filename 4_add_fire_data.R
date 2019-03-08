@@ -135,13 +135,20 @@ crs(studyid_sf)
 ###
 #intersection of BAECV lyb with studyid_sf
 
-#reproject raster to match CRS of dataframe
+#option 1: reproject raster to match CRS of dataframe
 baecvlyb_trans <- projectRaster(baecvlyb, crs = crs1b)
 crs(baecvlyb_trans)
 
+#option 2: or reproject points to match raster
+studyidsfrep <- st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(baecvlyb)
 
-#extract lyb from BAECV to the points in studyid_sf
+
+#option 1: extract lyb from BAECV to the points in studyid_sf
 lll <- raster::extract(baecvlyb, studyid_sf, sp = TRUE)
+
+#option 2: do the extract with the reprojected points
+lllb <- raster::extract(baecvlyb, studyidsfrep, sp = TRUE)
 
 unique(lll$lyb_usa_baecv_1984_2015)
 #there are many years when I used the original version (baecvlyb) which is what I would expect
@@ -149,8 +156,12 @@ unique(lll$lyb_usa_baecv_1984_2015)
 #something weird is happening here
 
 
-#create sf object from extracted values
+#option 1: create sf object from extracted values
 baecvtest_sf  <-  st_as_sf(lll, coords = c('long', 'lat'), crs = 4326) %>%
+  st_transform(crs1b)
+
+#option 2: create sf object from extracted values
+baecvtest_sf  <-  lllb %>%
   st_transform(crs1b)
 
 ###
