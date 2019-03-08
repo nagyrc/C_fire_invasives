@@ -173,6 +173,7 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 
 
 ###
+#after choosing option #1 or #2, go on here
 baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
 #1155 observations
