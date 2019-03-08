@@ -221,12 +221,12 @@ baecv_rep <- baecv_rep %>%
 #need to replace the 6 values here with those in yrbn
 siwf <- baecv_rep %>%
   mutate(masterlyb = maxsat) %>%
-  mutate(masterlyb = ifelse(X1 == 19, 1992, masterlyb)) %>%
-  mutate(masterlyb = ifelse(X1 == 20, 1999, masterlyb)) %>%
-  mutate(masterlyb = ifelse(X1 == 21, 1920, masterlyb)) %>%
-  mutate(masterlyb = ifelse(X1 == 22, 1910, masterlyb)) %>%
-  mutate(masterlyb = ifelse(X1 == 23, 1985, masterlyb)) %>%
-  mutate(masterlyb = ifelse(X1 == 24, 1964, masterlyb)) 
+  mutate(masterlyb = ifelse(study == "Hooker et al. 2008" & site == "Rush Valley", 1992, masterlyb)) %>%
+  mutate(masterlyb = ifelse(study == "Johnson et al. 2011" & site == "Eden Valley, NV", 1999, masterlyb)) %>%
+  mutate(masterlyb = ifelse(study == "Bjerregaard et al. 1984" & site == "Curlew Valley", 1920, masterlyb)) %>%
+  mutate(masterlyb = ifelse(study == "Van Miegrot et al. 2005" & site == "S-2", 1910, masterlyb)) %>%
+  mutate(masterlyb = ifelse(study == "Cleary et al. 2010" & site == "expansion", 1985, masterlyb)) %>%
+  mutate(masterlyb = ifelse(study == "Cleary et al. 2010" & site == "mature", 1964, masterlyb)) 
 
 write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv")
 ###
