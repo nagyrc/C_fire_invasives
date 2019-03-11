@@ -242,7 +242,7 @@ baecv_rep <- baecv_rep %>%
 siwf <- baecv_rep %>%
   mutate(masterlyb = case_when(last_year_burned > 1900 ~ last_year_burned, maxsat > 1900 ~ maxsat))
 
-write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv")
+write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
 
 
