@@ -955,6 +955,10 @@ alldata$litter_g_m2_SE <- as.numeric(alldata$litter_g_m2_SE)
 alldata$n_sampled <- as.numeric(alldata$n_sampled)
 alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
 
+colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
+colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
+
+
 write.csv(alldata, file = "alldata.csv")
 
 
