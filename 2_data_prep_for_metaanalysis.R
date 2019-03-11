@@ -7,8 +7,10 @@
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc", "dplyr")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
+setwd("data/")
+
 # Read in alldata.csv
-alldata = read_csv("data/alldata.csv")
+alldata = read_csv("alldata.csv")
 
 colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
 colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
