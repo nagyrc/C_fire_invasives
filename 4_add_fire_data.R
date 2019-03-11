@@ -18,7 +18,7 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 studyid = read_csv("studyid.csv")
 studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b)
-
+#rm(studyid)
 st_crs(studyid_sf)
 
 ###########################
