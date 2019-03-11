@@ -61,50 +61,53 @@ sms$SD[!is.na(sms$orgsoilC_g_m2_SE)] <-
 
 
 #calculate variance
-sms$variance<-sms$SD^2
+sms$variance <- sms$SD^2
 
 #calculate scale
-sms$scale<-sms$variance/sms$pool_value
+sms$scale <- sms$variance/sms$pool_value
 
 #calculate shape
-sms$shape<-sms$pool_value/sms$scale
+sms$shape <- sms$pool_value/sms$scale
 
 #calculate rate
-sms$rate<- 1/sms$scale
+sms$rate <- 1/sms$scale
 
 
 
 
 #add a column of random numbers ("explode") because Ricard 1985a has duplicate study ids
-sms$explode<-sample(1:1000, nrow(sms))
+sms$explode <- sample(1:1000, nrow(sms))
 
 #split the dataframe into a list of dataframes based on "explode"
-dflist<-split(sms, sms$explode)
+dflist <- split(sms, sms$explode)
 
 glimpse(dflist)
 
+
+
 #now we can run the analysis for each dataframe in the list of dataframes
-
-
 #Simulate data using rgamma
 #but use the bootstraptest script to make sure you're using the correct distribution
 
-dflistsim <- lapply(dflist, function(x) Dist1 = rgamma(n= x$n_sampled, 
-                                                       shape= x$shape, 
-                                                       scale= x$scale))
+dflistsim <- lapply(dflist, function(x) Dist1 = rgamma(n = x$n_sampled, 
+                                                       shape = x$shape, 
+                                                       scale = x$scale))
 
 #make list into a new dataframe of simulated raw data
-newrawdata<- ldply(dflistsim, cbind)
+newrawdata <- ldply(dflistsim, cbind)
 
 #rename columns to match original data
-newrawdata<-rename(newrawdata, c(".id" = "explode"))
-newrawdata<-rename(newrawdata, c("1" = "simvalue"))
-newrawdata$explode<-as.factor(newrawdata$explode)
+newrawdata <- rename(newrawdata, c(".id" = "explode"))
+newrawdata <- rename(newrawdata, c("1" = "simvalue"))
+newrawdata$explode <- as.factor(newrawdata$explode)
 
 #make a df to connect new raw data to original data
-key<- unique(sms[c("Study_ID", "explode")])
-key$explode<-as.factor(key$explode)
+key <- unique(sms[c("Study_ID", "explode")])
+key$explode <- as.factor(key$explode)
 
 #join the newrawdata to the key to get a list of simulated values by study id
-simrawdata<-newrawdata%>%
+simrawdata <- newrawdata %>%
   left_join(key)
+
+write.csv(simrawdata, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/simrawdata.csv", row.names = FALSE)
+###
