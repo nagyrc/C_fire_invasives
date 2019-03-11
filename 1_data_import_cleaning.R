@@ -962,6 +962,7 @@ colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 write.csv(alldata, file = "alldata.csv")
 
 
-
+unique(alldata$yr_samp)
+unique(alldata$n_sampled)
 
 
