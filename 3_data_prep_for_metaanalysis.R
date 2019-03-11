@@ -128,7 +128,7 @@ studyidSE <- clean_studynvar %>%
   dplyr::select(-sec, -first)
 
 #split data into means and raw data
-studymeans <- as.data.frame(read_csv("study_means.csv"))
+studymeans <- as.data.frame(read_csv("data/study_means.csv"))
 smeans <- unique(studymeans$study)
 
 meansonlynvar <- studyidSE %>%
