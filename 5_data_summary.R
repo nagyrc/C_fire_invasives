@@ -31,7 +31,7 @@ rawsonly <- siwf %>%
 write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
 meansonly <- siwf %>%
-  filter(study %in% smeans) %>%
+  filter(study %in% smeans)
 
 write.csv(meansonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
@@ -123,7 +123,7 @@ write.csv(zerostot, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/result
 
 ########################################
 ################################
-#for abstract values
+#for ESA abstract values
 mean1 <- siwf %>%
   group_by(pool) %>%
   summarise(mean = mean(pool_value))
@@ -140,7 +140,7 @@ invadedmeans <- invaded %>%
 invadedburned1 <- invaded %>%
   mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0, "burned", "unburned")) %>%
   group_by(pool, invaded, burned) %>%
-  summarise(mean = mean(pool_value), n = n())
+  dplyr::summarise(mean = mean(pool_value), n = n())
 
 write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_MTBS.csv")
 
@@ -150,7 +150,7 @@ write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/
 invadedburned2 <- invaded %>%
   mutate(burned = ifelse(!is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
   group_by(pool, invaded, burned) %>%
-  summarise(mean = mean(pool_value), n = n())
+  dplyr::summarise(mean = mean(pool_value), n = n())
 
 write.csv(invadedburned2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
 
@@ -159,7 +159,7 @@ write.csv(invadedburned2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/
 invadedburned3 <- invaded %>%
   mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0 & !is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
   group_by(pool, invaded, burned) %>%
-  summarise(mean = mean(pool_value), n = n())
+  dplyr::summarise(mean = mean(pool_value), n = n())
 
 write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
 ################################
