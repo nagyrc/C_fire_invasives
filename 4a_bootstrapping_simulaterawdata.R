@@ -89,9 +89,7 @@ glimpse(dflist)
 #Simulate data using rgamma
 #but use the bootstraptest script to make sure you're using the correct distribution
 
-dflistsim <- lapply(dflist, function(x) Dist1 = rgamma(n = x$n_sampled, 
-                                                       shape = x$shape, 
-                                                       scale = x$scale))
+dflistsim <- lapply(dflist, function(x) Dist1 = rgamma(n = x$n_sampled, shape = x$shape, scale = x$scale))
 
 #make list into a new dataframe of simulated raw data
 newrawdata <- ldply(dflistsim, cbind)
