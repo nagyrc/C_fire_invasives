@@ -113,7 +113,7 @@ mtbs_keep <- mtbs_keep %>%
 mtbs_add <- studyid_sf %>%
   left_join(as.data.frame(mtbs_keep) %>% 
   dplyr::select(-geometry)) %>%
-  dplyr::select(-mtbs_keep)
+  dplyr::select(-mtbs_keep, -X1_1)
 
 
 
