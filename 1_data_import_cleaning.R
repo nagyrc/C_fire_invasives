@@ -958,8 +958,8 @@ alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
 colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
 colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 
-
-write.csv(alldata, file = "alldata.csv")
+alldata$X1 <- as.factor(rownames(alldata))
+write.csv(alldata, file = "alldata.csv", row.names = FALSE)
 
 
 unique(alldata$yr_samp)
