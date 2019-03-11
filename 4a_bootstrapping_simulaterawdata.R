@@ -15,15 +15,32 @@ meansonlynvar <- as.data.frame(read_csv("meansonlynvar.csv"))
 ###########################
 
 
-#Subset the data to only values that have a mean and SE
-studymeanssubset1 <- subset(meansonlynvar, !is.na(n_sampled)) 
+#Subset the data to only values that have n_sampled and SE
+studymeanssubset1 <- subset(meansonlynvar, !is.na(n_sampled))
+#94 observations
                           
-sms <- subset(studymeanssubset1,!is.na(AGBC_g_m2_SE)
-                           |!is.na(BGBC_g_m2_SE)  
-                           |!is.na(litterC_g_m2_SE)
-                           |!is.na(totsoilC_g_m2_SE)
-                           |!is.na(orgsoilC_g_m2_SE))
+sms1 <- subset(studymeanssubset1, !is.na(AGBC_g_m2_SE) & pool == "AGBC_g_m2")
+sms2 <- subset(studymeanssubset1, !is.na(BGBC_g_m2_SE) & pool == "BGBC_g_m2")
+sms3 <- subset(studymeanssubset1, !is.na(litterC_g_m2_SE) & pool == "litterC_g_m2")
+sms4 <- subset(studymeanssubset1, !is.na(totsoilC_g_m2_SE) & pool == "totsoilC_g_m2")
+sms5 <- subset(studymeanssubset1, !is.na(orgsoilC_g_m2_SE) & pool == "orgsoilC_g_m2")
+
+smsa <- rbind(sms1, sms2)
+smsb <- rbind(smsa, sms3)
+smsc <- rbind(smsb, sms4)
+sms <- rbind(smsc, sms5)
+#40 observations
+
 glimpse(sms)
+
+#make sure all SEs of other pools are NA...there were some remnant values from the gather step to make the Study_IDs
+sms$AGBC_g_m2_SE <- ifelse(sms$pool == "AGBC_g_m2", sms$AGBC_g_m2_SE, NA)
+sms$BGBC_g_m2_SE <- ifelse(sms$pool == "BGBC_g_m2", sms$BGBC_g_m2_SE, NA)
+sms$litterC_g_m2_SE <- ifelse(sms$pool == "litterC_g_m2", sms$litterC_g_m2_SE, NA)
+sms$totsoilC_g_m2_SE <- ifelse(sms$pool == "totsoilC_g_m2", sms$totsoilC_g_m2_SE, NA)
+sms$orgsoilC_g_m2_SE <- ifelse(sms$pool == "orgsoilC_g_m2", sms$orgsoilC_g_m2_SE, NA)
+
+
 
 #calculate a study SD for each of the carbon pools
 sms$SD[!is.na(sms$AGBC_g_m2_SE)] <- 
