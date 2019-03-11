@@ -15,7 +15,7 @@ colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 
 unique(alldata$yr_samp)
 
-
+unique(alldata$n_sampled)
 
 ####
 #pull last year burned from alldata as overwriting the last year burned
