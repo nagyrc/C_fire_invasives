@@ -58,6 +58,8 @@ sms$SD[!is.na(sms$totsoilC_g_m2_SE)] <-
 sms$SD[!is.na(sms$orgsoilC_g_m2_SE)] <- 
   sms$orgsoilC_g_m2_SE[!is.na(sms$orgsoilC_g_m2_SE)] * sqrt(sms$n_sampled[!is.na(sms$orgsoilC_g_m2_SE)])
 
+
+
 #calculate variance
 sms$variance<-sms$SD^2
 
