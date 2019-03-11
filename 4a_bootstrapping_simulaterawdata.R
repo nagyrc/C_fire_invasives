@@ -4,69 +4,63 @@
 
 #load multiple libraries 
 x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox")
-#lapply(x, install.packages, character.only = TRUE, verbose = FALSE)
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 
 ###############################
 #bring in means
-studymeans <- as.data.frame(read_csv("meansonlynvar.csv"))
+meansonlynvar <- as.data.frame(read_csv("meansonlynvar.csv"))
 
 
 ###########################
 
 
 #Subset the data to only values that have a mean and SE
-studymeanssubset1 <- subset(studymeans, !is.na(n_sampled)) 
+studymeanssubset1 <- subset(meansonlynvar, !is.na(n_sampled)) 
                           
-studymeanssubset <- subset(studymeanssubset1,!is.na(AGBC_g_m2_SE)
+sms <- subset(studymeanssubset1,!is.na(AGBC_g_m2_SE)
                            |!is.na(BGBC_g_m2_SE)  
                            |!is.na(litterC_g_m2_SE)
                            |!is.na(totsoilC_g_m2_SE)
                            |!is.na(orgsoilC_g_m2_SE))
-glimpse(studymeanssubset)
+glimpse(sms)
 
 #calculate a study SD for each of the carbon pools
-studymeanssubset$SD[!is.na(studymeanssubset$AGBC_g_m2_SE)] <- 
-  studymeanssubset$AGBC_g_m2_SE[!is.na(studymeanssubset$AGBC_g_m2_SE)]*
-  sqrt(studymeanssubset$n_sampled[!is.na(studymeanssubset$AGBC_g_m2_SE)])
+sms$SD[!is.na(sms$AGBC_g_m2_SE)] <- 
+  sms$AGBC_g_m2_SE[!is.na(sms$AGBC_g_m2_SE)] * sqrt(sms$n_sampled[!is.na(sms$AGBC_g_m2_SE)])
 
-studymeanssubset$SD[!is.na(studymeanssubset$BGBC_g_m2_SE)] <- 
-  studymeanssubset$BGBC_g_m2_SE[!is.na(studymeanssubset$BGBC_g_m2_SE)]*
-  sqrt(studymeanssubset$n_sampled[!is.na(studymeanssubset$BGBC_g_m2_SE)])
+sms$SD[!is.na(sms$BGBC_g_m2_SE)] <- 
+  sms$BGBC_g_m2_SE[!is.na(sms$BGBC_g_m2_SE)] * sqrt(sms$n_sampled[!is.na(sms$BGBC_g_m2_SE)])
 
-studymeanssubset$SD[!is.na(studymeanssubset$litterC_g_m2_SE)] <- 
-  studymeanssubset$litterC_g_m2_SE[!is.na(studymeanssubset$litterC_g_m2_SE)]*
-  sqrt(studymeanssubset$n_sampled[!is.na(studymeanssubset$litterC_g_m2_SE)])
+sms$SD[!is.na(sms$litterC_g_m2_SE)] <- 
+  sms$litterC_g_m2_SE[!is.na(sms$litterC_g_m2_SE)] * sqrt(sms$n_sampled[!is.na(sms$litterC_g_m2_SE)])
 
-studymeanssubset$SD[!is.na(studymeanssubset$totsoilC_g_m2_SE)] <- 
-  studymeanssubset$totsoilC_g_m2_SE[!is.na(studymeanssubset$totsoilC_g_m2_SE)]*
-  sqrt(studymeanssubset$n_sampled[!is.na(studymeanssubset$totsoilC_g_m2_SE)])
+sms$SD[!is.na(sms$totsoilC_g_m2_SE)] <- 
+  sms$totsoilC_g_m2_SE[!is.na(sms$totsoilC_g_m2_SE)] * sqrt(sms$n_sampled[!is.na(sms$totsoilC_g_m2_SE)])
 
-studymeanssubset$SD[!is.na(studymeanssubset$orgsoilC_g_m2_SE)] <- 
-  studymeanssubset$orgsoilC_g_m2_SE[!is.na(studymeanssubset$orgsoilC_g_m2_SE)]*
-  sqrt(studymeanssubset$n_sampled[!is.na(studymeanssubset$orgsoilC_g_m2_SE)])
+sms$SD[!is.na(sms$orgsoilC_g_m2_SE)] <- 
+  sms$orgsoilC_g_m2_SE[!is.na(sms$orgsoilC_g_m2_SE)] * sqrt(sms$n_sampled[!is.na(sms$orgsoilC_g_m2_SE)])
 
 #calculate variance
-studymeanssubset$variance<-studymeanssubset$SD^2
+sms$variance<-sms$SD^2
 
 #calculate scale
-studymeanssubset$scale<-studymeanssubset$variance/studymeanssubset$pool_value
+sms$scale<-sms$variance/sms$pool_value
 
 #calculate shape
-studymeanssubset$shape<-studymeanssubset$pool_value/studymeanssubset$scale
+sms$shape<-sms$pool_value/sms$scale
 
 #calculate rate
-studymeanssubset$rate<- 1/studymeanssubset$scale
+sms$rate<- 1/sms$scale
 
 
 
 
 #add a column of random numbers ("explode") because Ricard 1985a has duplicate study ids
-studymeanssubset$explode<-sample(1:1000, nrow(studymeanssubset))
+sms$explode<-sample(1:1000, nrow(sms))
 
 #split the dataframe into a list of dataframes based on "explode"
-dflist<-split(studymeanssubset, studymeanssubset$explode)
+dflist<-split(sms, sms$explode)
 
 glimpse(dflist)
 
@@ -89,7 +83,7 @@ newrawdata<-rename(newrawdata, c("1" = "simvalue"))
 newrawdata$explode<-as.factor(newrawdata$explode)
 
 #make a df to connect new raw data to original data
-key<- unique(studymeanssubset[c("Study_ID", "explode")])
+key<- unique(sms[c("Study_ID", "explode")])
 key$explode<-as.factor(key$explode)
 
 #join the newrawdata to the key to get a list of simulated values by study id
