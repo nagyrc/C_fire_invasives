@@ -12,12 +12,6 @@ setwd("data/")
 # Read in alldata.csv
 alldata = read_csv("alldata.csv")
 
-colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
-colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
-
-unique(alldata$yr_samp)
-
-unique(alldata$n_sampled)
 
 ####
 #pull last year burned from alldata as overwriting the last year burned
@@ -31,7 +25,7 @@ yrbn <- alldata %>%
 
 unique(yrbn$last_year_burned)
 
-write.csv(yrbn, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/last_year_burn_overwrite.csv")
+write.csv(yrbn, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/last_year_burn_overwrite.csv", row.names = FALSE)
 ###
 
 
@@ -50,7 +44,7 @@ clean_study <- alldata %>%
 
 is.na(clean_study$yr_samp)
 
-write.csv(clean_study, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/clean_study.csv")
+write.csv(clean_study, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/clean_study.csv", row.names = FALSE)
 
 #create Article_ID
 clean_study$Article_IDs <- str_sub(clean_study$study,1,4)
@@ -83,10 +77,10 @@ studyid <- clean_study %>%
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
-#372 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+#344 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 
 #export long format for later use
-write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv")
+write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
 
 
 
@@ -136,7 +130,7 @@ smeans <- unique(studymeans$study)
 meansonlynvar <- studyidSE %>%
   filter(study %in% smeans) 
 
-write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv")
+write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
 
 ######################################
 
