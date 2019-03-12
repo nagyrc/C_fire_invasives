@@ -11,7 +11,8 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 #bring in means
 meansonlynvar <- as.data.frame(read_csv("meansonlynvar.csv"))
 
-
+#need this to join back in later
+ttt <- unique(meansonlynvar[c("Study_ID", "pool", "site", "lat", "long", "veg", "study", "yr_samp")])
 ###########################
 
 
