@@ -13,6 +13,8 @@ meansonlynvar <- as.data.frame(read_csv("meansonlynvar.csv"))
 
 #need this to join back in later
 ttt <- unique(meansonlynvar[c("Study_ID", "pool", "site", "lat", "long", "veg", "study", "yr_samp")])
+write.csv(ttt, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/ttt.csv", row.names = FALSE)
+###
 ###########################
 
 
