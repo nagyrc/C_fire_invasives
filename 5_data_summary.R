@@ -231,11 +231,11 @@ head(rawmeans)
 ggplot(rawmeans, aes(x=pool, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9))
+                width=.2, position = position_dodge(0.9))
 
 sm1 <- surfacemeans %>%
-  filter(pool == "orgsoilC_g_m2")
+  filter(pool == "orgsoilC_g_m2") %>%
+  mutate(depth = "0-10 cm")
 
 sm2 <- surfacemeans %>%
   filter(pool == "totsoilC_g_m2")
@@ -253,6 +253,16 @@ ggplot(sm2, aes(x=pool, y=meanpv, fill=veg)) +
                 position=position_dodge(.9))
 
 ggplot(tens, aes(x=pool, y=meanpv, fill=veg)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9))
+
+org <- tens %>%
+  mutate(depth = "10-20 cm") %>%
+  rbind(sm1)
+
+ggplot(org, aes(x=depth, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
