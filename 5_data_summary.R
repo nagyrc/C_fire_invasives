@@ -12,7 +12,6 @@ setwd("data/")
 studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
-
 ############################
 #to get a count of mean values vs. raw data
 checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
@@ -79,9 +78,9 @@ st_geometry(surfacemeans) = NULL
 write.csv(surfacemeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/surfacemeans.csv")
 
 
-
+#for 10-20 cm only
 tens <- rawsonly %>%
-  filter(topdepth_cm == 10 & pool == "orgsoilC_g_m2" & bottomdepth_cm == 20) %>%
+  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
@@ -95,7 +94,7 @@ write.csv(tens, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/te
 
 
 
-
+#for organic soils with 0 as top depth
 zerosorg <- rawsonly %>%
   filter(topdepth_cm == 0 & pool == "orgsoilC_g_m2") %>%
   group_by(veg) %>%
@@ -106,7 +105,7 @@ zerosorg <- rawsonly %>%
 write.csv(zerosorg, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerosorg.csv")
 
 
-
+#for total soils with 0 as top depth
 zerostot <- rawsonly %>%
   filter(topdepth_cm == 0 & pool == "totsoilC_g_m2") %>%
   group_by(veg) %>%
@@ -115,6 +114,114 @@ zerostot <- rawsonly %>%
   mutate(se = sqrt(var)/sqrt(n))
 
 write.csv(zerostot, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerostot.csv")
+
+
+
+
+
+
+########################################
+
+
+
+
+
+############################
+#summary of raws plus simulated raw data
+
+#bring in simulated raw data
+simrawdata <- read_csv("simrawdata.csv")
+ttt <- read_csv("ttt.csv")
+
+
+simraw <- simrawdata %>%
+  left_join(ttt) %>%
+  mutate(pool_value = simvalue) %>%
+  dplyr::select(-simvalue, -explode)
+
+#need to join simrawdata and rawsonly
+rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
+joiny2 <- rawsonly %>%
+  full_join(simraw)
+
+
+
+#AGB, BGB, and litter only
+rawsimmeans <- joiny2 %>%
+  filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(rawsimmeans) = NULL
+write.csv(rawsimmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawsimmeans.csv")
+
+
+
+#now get into more detail in the soils (organic and total)
+unique(joiny2$topdepth_cm)
+unique(joiny2$bottomdepth_cm)
+
+count(joiny2$bottomdepth_cm == 5)
+#229
+
+count(joiny2$bottomdepth_cm == 10)
+#588
+#go with 0-10 for surface soils
+
+count(joiny2$bottomdepth_cm == 10 & joiny2$pool == "orgsoilC_g_m2")
+#399
+
+count(joiny2$bottomdepth_cm == 10 & joiny2$pool == "totsoilC_g_m2")
+#189
+
+
+
+#for 0-10 cm only
+surfacemeans2 <- joiny2 %>%
+  filter(bottomdepth_cm == 10) %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+#399 for org soil; 189 for total soil
+st_geometry(surfacemeans2) = NULL
+
+write.csv(surfacemeans2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
+
+
+#for 10-20 cm only
+tens2 <- joiny2 %>%
+  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+#97 for org soil; 0 for total soil
+st_geometry(tens2) = NULL
+
+write.csv(tens2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/tens2.csv")
+
+
+
+#for organic soils with 0 as top depth
+zerosorg2 <- joiny2 %>%
+  filter(topdepth_cm == 0 & pool == "orgsoilC_g_m2") %>%
+  group_by(veg) %>%
+  mutate(norm_value = pool_value / thick) %>%
+  dplyr::summarise(meanpv = mean(norm_value), n = n(), var = var(norm_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+write.csv(zerosorg2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerosorg2.csv")
+
+
+#for total soils with 0 as top depth
+zerostot2 <- joiny2 %>%
+  filter(topdepth_cm == 0 & pool == "totsoilC_g_m2") %>%
+  group_by(veg) %>%
+  mutate(norm_value = pool_value / thick) %>%
+  dplyr::summarise(meanpv = mean(norm_value), n = n(), var = var(norm_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+write.csv(zerostot2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerostot2.csv")
 
 
 
