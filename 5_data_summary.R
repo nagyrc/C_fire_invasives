@@ -68,7 +68,7 @@ count(rawsonly$bottomdepth_cm == 10 & rawsonly$pool == "totsoilC_g_m2")
 
 #for 0-10 cm only
 surfacemeans <- rawsonly %>%
-  filter(bottomdepth_cm == 10) %>%
+  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
@@ -86,8 +86,6 @@ tens <- rawsonly %>%
   mutate(se = sqrt(var)/sqrt(n))
 #97 for org soil; 0 for total soil
 
-unique(tens$bottomdepth_cm)
-#20
 st_geometry(tens) = NULL
 
 write.csv(tens, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/tens.csv")
@@ -147,14 +145,14 @@ joiny2 <- rawsonly %>%
 
 
 #AGB, BGB, and litter only
-rawsimmeans <- joiny2 %>%
+rawmeans2 <- joiny2 %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
-st_geometry(rawsimmeans) = NULL
-write.csv(rawsimmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawsimmeans.csv")
+st_geometry(rawmeans2) = NULL
+write.csv(rawmeans2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawmeans2.csv")
 
 
 
