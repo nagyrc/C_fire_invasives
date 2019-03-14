@@ -393,3 +393,22 @@ invadedburned3 <- invaded %>%
 
 write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
 ################################
+
+head(joiny2)
+#analysis with fire
+joiny2$timesincefire <- joiny2$yr_samp - joiny2$masterlyb
+
+ggplot(data = joiny2) +
+  geom_point(aes(x = timesincefire, y = pool_value)) +
+  facet_wrap(~pool)
+
+recentburn <- joiny2 %>%
+  filter(timesincefire < 20)
+#only 337 observations of 2247
+#need to check and make sure fire info came in with simraw data
+
+ggplot(data = recentburn) +
+  geom_point(aes(x = timesincefire, y = pool_value)) + 
+  facet_wrap(~pool2) +
+  xlab("Time since fire (years)") +
+  ylab("Carbon content (gC m-2)")
