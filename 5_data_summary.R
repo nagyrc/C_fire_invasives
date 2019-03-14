@@ -228,10 +228,12 @@ write.csv(zerostot2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/resul
 #plotting
 head(rawmeans)
 
-ggplot(rawmeans, aes(x=pool, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2, position = position_dodge(0.9))
+ggplot(rawmeans, aes(x = veg, y = meanpv, fill = veg)) + 
+  geom_bar(position = position_dodge(preserve = "single"), stat="identity") +
+  geom_errorbar(aes(ymin = meanpv-se, ymax = meanpv+se),
+                width = .2, position = position_dodge(0.9)) + 
+  facet_wrap(~pool) + 
+  labs(x = "vegetation type", y = "mean carbon content (gC m-2)")
 
 sm1 <- surfacemeans %>%
   filter(pool == "orgsoilC_g_m2") %>%
