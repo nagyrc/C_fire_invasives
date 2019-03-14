@@ -129,19 +129,23 @@ write.csv(zerostot, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/result
 #bring in simulated raw data
 simrawdata <- read_csv("simrawdata.csv")
 ttt <- read_csv("ttt.csv")
-
+head(ttt)
 
 simraw <- simrawdata %>%
   left_join(ttt) %>%
   mutate(pool_value = simvalue) %>%
   dplyr::select(-simvalue, -explode)
 
+unique(simraw$Article_ID)
+head(simraw)
+
 #need to join simrawdata and rawsonly
 rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 joiny2 <- rawsonly %>%
-  full_join(simraw)
+  full_join(simraw) %>%
+  mutate_if(is.character, as.factor)
 
-
+unique(joiny2$Article_ID)
 
 #AGB, BGB, and litter only
 rawmeans2 <- joiny2 %>%
@@ -226,6 +230,9 @@ write.csv(zerostot2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/resul
 ########################################
 ################################
 #plotting
+
+
+#raw data only
 head(rawmeans)
 
 ggplot(rawmeans, aes(x = veg, y = meanpv, fill = veg)) + 
@@ -271,7 +278,65 @@ ggplot(org, aes(x=depth, y=meanpv, fill=veg)) +
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
   labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)")
+
+
+
 ########################################
+#raw plus simulated data
+
+head(joiny2)
+
+#try with subsets for each pool
+AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
+BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
+litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
+orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
+totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
+
+head(AGBC)
+ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("AGB C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("BGB C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("litter C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("organic soil C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("total soil C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+
+
+
 ################################
 #for ESA abstract values
 mean1 <- siwf %>%
