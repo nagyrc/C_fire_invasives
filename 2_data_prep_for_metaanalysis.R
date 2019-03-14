@@ -159,6 +159,8 @@ studyid %>%
 
 
 ####################
+#plotting
+
 #set crs for all data layers: Albers Equal Area
 crs1 <- 'ESRI:102003'
 crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs'
@@ -181,13 +183,19 @@ studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
 crs(usa_shp)
 crs(studyid_pt)
 
+extent(usa_shp)
+extent(studyid_pt)
+
 identical(crs(usa_shp),crs(studyid_pt))
 #TRUE
+
+studyid_pt$pool2 <- ifelse(studyid_pt$pool == "AGBC_g_m2", "AGB", ifelse(studyid_pt$pool == "BGBC_g_m2", "BGB", ifelse(studyid_pt$pool == "litterC_g_m2", "litter", ifelse(studyid_pt$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+
 
 #plot with pool as the color
 is.factor(studyid_pt$pool)
 levels(studyid_pt$pool)
-plot(studyid_pt["pool"], key.pos = 1)
+plot(studyid_pt["pool2"], key.pos = 1)
 plot(usa_shp["geometry"], add = TRUE)
 
 
@@ -199,3 +207,18 @@ plot(usa_shp["geometry"], add = TRUE)
 plot(studyid_pt["Study_ID"])
 plot(usa_shp["geometry"], add = TRUE)
 #more than 1500 'studies'; actually only 372 once the rows with NA's were removed
+
+
+
+extent(studyid_pt)
+head(studyid_pt)
+
+#crop usa_shp to extent of studyid_pt
+us_crop <- st_crop(usa_shp, extent(studyid_pt))
+
+ggplot(data = us_crop) +
+  geom_sf() +
+  geom_sf(data = studyid_pt, size = 1.5, aes(color = pool)) +
+  theme(legend.key.size =  unit(0.1, "in")) 
+  
+
