@@ -13,8 +13,8 @@ rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 
 # Histogram for each pol-veg combo to look at distributions
 ggplot(rawsonly, aes(x = pool_value, fill = Article_ID)) + 
-  geom_histogram()+ facet_grid(pool ~ veg)+ 
-  xlab("pool_value") + theme_bw()+ 
+  geom_histogram() + facet_grid(pool ~ veg) + 
+  xlab("pool_value") + theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
