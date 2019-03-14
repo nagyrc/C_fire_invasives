@@ -285,6 +285,16 @@ ggplot(org, aes(x=depth, y=meanpv, fill=veg)) +
 #raw plus simulated data
 
 head(joiny2)
+joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+
+# Histogram for each pol-veg combo to look at distributions
+ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + facet_grid(pool2 ~ veg) + 
+  xlab("pool_value") + theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        legend.key.size =  unit(0.05, "in")) +
+  xlab("Carbon Content (gC m-2)") 
 
 #try with subsets for each pool
 AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
@@ -295,44 +305,49 @@ totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
 head(AGBC)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
-  geom_histogram() + 
+  geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
   xlab("AGB C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
+        legend.key.size =  unit(0.1, "in"))
 
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
-  geom_histogram() + 
+  geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
   xlab("BGB C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        legend.key.size =  unit(0.1, "in"))
 
 ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
-  geom_histogram() + 
+  geom_histogram(bins = 50) + 
   facet_wrap(~veg) + 
   xlab("litter C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        legend.key.size =  unit(0.1, "in"))
 
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
-  geom_histogram() + 
+  geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
   xlab("organic soil C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        legend.key.size =  unit(0.1, "in"))
 
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
-  geom_histogram() + 
+  geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
   xlab("total soil C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
+        legend.key.size =  unit(0.1, "in"))
 
 
 
