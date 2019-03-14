@@ -245,4 +245,6 @@ siwf <- baecv_rep %>%
 write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
 
+bbb <- unique(siwf[c("Study_ID", "masterlyb")])
+write.csv(bbb, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/bbb.csv", row.names = FALSE)
 

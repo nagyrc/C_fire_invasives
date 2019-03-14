@@ -141,9 +141,15 @@ head(simraw)
 
 #need to join simrawdata and rawsonly
 rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
-joiny2 <- rawsonly %>%
+joiny2a <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor)
+
+#need to subset bbb for studies in smeans
+
+#then join with joiny2a
+joiny2 <- joiny2a %>%
+  inner_join(bbb)
 
 unique(joiny2$Article_ID)
 
