@@ -12,12 +12,60 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 
 # Histogram for each pol-veg combo to look at distributions
-ggplot(rawsonly, aes(x= pool_value, fill= Article_ID)) + 
+ggplot(rawsonly, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram()+ facet_grid(pool ~ veg)+ 
   xlab("pool_value") + theme_bw()+ 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
+
+#try with subsets for each pool
+AGBC <- subset.data.frame(rawsonly, pool == "AGBC_g_m2")
+BGBC <- subset.data.frame(rawsonly, pool == "BGBC_g_m2")
+litterC <- subset.data.frame(rawsonly, pool == "litterC_g_m2")
+orgsoilC <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2")
+totsoilC <- subset.data.frame(rawsonly, pool == "totsoilC_g_m2")
+
+head(AGBC)
+ggplot(AGBC, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("AGB C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(BGBC, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("BGB C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(litterC, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("litter C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(orgsoilC, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("organic soil C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
+
+ggplot(totsoilC, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  facet_wrap(~veg) + 
+  xlab("total soil C (gC m-2)") + 
+  theme_bw() + 
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 ###########################
 #subset data for aboveground sagebrush
 
