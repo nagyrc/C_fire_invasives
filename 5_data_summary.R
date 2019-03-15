@@ -141,15 +141,26 @@ head(simraw)
 
 #need to join simrawdata and rawsonly
 rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
-joiny2a <- rawsonly %>%
+joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor)
 
 #need to subset bbb for studies in smeans
+#bring in studymeans from script 2
+#studymeans <- as.data.frame(read_csv("data/study_means.csv"))
+#smeans <- unique(studymeans$study)
+
+#bring in bbb from script 3
+#bbb <- as.data.frame(read_csv("data/bbb.csv"))
+
+#fireinfo <- bbb %>%
+  #filter(study %in% smeans)
+#only Diamond et al. 2012 burned in 1996
 
 #then join with joiny2a
-joiny2 <- joiny2a %>%
-  inner_join(bbb)
+#joiny2 <- joiny2a %>%
+  #inner_join(bbb)
+#why is Diamond not in joiny2? Diamond was removed because it didn't have a SE
 
 unique(joiny2$Article_ID)
 
