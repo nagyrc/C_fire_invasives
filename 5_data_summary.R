@@ -145,6 +145,9 @@ joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor)
 
+write.csv(joiny2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/joiny2.csv")
+
+
 #need to subset bbb for studies in smeans
 #bring in studymeans from script 2
 #studymeans <- as.data.frame(read_csv("data/study_means.csv"))
