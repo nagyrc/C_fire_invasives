@@ -145,7 +145,7 @@ write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 rawspmeans <- as.data.frame(read_csv("rawspmeans.csv"))
 
 
-dq2 <-rawspmeans
+dq2 <- rawspmeans
 
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
