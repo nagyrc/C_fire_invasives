@@ -1,4 +1,4 @@
-#Data exploration continued
+#Data prep for meta-analysis
 #Dr. R. Chelsea Nagy
 #created February 20, 2019
 
