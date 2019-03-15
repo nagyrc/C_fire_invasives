@@ -16,7 +16,7 @@ siwf = read_csv("siwf.csv")
 
 #bring in paired Study_IDs
 #pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
-pairs <- as.data.frame(read_csv("paired_studyIDs.csv"))
+pairs <- as.data.frame(read_csv("paired_studyIDs2.csv"))
 pairs <- pairs %>%
   dplyr::select(-Article_ID, -pool) %>%
   mutate(pairnum = 1:nrow(pairs))
@@ -148,7 +148,7 @@ write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 #manually pasted in the correct spots in a .csv file
 
 #bring that file in here
-rawspmeans <- as.data.frame(read_csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans.csv"))
+rawspmeans <- as.data.frame(read_csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv"))
 
 
 dq2 <- rawspmeans
