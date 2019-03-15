@@ -59,6 +59,10 @@ write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/r
 
 
 unique(rawsonly$Study_ID)
+ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
+
+ccc$geometry <- NULL
+write.csv(ccc, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
 
 
 ###
@@ -92,13 +96,15 @@ psagecheat <- pairssagecheat %>%
 psagecheat2 <- semi_join(psagecheat, rawsonly)
 psagecheat2
 
+#replaced 211 and 231 with 216 and 236 (Bradley)
+#replaced 240 and 220 with 235 and 215 (Bradley)
 rawsonlysagecheat <- rawsonly %>%
-  filter(Study_ID == 387 | Study_ID == 397 | Study_ID == 377 | Study_ID == 407 | Study_ID == 154 | Study_ID == 159 | Study_ID == 134 | Study_ID == 139 | Study_ID == 114 | Study_ID == 119 | Study_ID == 94 | Study_ID == 99 | Study_ID == 54 | Study_ID == 59 | Study_ID == 74 | Study_ID == 79 | Study_ID == 389 | Study_ID == 399 | Study_ID == 379 | Study_ID == 409 | Study_ID == 1094 | Study_ID == 1344 | Study_ID == 1349 | Study_ID == 1354 | Study_ID == 1359 | Study_ID == 510 | Study_ID == 535)
+  filter(Study_ID == 387 | Study_ID == 397 | Study_ID == 377 | Study_ID == 407 | Study_ID == 154 | Study_ID == 159 | Study_ID == 134 | Study_ID == 139 | Study_ID == 114 | Study_ID == 119 | Study_ID == 94 | Study_ID == 99 | Study_ID == 54 | Study_ID == 59 | Study_ID == 74 | Study_ID == 79 | Study_ID == 389 | Study_ID == 399 | Study_ID == 379 | Study_ID == 409 | Study_ID == 1094 | Study_ID == 1344 | Study_ID == 1349 | Study_ID == 1354 | Study_ID == 1359 | Study_ID == 510 | Study_ID == 535 | Study_ID == 216 | Study_ID == 236 | Study_ID == 215 | Study_ID == 235)
 
 
 #missing some Study_IDs...is this because they were re-created?
-rawsonly211 <- siwf %>%
-  filter(Study_ID == 211)
+rawsonly236 <- siwf %>%
+  filter(Study_ID == 236)
 
 
 ####
