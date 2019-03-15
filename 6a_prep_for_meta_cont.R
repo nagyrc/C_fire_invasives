@@ -142,7 +142,7 @@ write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 #manually pasted in the correct spots in a .csv file
 
 #bring that file in here
-rawspmeans <- as.data.frame(read_csv("rawspmeans.csv"))
+rawspmeans <- as.data.frame(read_csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans.csv"))
 
 
 dq2 <- rawspmeans
