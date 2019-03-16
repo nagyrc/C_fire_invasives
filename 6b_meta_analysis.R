@@ -74,33 +74,33 @@ library(MCMCglmm)
 library(MCMCvis)
 
 #subset data by carbon pool
-orgsoil <- subset(dq2,pool=="orgsoilC_g_m2"&!is.na(var_d_cheat_v_sage))
-orgsoil2 <- subset(dq2,pool=="orgsoilC_g_m2"&!is.na(var_d_sagecheat_v_sage))
+orgsoil <- subset(dq2,pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage))
+orgsoil2 <- subset(dq2,pool == "orgsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage))
 
 # set priors
 #non informative uniform priors
-prior <- list(R=list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -1)))
+prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -1)))
 
 # run random effects model, three chains
 # we will get an error because we don't have replication with our study ID. this is OK
 #make nitt smaller- 10,000 when we start to help run faster
 #fit= dq2
-m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 100, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
-m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 100, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
-m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1c_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 100, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
 
-m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
@@ -108,7 +108,7 @@ m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2
 #NOTE that if we want to include a fixed effect then gInv~ would have a variable listed
 
 # combine 3 chains into 1 mcmc object
-m1_inv=mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
+m1_inv = mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
 
 
 #THIS IS HOW WE CHECK THE MODEL#
