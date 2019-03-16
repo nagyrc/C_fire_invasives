@@ -74,8 +74,8 @@ library(MCMCglmm)
 library(MCMCvis)
 
 #subset data by carbon pool
-orgsoil <- subset(dq2,pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage))
-orgsoil2 <- subset(dq2,pool == "orgsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage))
+orgsoil <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage))
+orgsoil2 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage))
 
 # set priors
 #non informative uniform priors
