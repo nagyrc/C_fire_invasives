@@ -31,11 +31,17 @@ summary(dq2) # no missing values in n, mean, variance
 #dq2$SD_control[dq2$var_statistic == "SE"] <- dq2$varsage[dq2$var_statistic == "SE"]*sqrt(dq2$nsage[dq2$var_statistic == "SE"])
 #dq2$SD_control[dq2$var_statistic == "CI"] <- (sqrt(dq2$nsage[dq2$var_statistic == "CI"]))*(((dq2$meansage[dq2$var_statistic == "CI"] + dq2$varsage[dq2$var_statistic == "CI"])- dq2$meansage[dq2$var_statistic == "CI"])/1.96)
 
-#will need to calculate sd for the invaded and invaded fire sites as well
+#will need to calculate sd for all three veg categories
+head(dq2)
+dq2$sdsage <- sqrt(dq2$varsage)
+dq2$sdsagecheat <- sqrt(dq2$varsagecheat)
+dq2$sdcheat <- sqrt(dq2$varcheat)
+
 
 # Computing the pooled standard deviations for the Hedges' index
 #this is the equation in the book
 #at this point we have three groups - cheat (invaded, burned), sagecheat (invaded, unburned), and sage (uninvaded, unburned)
+
 dq2$SD_hedge_cheat_v_sage <- sqrt((dq2$sdsage^2*(dq2$nsage-1)+dq2$sdcheat^2*(dq2$ncheat-1))/(dq2$nsage+dq2$ncheat-2))
 dq2$SD_hedge_cheat_v_sagecheat <- sqrt((dq2$sdsagecheat^2*(dq2$nsagecheat-1)+dq2$sdcheat^2*(dq2$ncheat-1))/(dq2$nsagecheat+dq2$ncheat-2))
 dq2$SD_hedge_sagecheat_v_sage <- sqrt((dq2$sdsage^2*(dq2$nsage-1)+dq2$sdsagecheat^2*(dq2$nsagecheat-1))/(dq2$nsage+dq2$nsagecheat-2))
@@ -45,13 +51,13 @@ dq2$SD_hedge_sagecheat_v_sage <- sqrt((dq2$sdsage^2*(dq2$nsage-1)+dq2$sdsagechea
 #J is also in the book- best for studies with small sample sizes
 #calculate one per effect size- here this is control vs invasion
 dq2$df_cheat_v_sage = dq2$nsage + dq2$ncheat - 2
-dq2$J_cheat_v_sage = 1 - (3 / (4*dq2$df_cheat_v_sage -1))
+dq2$J_cheat_v_sage = 1 - (3 / (4*dq2$df_cheat_v_sage - 1))
 
 dq2$df_cheat_v_sagecheat = dq2$nsagecheat + dq2$ncheat - 2
-dq2$J_cheat_v_sagecheat = 1 - (3 / (4*dq2$df_cheat_v_sagecheat -1))
+dq2$J_cheat_v_sagecheat = 1 - (3 / (4*dq2$df_cheat_v_sagecheat - 1))
 
 dq2$df_sagecheat_v_sage = dq2$nsage + dq2$nsagecheat - 2
-dq2$J_sagecheat_v_sage = 1 - (3 / (4*dq2$df_sagecheat_v_sage -1))
+dq2$J_sagecheat_v_sage = 1 - (3 / (4*dq2$df_sagecheat_v_sage - 1))
 
 ## Compute effect sizes (Hedge's g) with the J adjustment
 #result is the effect size for each row in the data set 
@@ -70,8 +76,6 @@ dq2$var_d_sagecheat_v_sage = ((dq2$nsage + dq2$nsagecheat/dq2$nsage * dq2$nsagec
 ####################################################################
 ## Meta-Analysis
 ###################################################################
-library(MCMCglmm)
-library(MCMCvis)
 
 #subset data by carbon pool
 orgsoil <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage))
@@ -102,7 +106,7 @@ summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
 
-
+#these aren't running 3/18/19
 m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
@@ -114,15 +118,19 @@ m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil
 m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
+#Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
+#Mixed model equations singular: use a (stronger) prior
 
 summary(m2a_inv)
 summary(m2b_inv)
 summary(m2c_inv)
 
-
+#these aren't running
 m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
+#Error in `$<-.data.frame`(`*tmp*`, "MCMC_mev", value = c(10.6689450017523,  : 
+#replacement has 16 rows, data has 9
 
 m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
