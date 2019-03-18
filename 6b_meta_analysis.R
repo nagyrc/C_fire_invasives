@@ -76,6 +76,7 @@ library(MCMCvis)
 #subset data by carbon pool
 orgsoil <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage))
 orgsoil2 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage))
+orgsoil3 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat))
 
 # set priors
 #non informative uniform priors
@@ -86,25 +87,60 @@ prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -
 #make nitt smaller- 10,000 when we start to help run faster
 #fit= dq2
 m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 100, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 100, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 m1c_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 100, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
+
 summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
+
 
 m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
+m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
+m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil2, pr = T, saveX = T, saveZ = T)
+
+summary(m2a_inv)
+summary(m2b_inv)
+summary(m2c_inv)
+
+
+m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil3, pr = T, saveX = T, saveZ = T)
+
+m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil3, pr = T, saveX = T, saveZ = T)
+
+m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil3, pr = T, saveX = T, saveZ = T)
+
+summary(m3a_inv)
+summary(m3b_inv)
+summary(m3c_inv)
+
+
+
+###
+###
+#effect of cheat vs. sage
 #NOTE that if we want to include a fixed effect then gInv~ would have a variable listed
 
 # combine 3 chains into 1 mcmc object
@@ -141,3 +177,70 @@ geweke.diag(m1_inv[ , "(Intercept)"])
 
 #If everything looks good here, then the intercept value is the effect
 
+
+
+
+
+
+###
+#effect of sagecheat vs. sage
+# combine 3 chains into 1 mcmc object
+m2_inv = mcmc.list(m2a_inv[[1]], m2b_inv[[1]], m2c_inv[[1]])
+
+
+#THIS IS HOW WE CHECK THE MODEL#
+# diagnostics to ensure good model behavior
+inv_overall <- MCMCsummary(m2_inv, params = "(Intercept)", n.eff = T)
+
+#we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
+MCMCtrace(m2_inv, params = "(Intercept)", pdf = F, ind = T)
+
+#autocorr.plot(m1_inv) #all
+#this will tell us whether our thinning variable is okay
+#if many tall bars, increase thinning
+autocorr.plot(m2_inv[, "(Intercept)"]) 
+
+#assess convergence
+#Trace plot. we want all the parameter estimates to be similar and horizontal; up the burnin and iterations if they are headed in an up or down direction
+gelman.plot(m2_inv[ , "(Intercept)"]) 
+
+#we want the posteriors to converge on 1; if they dont, up burnin and interations
+gelman.diag(m2_inv[ , "(Intercept)"])
+
+#dont worry about this one for now if gelman diagram looks good
+geweke.diag(m2_inv[ , "(Intercept)"])
+
+#If everything looks good here, then the intercept value is the effect
+
+
+
+
+###
+#effect of cheat vs. sagecheat
+# combine 3 chains into 1 mcmc object
+m3_inv = mcmc.list(m3a_inv[[1]], m3b_inv[[1]], m3c_inv[[1]])
+
+
+#THIS IS HOW WE CHECK THE MODEL#
+# diagnostics to ensure good model behavior
+inv_overall <- MCMCsummary(m3_inv, params = "(Intercept)", n.eff = T)
+
+#we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
+MCMCtrace(m3_inv, params = "(Intercept)", pdf = F, ind = T)
+
+#autocorr.plot(m1_inv) #all
+#this will tell us whether our thinning variable is okay
+#if many tall bars, increase thinning
+autocorr.plot(m3_inv[, "(Intercept)"]) 
+
+#assess convergence
+#Trace plot. we want all the parameter estimates to be similar and horizontal; up the burnin and iterations if they are headed in an up or down direction
+gelman.plot(m3_inv[ , "(Intercept)"]) 
+
+#we want the posteriors to converge on 1; if they dont, up burnin and interations
+gelman.diag(m3_inv[ , "(Intercept)"])
+
+#dont worry about this one for now if gelman diagram looks good
+geweke.diag(m3_inv[ , "(Intercept)"])
+
+#If everything looks good here, then the intercept value is the effect
