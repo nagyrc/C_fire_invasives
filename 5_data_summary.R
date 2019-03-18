@@ -146,7 +146,7 @@ joiny2 <- rawsonly %>%
   mutate_if(is.character, as.factor)
 
 write.csv(joiny2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/joiny2.csv")
-
+unique(joiny2$Article_ID)
 
 #need to subset bbb for studies in smeans
 #bring in studymeans from script 2
