@@ -15,7 +15,7 @@ siwf = read_csv("siwf.csv")
 
 
 #bring in paired Study_IDs
-#pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
+pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
 pairs <- as.data.frame(read_csv("paired_studyIDs2.csv"))
 pairs <- pairs %>%
   dplyr::select(-Article_ID, -pool) %>%
@@ -150,8 +150,18 @@ write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 #bring that file in here
 rawspmeans <- as.data.frame(read_csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv"))
 
-
 dq2 <- rawspmeans
+
+#check depths on soil pools
+check <- pairs_long %>%
+  filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
+  filter(!is.na(Study_ID)) 
+
+#this isn't working
+check2 <- joiny2 %>%
+  filter(Study_ID %in% check) 
+
+check3 <- unique(check2[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
