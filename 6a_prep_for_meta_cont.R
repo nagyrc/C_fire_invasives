@@ -157,11 +157,13 @@ check <- pairs_long %>%
   filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
   filter(!is.na(Study_ID)) 
 
-#this isn't working
+check2a <- check$Study_ID
+
 check2 <- joiny2 %>%
-  filter(Study_ID %in% check) 
+  filter(Study_ID %in% check2a) 
 
 check3 <- unique(check2[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+#all different depth intervals; need to standardize
 
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
