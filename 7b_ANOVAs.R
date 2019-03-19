@@ -42,4 +42,16 @@ fit3 <- aov(pool_value ~ veg, data = totsoil010)
 summary(fit3)
 #p = 3.98e-05
 
+fit4 <- aov(pool_value ~ veg, data = litterC2)
+summary(fit4)
+#p = 5.6e-12
+
+fit5 <- aov(pool_value ~ veg, data = AGBC2)
+summary(fit5)
+#p = 0.00723
+
+fit6 <- aov(pool_value ~ veg, data = BGBC2)
+summary(fit6)
+#p < 2e-16
+
 #run Tukey's
