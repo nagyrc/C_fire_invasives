@@ -200,7 +200,7 @@ count(joiny2$bottomdepth_cm == 10 & joiny2$pool == "totsoilC_g_m2")
 
 #for 0-10 cm only
 surfacemeans2 <- joiny2 %>%
-  filter(bottomdepth_cm == 10) %>%
+  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
@@ -244,7 +244,18 @@ zerostot2 <- joiny2 %>%
 
 write.csv(zerostot2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerostot2.csv")
 
-
+#subset soils to appropriate depths
+orgsoilmeans010 <- surfacemeans2 %>%
+  filter(pool == "orgsoilC_g_m2") %>%
+  mutate(depth = "0-10 cm")
+orgsoilmeans1020 <- tens2 %>%
+  filter(pool == "orgsoilC_g_m2") %>%
+  mutate(depth = "10-20 cm")
+totsoilmeans010 <- surfacemeans2 %>%
+  filter(pool == "totsoilC_g_m2") %>%
+  mutate(depth = "0-10 cm")
+#totsoilmeans1020 <- tens2 %>%
+  #filter(pool == "totsoilC_g_m2")
 
 
 ########################################
@@ -301,6 +312,8 @@ ggplot(org, aes(x=depth, y=meanpv, fill=veg)) +
 
 
 
+
+
 ########################################
 #raw plus simulated data
 
@@ -322,6 +335,7 @@ BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
 litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
+
 
 head(AGBC)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
@@ -371,6 +385,45 @@ ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) +
 
 
 
+#plotting means of raw + simulated raw values
+ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 0-10 cm")
+
+ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  labs(x = "vegetation type", y = "total soil carbon content (gC m-2): 0-10 cm")
+
+ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm")
+
+org2 <- orgsoilmeans010 %>%
+  rbind(orgsoilmeans1020)
+
+ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
+  geom_bar(position=position_dodge(), stat="identity") +
+  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
+                width=.2,                    # Width of the error bars
+                position=position_dodge(.9)) +
+  labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)")
+
+
+ggplot(rawmeans2, aes(x = veg, y = meanpv, fill = veg)) + 
+  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
+  geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
+                width = .2, position = position_dodge(0.9)) + 
+  facet_wrap(~pool) + 
+  labs(x = "vegetation type", y = "carbon content (gC m-2)")
 
 ################################
 #for ESA abstract values
