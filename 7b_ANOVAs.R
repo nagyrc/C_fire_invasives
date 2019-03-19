@@ -3,7 +3,7 @@
 #created March 19, 2019
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "ggplot2", "doBy")
+x <- c("tidyverse", "sf", "ggplot2", "doBy", "FSA")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
@@ -167,3 +167,54 @@ kruskal.test(pool_value ~ veg, data = AGBC2)
 
 kruskal.test(pool_value ~ veg, data = BGBC2)
 #p<2.2e-16
+
+
+#Dunn test for multiple comparisons
+PT = dunnTest(pool_value ~ veg, data = orgsoil010, method = "none")    
+PT
+#              Comparison          Z      P.unadj        P.adj
+#1 cheatgrass - sagebrush  5.9285168 3.056832e-09 3.056832e-09
+#2 cheatgrass - sagecheat  4.2694903 1.959202e-05 1.959202e-05
+#3  sagebrush - sagecheat -0.3678727 7.129682e-01 7.129682e-01
+
+PT2 = dunnTest(pool_value ~ veg, data = orgsoil1020, method = "none")    
+PT2
+#              Comparison        Z    P.unadj      P.adj
+#1 cheatgrass - sagebrush 1.697932 0.08952060 0.08952060
+#2 cheatgrass - sagecheat 2.206175 0.02737176 0.02737176
+#3  sagebrush - sagecheat 1.198108 0.23087490 0.23087490
+
+PT3 = dunnTest(pool_value ~ veg, data = totsoil010, method = "none")    
+PT3
+#                Comparison          Z      P.unadj        P.adj
+#1   cheatgrass - sagecheat -0.9058939 3.649920e-01 3.649920e-01
+#2 cheatgrass - salt_desert  5.2171695 1.816780e-07 1.816780e-07
+#3  sagecheat - salt_desert  5.6620131 1.496074e-08 1.496074e-08
+
+PT4 = dunnTest(pool_value ~ veg, data = litterC2, method = "none")    
+PT4
+#                Comparison         Z      P.unadj        P.adj
+#1   cheatgrass - sagebrush -1.904938 5.678815e-02 5.678815e-02
+#2 cheatgrass - salt_desert -7.909452 2.585252e-15 2.585252e-15
+#3  sagebrush - salt_desert -3.234228 1.219722e-03 1.219722e-03
+
+PT5 = dunnTest(pool_value ~ veg, data = AGBC2, method = "none")    
+PT5
+#                Comparison          Z      P.unadj        P.adj
+#1   cheatgrass - sagebrush  4.9112079 9.051707e-07 9.051707e-07
+#2   cheatgrass - sagecheat -1.4436057 1.488499e-01 1.488499e-01
+#3    sagebrush - sagecheat -3.5114786 4.456213e-04 4.456213e-04
+#4 cheatgrass - salt_desert -0.7075371 4.792327e-01 4.792327e-01
+#5  sagebrush - salt_desert -1.9823557 4.743944e-02 4.743944e-02
+#6  sagecheat - salt_desert  0.1575080 8.748445e-01 8.748445e-01
+
+PT6 = dunnTest(pool_value ~ veg, data = BGBC2, method = "none")    
+PT6
+#                Comparison           Z      P.unadj        P.adj
+#1   cheatgrass - sagebrush -3.82391504 1.313492e-04 1.313492e-04
+#2   cheatgrass - sagecheat -0.03047993 9.756843e-01 9.756843e-01
+#3    sagebrush - sagecheat  4.61954196 3.845881e-06 3.845881e-06
+#4 cheatgrass - salt_desert -6.75210435 1.457160e-11 1.457160e-11
+#5  sagebrush - salt_desert -4.91588644 8.838162e-07 8.838162e-07
+#6  sagecheat - salt_desert -7.94704307 1.910160e-15 1.910160e-15
+
