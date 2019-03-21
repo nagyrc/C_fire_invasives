@@ -12,6 +12,10 @@ setwd("data/")
 joiny2 <- as.data.frame(read_csv("joiny2.csv"))
 head(joiny2)
 
+joiny2 <- joiny2 %>%
+  filter(veg != "salt_desert")
+#2247 to 2123 obs.
+
 #subset by pool
 AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
 BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
@@ -19,15 +23,23 @@ litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
+unique(totsoilC2$veg)
+#has sagebrush
+
+unique(totsoilC2$bottomdepth_cm)
+#5, 10, 100, 15, 20
+#160 of 404 observations are 0-10 cm
+
 #subset soils to appropriate depths
 orgsoil010 <- orgsoilC2 %>%
-  filter(bottomdepth_cm == 10, topdepth_cm == 0)
+  filter(bottomdepth_cm == 10, topdepth_cm == 0) 
 orgsoil1020 <- orgsoilC2 %>%
   filter(bottomdepth_cm == 20, topdepth_cm == 10)
 totsoil010 <- totsoilC2 %>%
   filter(bottomdepth_cm == 10, topdepth_cm == 0)
 
-
+unique(totsoil010$veg)
+#no sagebrush
 
 ###
 #run ANOVAs
@@ -157,16 +169,16 @@ kruskal.test(pool_value ~ veg, data = orgsoil1020)
 #p=0.0619
 
 kruskal.test(pool_value ~ veg, data = totsoil010)
-#p=4.29e-08
+#p=0.4231
 
 kruskal.test(pool_value ~ veg, data = litterC2)
-#p=2.46e-14
+#p=0.5052
 
 kruskal.test(pool_value ~ veg, data = AGBC2)
-#p=5.119e-07
+#p=2.144e-07
 
 kruskal.test(pool_value ~ veg, data = BGBC2)
-#p<2.2e-16
+#p<4.034e-10
 
 
 #Dunn test for multiple comparisons
@@ -186,35 +198,28 @@ PT2
 
 PT3 = dunnTest(pool_value ~ veg, data = totsoil010, method = "none")    
 PT3
-#                Comparison          Z      P.unadj        P.adj
-#1   cheatgrass - sagecheat -0.9058939 3.649920e-01 3.649920e-01
-#2 cheatgrass - salt_desert  5.2171695 1.816780e-07 1.816780e-07
-#3  sagecheat - salt_desert  5.6620131 1.496074e-08 1.496074e-08
+#             Comparison          Z   P.unadj     P.adj
+# cheatgrass - sagecheat -0.8010422 0.4231072 0.4231072
+###this should have sagebrush...where is sagebrush?
+#no sagebrush from 0-10 cm; other depth increments only
+
 
 PT4 = dunnTest(pool_value ~ veg, data = litterC2, method = "none")    
 PT4
-#                Comparison         Z      P.unadj        P.adj
-#1   cheatgrass - sagebrush -1.904938 5.678815e-02 5.678815e-02
-#2 cheatgrass - salt_desert -7.909452 2.585252e-15 2.585252e-15
-#3  sagebrush - salt_desert -3.234228 1.219722e-03 1.219722e-03
+#                Comparison          Z   P.unadj     P.adj
+#    cheatgrass - sagebrush -0.6662711 0.5052378 0.5052378
 
 PT5 = dunnTest(pool_value ~ veg, data = AGBC2, method = "none")    
 PT5
-#                Comparison          Z      P.unadj        P.adj
-#1   cheatgrass - sagebrush  4.9112079 9.051707e-07 9.051707e-07
-#2   cheatgrass - sagecheat -1.4436057 1.488499e-01 1.488499e-01
-#3    sagebrush - sagecheat -3.5114786 4.456213e-04 4.456213e-04
-#4 cheatgrass - salt_desert -0.7075371 4.792327e-01 4.792327e-01
-#5  sagebrush - salt_desert -1.9823557 4.743944e-02 4.743944e-02
-#6  sagecheat - salt_desert  0.1575080 8.748445e-01 8.748445e-01
+#             Comparison         Z      P.unadj        P.adj
+# cheatgrass - sagebrush  4.941802 7.740378e-07 7.740378e-07
+# cheatgrass - sagecheat -1.433650 1.516721e-01 1.516721e-01
+#  sagebrush - sagecheat -3.514443 4.406770e-04 4.406770e-04
 
 PT6 = dunnTest(pool_value ~ veg, data = BGBC2, method = "none")    
 PT6
-#                Comparison           Z      P.unadj        P.adj
-#1   cheatgrass - sagebrush -3.82391504 1.313492e-04 1.313492e-04
-#2   cheatgrass - sagecheat -0.03047993 9.756843e-01 9.756843e-01
-#3    sagebrush - sagecheat  4.61954196 3.845881e-06 3.845881e-06
-#4 cheatgrass - salt_desert -6.75210435 1.457160e-11 1.457160e-11
-#5  sagebrush - salt_desert -4.91588644 8.838162e-07 8.838162e-07
-#6  sagecheat - salt_desert -7.94704307 1.910160e-15 1.910160e-15
+#              Comparison          Z      P.unadj        P.adj
+#1 cheatgrass - sagebrush -4.4266841 9.569273e-06 9.569273e-06
+#2 cheatgrass - sagecheat  0.1880842 8.508106e-01 8.508106e-01
+#3  sagebrush - sagecheat  5.6629182 1.488201e-08 1.488201e-08
 
