@@ -21,11 +21,10 @@ BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
 litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
-tt <- 2+2
-rm(tt)
+
 lm1 <- lm(pool_value ~ masterlyb + veg, data = AGBC2)
 summary(lm1)
-#veg is sig. in one case; overall p-value = 3.315e-06
+#veg is sig. in one case; overall p-value = 2.748e-06
 
 lm2 <- lm(pool_value ~ masterlyb + veg, data = BGBC2)
 summary(lm2)
@@ -42,4 +41,4 @@ summary(lm4)
 
 lm5 <- lm(pool_value ~ masterlyb + veg, data = totsoilC2)
 summary(lm5)
-#veg and lyb are significant; overall p-value = 1.583e-08
+#veg and lyb are significant; overall p-value = 6.428e-05

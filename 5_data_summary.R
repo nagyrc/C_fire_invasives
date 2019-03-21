@@ -478,7 +478,7 @@ ggplot(data = joiny2) +
 
 recentburn <- joiny2 %>%
   filter(timesincefire < 20)
-#only 337 observations of 2247
+#only 303 observations of 2123
 #need to check and make sure fire info came in with simraw data
 
 ggplot(data = recentburn) +
