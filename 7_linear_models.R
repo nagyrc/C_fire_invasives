@@ -9,6 +9,10 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 setwd("data/")
 
 joiny2 <- as.data.frame(read_csv("joiny2.csv"))
+
+joiny2 <- joiny2 %>%
+  filter(veg != "salt_desert")
+
 head(joiny2)
 
 #try with subsets for each pool
@@ -17,7 +21,8 @@ BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
 litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
-
+tt <- 2+2
+rm(tt)
 lm1 <- lm(pool_value ~ masterlyb + veg, data = AGBC2)
 summary(lm1)
 #veg is sig. in one case; overall p-value = 3.315e-06
