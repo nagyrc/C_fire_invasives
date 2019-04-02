@@ -16,6 +16,8 @@ joiny2 <- joiny2 %>%
   filter(veg != "salt_desert")
 #2247 to 2123 obs.
 
+summary(AGBC2$pool_value)
+
 #subset by pool
 AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
 BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
@@ -61,7 +63,7 @@ summary(fit4)
 
 fit5 <- aov(pool_value ~ veg, data = AGBC2)
 summary(fit5)
-#p = 0.00723
+#p = 0.00274
 
 fit6 <- aov(pool_value ~ veg, data = BGBC2)
 summary(fit6)
