@@ -9,8 +9,8 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 setwd("data/")
 
 #bring in studyid or siwf dataframe
-studyid = read_csv("studyid.csv")
-siwf = read_csv("siwf.csv")
+studyid = as.data.frame(read_csv("studyid.csv"))
+siwf = as.data.frame(read_csv("siwf.csv"))
 
 ############################
 #to get a count of mean values vs. raw data
