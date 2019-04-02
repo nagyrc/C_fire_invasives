@@ -9,8 +9,11 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 setwd("data/")
 
 #bring in studyid or siwf dataframe
-studyid = as.data.frame(read_csv("studyid.csv"))
-siwf = as.data.frame(read_csv("siwf.csv"))
+studyid <- as.data.frame(read_csv("studyid.csv"))
+siwf <- as.data.frame(read_csv("siwf.csv"))
+
+studymeans <- as.data.frame(read_csv("study_means.csv"))
+smeans <- unique(studymeans$study)
 
 ############################
 #to get a count of mean values vs. raw data
