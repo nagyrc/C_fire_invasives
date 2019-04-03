@@ -153,7 +153,7 @@ summary(m3c_inv)
 
 # combine 3 chains into 1 mcmc object
 m1_inv = mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
-
+m1_inv
 
 #THIS IS HOW WE CHECK THE MODEL#
 
