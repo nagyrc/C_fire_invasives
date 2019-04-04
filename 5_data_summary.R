@@ -207,7 +207,8 @@ surfacemeans2 <- joiny2 %>%
   filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup ()
 #399 for org soil; 165 for total soil
 st_geometry(surfacemeans2) = NULL
 
@@ -251,16 +252,15 @@ write.csv(tens2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/t
 #subset soils to appropriate depths
 orgsoilmeans010 <- surfacemeans2 %>%
   filter(pool == "orgsoilC_g_m2") %>%
-  mutate(depth = "0-10 cm")
+  mutate(depth = "0-10 cm") 
 orgsoilmeans1020 <- tens2 %>%
   filter(pool == "orgsoilC_g_m2") %>%
-  mutate(depth = "10-20 cm")
+  mutate(depth = "10-20 cm") 
 totsoilmeans010 <- surfacemeans2 %>%
   filter(pool == "totsoilC_g_m2") %>%
-  mutate(depth = "0-10 cm")
+  mutate(depth = "0-10 cm") 
 #totsoilmeans1020 <- tens2 %>%
   #filter(pool == "totsoilC_g_m2")
-
 
 ########################################
 ################################
@@ -390,6 +390,8 @@ ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) +
 
 
 #plotting means of raw + simulated raw values
+orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+
 ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
@@ -397,37 +399,56 @@ ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) +
                 position=position_dodge(.9)) +
   labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 0-10 cm")
 
+
+totsoilmeans010 <- add_row(totsoilmeans010, pool = "totsoilC_g_m2", veg = "sagebrush")
+totsoilmeans010$veg <- factor(totsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+
 ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "total soil carbon content (gC m-2): 0-10 cm")
+  labs(x = "vegetation type", y = "total soil carbon content (gC m-2): 0-10 cm", fill = "vegetation") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+
+
+orgsoilmeans1020$veg <- factor(orgsoilmeans1020$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm")
+  labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm", fill = "vegetation") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+
 
 org2 <- orgsoilmeans010 %>%
   rbind(orgsoilmeans1020)
+
+org2$veg <- factor(org2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+
 
 ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
-  labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)")
+  labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)", fill = "vegetation") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
+
+rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 ggplot(rawmeans2, aes(x = veg, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
   facet_wrap(~pool) + 
-  labs(x = "vegetation type", y = "carbon content (gC m-2)")
+  labs(x = "carbon pool by vegetation type", y = "carbon content (gC m-2)", fill = "vegetation") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+
+
 
 ################################
 #for ESA abstract values
