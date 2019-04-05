@@ -176,7 +176,8 @@ rawmeans2 <- joiny2 %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
 
 st_geometry(rawmeans2) = NULL
 write.csv(rawmeans2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawmeans2.csv")
@@ -439,13 +440,20 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
 
 
 rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
 
-ggplot(rawmeans2, aes(x = veg, y = meanpv, fill = veg)) + 
+#ggplot(rawmeans2, aes(x = veg, y = meanpv, fill = veg)) + 
+  #geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
+  #geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se), width = .2, position = position_dodge(0.9)) + 
+  #facet_wrap(~pool) + 
+  #labs(x = "carbon pool by vegetation type", y = "carbon content (gC m-2)", fill = "vegetation") +
+  #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+
+ggplot(rawmeans2, aes(x = pool, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
-  facet_wrap(~pool) + 
-  labs(x = "carbon pool by vegetation type", y = "carbon content (gC m-2)", fill = "vegetation") +
+  labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
 
