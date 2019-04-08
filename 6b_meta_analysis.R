@@ -13,6 +13,7 @@ setwd("data/")
 #dq2 <- read.csv("Meta_analysis_sheet_manual.csv", header = T)
 dq2 <- read.csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv", header = T)
 head(dq2)
+tail(dq2)
 summary(dq2) # no missing values in n, mean, variance
 
 
@@ -101,11 +102,11 @@ m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = or
                     #prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     #data = orgsoil, pr = T, saveX = T, saveZ = T)
 
-m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1b_inv <- MCMCglmm(g_cheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
-m1c_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1c_inv <- MCMCglmm(g_cheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
@@ -113,40 +114,35 @@ summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
 
-#these aren't running 3/18/19
-#can run this without Article_ID
-m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, mev = orgsoil2$var_d_sagecheat_v_sage,
+#need to run this without Article_ID as random effect; random effect removed here
+m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
-#Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
-#Mixed model equations singular: use a (stronger) prior
 
-m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
-                    data = orgsoil2, pr = T, saveX = T, saveZ = T)
-#Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
-#Mixed model equations singular: use a (stronger) prior
 
-m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
-#Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
-#Mixed model equations singular: use a (stronger) prior
+
+
+m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 summary(m2a_inv)
 summary(m2b_inv)
 summary(m2c_inv)
 
-#these aren't running
-m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+#ok to leave Article_ID in here as random effect
+m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
