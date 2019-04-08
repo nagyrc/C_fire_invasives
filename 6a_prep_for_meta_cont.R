@@ -169,20 +169,25 @@ check3
 shallow <- check3 %>%
   filter(bottomdepth_cm < 20)
 #31 study ids
+write.csv(shallow, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/shallowid.csv")
 
 shallowid <- shallow %>%
   dplyr::select(Study_ID)
 
+
 mid <- check3 %>%
   filter(bottomdepth_cm == 20)
 #17 study ids
+write.csv(mid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/midid.csv")
 
 midid <- mid %>%
   dplyr::select(Study_ID)
 
+
 deep <- check3 %>%
   filter(bottomdepth_cm > 20)
 #14 study ids
+write.csv(deep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/deepid.csv")
 
 deepid <- deep %>%
   dplyr::select(Study_ID)
