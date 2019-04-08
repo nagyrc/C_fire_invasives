@@ -170,13 +170,22 @@ shallow <- check3 %>%
   filter(bottomdepth_cm < 20)
 #31 study ids
 
-tens <- check3 %>%
+shallowid <- shallow %>%
+  dplyr::select(Study_ID)
+
+mid <- check3 %>%
   filter(bottomdepth_cm == 20)
 #17 study ids
+
+midid <- mid %>%
+  dplyr::select(Study_ID)
 
 deep <- check3 %>%
   filter(bottomdepth_cm > 20)
 #14 study ids
+
+deepid <- deep %>%
+  dplyr::select(Study_ID)
 
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
