@@ -110,10 +110,14 @@ summary(m1c_inv)
 m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
+#Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
+#Mixed model equations singular: use a (stronger) prior
 
 m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
+#Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
+#Mixed model equations singular: use a (stronger) prior
 
 m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
