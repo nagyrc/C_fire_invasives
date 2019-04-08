@@ -192,6 +192,8 @@ write.csv(deep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/deepi
 deepid <- deep %>%
   dplyr::select(Study_ID)
 
+####manually added this categorical variable (depth_cat: shallow, mid, deep) into rawspmeans2.csv for use as a fixed effect in meta-analysis
+
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
 st_geometry(joiny) = NULL
