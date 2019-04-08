@@ -163,7 +163,20 @@ check2 <- joiny2 %>%
   filter(Study_ID %in% check2a) 
 
 check3 <- unique(check2[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+check3
 #all different depth intervals; need to standardize
+
+shallow <- check3 %>%
+  filter(bottomdepth_cm < 20)
+#31 study ids
+
+tens <- check3 %>%
+  filter(bottomdepth_cm == 20)
+#17 study ids
+
+deep <- check3 %>%
+  filter(bottomdepth_cm > 20)
+#14 study ids
 
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
