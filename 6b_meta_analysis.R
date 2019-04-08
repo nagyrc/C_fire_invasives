@@ -90,9 +90,16 @@ prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -
 # we will get an error because we don't have replication with our study ID. this is OK
 #make nitt smaller- 10,000 when we start to help run faster
 #fit= dq2
-m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+
+#this is how you add in depth to the model (could be factor or numeric) as a fixed effect
+m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
+
+#this is without depth as a fixed effect
+#m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    #data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
@@ -107,7 +114,8 @@ summary(m1b_inv)
 summary(m1c_inv)
 
 #these aren't running 3/18/19
-m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+#can run this without Article_ID
+m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 #Error in MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,  : 
@@ -130,17 +138,15 @@ summary(m2b_inv)
 summary(m2c_inv)
 
 #these aren't running
-m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
-                    data = orgsoil3, pr = T, saveX = T, saveZ = T)
-#Error in `$<-.data.frame`(`*tmp*`, "MCMC_mev", value = c(10.6689450017523,  : 
-#replacement has 16 rows, data has 9
-
-m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
+m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_cheat_v_sagecheat,
+m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = orgsoil3, pr = T, saveX = T, saveZ = T)
+
+m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
