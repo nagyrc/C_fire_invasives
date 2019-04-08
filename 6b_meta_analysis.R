@@ -257,3 +257,63 @@ gelman.diag(m3_inv[ , "(Intercept)"])
 geweke.diag(m3_inv[ , "(Intercept)"])
 
 #If everything looks good here, then the intercept value is the effect
+
+
+
+###
+###
+###
+#total soil; effect of cheat vs. sagecheat
+#only 2 studies and both are 0 - 10 cm; so don't need depth_cat
+totsoil <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat))
+
+m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = totsoil, pr = T, saveX = T, saveZ = T)
+
+m4b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = totsoil, pr = T, saveX = T, saveZ = T)
+
+m4c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = totsoil, pr = T, saveX = T, saveZ = T)
+
+summary(m4a_inv)
+summary(m4b_inv)
+summary(m4c_inv)
+
+#effect of cheat vs. sagecheat
+# combine 3 chains into 1 mcmc object
+m4_inv = mcmc.list(m4a_inv[[1]], m4b_inv[[1]], m4c_inv[[1]])
+
+#THIS IS HOW WE CHECK THE MODEL#
+
+# diagnostics to ensure good model behavior
+inv_overall <- MCMCsummary(m4_inv, params = "(Intercept)", n.eff = T)
+
+#we want this density plot to look relatively smooth
+#if not smooth, increase burnin and increase number of iterations
+MCMCtrace(m4_inv, params = "(Intercept)", pdf = F, ind = T)
+
+#autocorr.plot(m1_inv) #all
+#this will tell us whether our thinning variable is okay
+#if many tall bars, increase thinning
+autocorr.plot(m4_inv[, "(Intercept)"]) 
+
+#assess convergence
+#Trace plot. we want all the parameter estimates to be similar and horizontal
+#up the burnin and iterations if they are headed in an up or down direction
+gelman.plot(m4_inv[ , "(Intercept)"]) 
+
+
+#we want the posteriors to converge on 1
+#if they dont, up burnin and interations
+gelman.diag(m4_inv[ , "(Intercept)"])
+
+#dont worry about this one for now if gelman diagram looks good
+geweke.diag(m4_inv[ , "(Intercept)"])
+
+
+#If everything looks good here, then the intercept value is the effect
+
