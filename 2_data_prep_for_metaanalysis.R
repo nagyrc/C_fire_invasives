@@ -228,7 +228,9 @@ ggplot(data = us_crop) +
 ggplot() +
   geom_sf(data = us_crop) +
   geom_sf(data = studyid_pt, aes(color = pool2, shape = pool2)) +
-  labs(fill = "carbon pool") +
+  scale_color_manual(name = "carbon pool",
+   breaks = c("AGB", "BGB", "litter", "organic soil", "total soil"),
+   values = c("blue3", "darkgrey", "forestgreen", "darkgrey", "darkgrey")) +
   #theme(legend.key.size =  unit(0.1, "in")) +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size = 12), legend.title=element_text(size = 12))
 
