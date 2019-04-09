@@ -520,7 +520,7 @@ ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, fill = veg)) +
   xlab("Time since fire (years)") +
   ylab("Carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
-  geom_smooth(method = "lm") + 
+  geom_smooth(method = "lm", se=TRUE) + 
   theme(legend.position="bottom")
 
 
