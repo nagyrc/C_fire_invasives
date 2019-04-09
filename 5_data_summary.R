@@ -514,10 +514,14 @@ recentburn <- joiny2 %>%
 #need to check and make sure fire info came in with simraw data
 
 #Fig. 4
-ggplot(data = recentburn) +
-  geom_point(aes(x = timesincefire, y = pool_value)) + 
+ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, fill = veg)) +
+  geom_point() + 
   facet_wrap(~pool2) +
   xlab("Time since fire (years)") +
   ylab("Carbon content (gC m-2)") +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14), strip.text.x = element_text(size = 14))
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
+  geom_smooth(method = "lm") + 
+  theme(legend.position="bottom")
+
+
 
