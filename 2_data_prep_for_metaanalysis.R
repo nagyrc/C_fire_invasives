@@ -216,22 +216,18 @@ head(studyid_pt)
 #crop usa_shp to extent of studyid_pt
 us_crop <- st_crop(usa_shp, extent(studyid_pt))
 
-#Fig. 1...legend is not quite right
+#Fig. 1...yahoo!!
 ggplot(data = us_crop) +
   geom_sf() +
-  geom_sf(data = studyid_pt, size = 1.5, aes(color = pool2, shape = pool2)) +
-  labs(fill = "carbon pool") +
-  #theme(legend.key.size =  unit(0.1, "in")) +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size = 12), legend.title=element_text(size = 12))
-
-#Fig. 1...legend is still not right
-ggplot() +
-  geom_sf(data = us_crop) +
-  geom_sf(data = studyid_pt, aes(color = pool2, shape = pool2)) +
-  scale_color_manual(name = "carbon pool",
-   breaks = c("AGB", "BGB", "litter", "organic soil", "total soil"),
-   values = c("blue3", "darkgrey", "forestgreen", "darkgrey", "darkgrey")) +
-  #theme(legend.key.size =  unit(0.1, "in")) +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size = 12), legend.title=element_text(size = 12))
+  geom_sf(data = studyid_pt, size = 1.5, aes(color = pool2, shape = pool2),
+          show.legend = "point") +
+  scale_color_discrete(name = "Carbon Pool") +
+  scale_shape_discrete(name = "Carbon Pool") +
+  theme(axis.text.x = element_text(size = 12), 
+        axis.text.y = element_text(size = 12), 
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12), 
+        legend.text=element_text(size = 12), 
+        legend.title=element_text(size = 12))
 
 
