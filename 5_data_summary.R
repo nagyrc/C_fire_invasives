@@ -393,50 +393,46 @@ ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) +
 #plotting means of raw + simulated raw values
 orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
-ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 0-10 cm")
+#ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
+  #geom_bar(position=position_dodge(), stat="identity") +
+  #geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se), width=.2, position=position_dodge(.9)) +
+  #labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 0-10 cm")
 
 
 totsoilmeans010 <- add_row(totsoilmeans010, pool = "totsoilC_g_m2", veg = "sagebrush")
 totsoilmeans010$veg <- factor(totsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
+#Fig. 3c
 ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "total soil carbon content (gC m-2): 0-10 cm", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+  labs(x = "vegetation type", y = "total soil carbon (gC m-2): 0-10 cm", fill = "vegetation") +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
 orgsoilmeans1020$veg <- factor(orgsoilmeans1020$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
-ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+#ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
+  #geom_bar(position=position_dodge(), stat="identity") +
+  #geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se), width=.2, position=position_dodge(.9)) +
+  #labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm", fill = "vegetation") +
+  #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
 
-org2 <- orgsoilmeans010 %>%
-  rbind(orgsoilmeans1020)
+org2 <- rbind(as.data.frame(orgsoilmeans010), as.data.frame(orgsoilmeans1020))
 
 org2$veg <- factor(org2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
-
+#Fig. 3b
 ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
   labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
 rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
@@ -452,12 +448,13 @@ head(rawmeans2)
   #labs(x = "carbon pool by vegetation type", y = "carbon content (gC m-2)", fill = "vegetation") +
   #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
+#Fig. 3a
 ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
   labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
 
@@ -516,8 +513,11 @@ recentburn <- joiny2 %>%
 #only 303 observations of 2123
 #need to check and make sure fire info came in with simraw data
 
+#Fig. 4
 ggplot(data = recentburn) +
   geom_point(aes(x = timesincefire, y = pool_value)) + 
   facet_wrap(~pool2) +
   xlab("Time since fire (years)") +
-  ylab("Carbon content (gC m-2)")
+  ylab("Carbon content (gC m-2)") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14), strip.text.x = element_text(size = 14))
+
