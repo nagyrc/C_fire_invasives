@@ -441,7 +441,10 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
 
 rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
+rawmeans2$pool2 <- ifelse(rawmeans2$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans2$pool == "BGBC_g_m2", "BGB", "litter"))
 
+unique(rawmeans2$pool)
+head(rawmeans2)
 #ggplot(rawmeans2, aes(x = veg, y = meanpv, fill = veg)) + 
   #geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   #geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se), width = .2, position = position_dodge(0.9)) + 
@@ -449,7 +452,7 @@ rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
   #labs(x = "carbon pool by vegetation type", y = "carbon content (gC m-2)", fill = "vegetation") +
   #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
-ggplot(rawmeans2, aes(x = pool, y = meanpv, fill = veg)) + 
+ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
