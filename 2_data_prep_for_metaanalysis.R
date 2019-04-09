@@ -216,9 +216,13 @@ head(studyid_pt)
 #crop usa_shp to extent of studyid_pt
 us_crop <- st_crop(usa_shp, extent(studyid_pt))
 
+#Fig. 1
 ggplot(data = us_crop) +
   geom_sf() +
-  geom_sf(data = studyid_pt, size = 1.5, aes(color = pool)) +
-  theme(legend.key.size =  unit(0.1, "in")) 
+  geom_sf(data = studyid_pt, size = 1.5, aes(color = pool2, shape = pool2)) +
+  #labs(fill = "carbon pool") +
+  theme(legend.key.size =  unit(0.1, "in")) +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size = 12), legend.title=element_text(size = 12))
+
   
 
