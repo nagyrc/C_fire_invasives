@@ -512,6 +512,8 @@ recentburn <- joiny2 %>%
   filter(timesincefire < 20)
 #only 303 observations of 2123
 #need to check and make sure fire info came in with simraw data
+unique(recentburn$veg)
+recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 #Fig. 4
 ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, fill = veg)) +
