@@ -30,12 +30,12 @@ write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/p
 rawsonly <- siwf %>%
   filter(!study %in% smeans)
 
-write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
 meansonly <- siwf %>%
   filter(study %in% smeans)
 
-write.csv(meansonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonly.csv")
+write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
 #summary of raws only
 #AGB, BGB, and litter only
@@ -43,10 +43,11 @@ rawmeans <- rawsonly %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  filter(veg != "salt_desert")
 
 st_geometry(rawmeans) = NULL
-write.csv(rawmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawmeans.csv")
+write.csv(rawmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans.csv")
 
 
 #now get into more detail in the soils (organic and total)
@@ -77,7 +78,7 @@ surfacemeans <- rawsonly %>%
 
 st_geometry(surfacemeans) = NULL
 
-write.csv(surfacemeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/surfacemeans.csv")
+write.csv(surfacemeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans.csv")
 
 
 #for 10-20 cm only
@@ -90,7 +91,7 @@ tens <- rawsonly %>%
 
 st_geometry(tens) = NULL
 
-write.csv(tens, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/tens.csv")
+write.csv(tens, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens.csv")
 
 
 
