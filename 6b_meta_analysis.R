@@ -11,7 +11,7 @@ setwd("data/")
 
 ## get full dataset from github (includes all cases and studies)
 #dq2 <- read.csv("Meta_analysis_sheet_manual.csv", header = T)
-dq2 <- read.csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv", header = T)
+dq2 <- read.csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv", header = T)
 head(dq2)
 tail(dq2)
 summary(dq2) # no missing values in n, mean, variance
