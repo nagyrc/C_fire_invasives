@@ -138,7 +138,7 @@ head(ttt)
 simraw <- simrawdata %>%
   left_join(ttt) %>%
   mutate(pool_value = simvalue) %>%
-  dplyr::select(-simvalue, -explode)
+  dplyr::select(-simvalue, -explode) 
 
 unique(simraw$Article_ID)
 head(simraw)
