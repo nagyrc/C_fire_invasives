@@ -16,8 +16,13 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 
 #bring in dataframe and convert dataframe to sf object with ESRI projection 102003
 studyid = read_csv("studyid.csv")
+
+#check to see if X1 came through...if not, add it here
+studyid$X1 <- 1:nrow(studyid)
+
+#transform to sf object
 studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
-  st_transform(crs1b)
+  st_transform(crs1b) 
 #rm(studyid)
 st_crs(studyid_sf)
 
@@ -85,7 +90,6 @@ mtbs_int <- sf::st_intersection(studyid_sf, mtbs_fire)
 #524 observations; so some points didn't burn
 
 unique(mtbs_int$X1)
-#where did this field come from???
 
 unique(mtbs_fire$MTBS_DISCOVERY_YEAR)
 unique(mtbs_int$MTBS_DISCOVERY_YEAR)
@@ -113,7 +117,7 @@ mtbs_keep <- mtbs_keep %>%
 mtbs_add <- studyid_sf %>%
   left_join(as.data.frame(mtbs_keep) %>% 
   dplyr::select(-geometry)) %>%
-  dplyr::select(-mtbs_keep, -X1_1)
+  dplyr::select(-mtbs_keep)
 
 
 
@@ -176,7 +180,7 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 #after choosing option #1 or #2, go on here
 baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1155 observations
+#1282 observations
 #these ones are keepers
 
 baecv_no <- baecvtest_sfb  %>%
@@ -190,7 +194,7 @@ baecv_no <- baecvtest_sfb  %>%
 Xno <- unique(baecv_no$X1)
 baecv_no_Adamll <- studyid %>%
   filter(X1 %in% Xno)
-write.csv(baecv_no_Adamll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
+write.csv(baecv_no_Adamll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
 #go to Adams' script for dealing with these points; then come back here
 
 
@@ -206,12 +210,12 @@ ll <- studyid %>%
 baecv_add_ll <- baecv_add %>%
   left_join(as.data.frame(ll))
 
-write.csv(baecv_add_ll, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire_almost.csv")
+write.csv(baecv_add_ll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid_with_fire_almost.csv")
 
 
 #adding in BAECV info (second to last year burned) from Adam's script
 #open data
-baecv_gpkg <- readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
+baecv_gpkg <- rgdal::readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
 
 #turn this into a dataframe
 as.data.frame(baecv_gpkg)
@@ -224,7 +228,7 @@ baecv_rep <- baecv_add_ll %>%
 
 #write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
 
-yrbn = read_csv("last_year_burn_overwrite.csv")
+yrbn <- read_csv("last_year_burn_overwrite.csv")
 
 #the Mahood ones are using satellite data, so I removed those
 yrbn <- yrbn %>%
@@ -242,9 +246,9 @@ baecv_rep <- baecv_rep %>%
 siwf <- baecv_rep %>%
   mutate(masterlyb = case_when(last_year_burned > 1900 ~ last_year_burned, maxsat > 1900 ~ maxsat))
 
-write.csv(siwf, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
+write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
 
 bbb <- unique(siwf[c("Study_ID", "masterlyb", "study")])
-write.csv(bbb, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/bbb.csv", row.names = FALSE)
+write.csv(bbb, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/bbb.csv", row.names = FALSE)
 
