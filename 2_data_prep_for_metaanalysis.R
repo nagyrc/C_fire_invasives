@@ -25,7 +25,7 @@ yrbn <- alldata %>%
 
 unique(yrbn$last_year_burned)
 
-write.csv(yrbn, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/last_year_burn_overwrite.csv", row.names = FALSE)
+write.csv(yrbn, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/last_year_burn_overwrite.csv", row.names = FALSE)
 ###
 
 
@@ -47,7 +47,7 @@ is.na(clean_study$yr_samp)
 nortoncheck <- clean_study %>%
   filter(study == "Norton et al. 2004")
 
-write.csv(clean_study, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/clean_study.csv", row.names = FALSE)
+write.csv(clean_study, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/clean_study.csv", row.names = FALSE)
 
 #create Article_ID
 clean_study$Article_IDs <- str_sub(clean_study$study,1,4)
@@ -64,7 +64,6 @@ unique(clean_study$Article_ID)
 #these look great
 head(alldata)
 
-rm(studyid)
 #creates study_ID, pool, and setup for Bethany's meta-analysis format (long format)
 #clean yr_samp
 #take either first year if yr_samp is a range
@@ -83,7 +82,7 @@ unique(studyid$Study_ID)
 #344 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 
 #export long format for later use
-write.csv(studyid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
+write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
 
 
 
@@ -127,13 +126,13 @@ studyidSE <- clean_studynvar %>%
   dplyr::select(-sec, -first)
 
 #split data into means and raw data
-studymeans <- as.data.frame(read_csv("data/study_means.csv"))
+studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 
 meansonlynvar <- studyidSE %>%
   filter(study %in% smeans) 
 
-write.csv(meansonlynvar, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
+write.csv(meansonlynvar, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
 
 ######################################
 

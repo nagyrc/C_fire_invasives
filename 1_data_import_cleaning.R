@@ -441,7 +441,7 @@ colnames(Mahood1ll)[colnames(Mahood1ll) == 'long.x'] <- 'long'
 kpMahood1 <- Mahood1ll[,c("plot", "BD_g_cm3", "totsoil%C", "last_year_severity", "elevation", "fire_frequency", "last_year_burned", "time_since_fire", "allotment", "mean_fire_interval", "totsoilC_g_m2", "lat", "long", "study", "seeded", "pr_burned", "bottomdepth_cm", "topdepth_cm", "thick", "veg", "BD_estimated", "yr_samp", "site")]
 head(kpMahood1)
 
-write.csv(kpMahood1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood1.csv")
+write.csv(kpMahood1, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/kpMahood1.csv")
 
 
 unique(kpMahood1$site)
@@ -502,7 +502,7 @@ head(kpMahood2)
 
 str(kpMahood2)
 
-write.csv(kpMahood2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/kpMahood2.csv")
+write.csv(kpMahood2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/kpMahood2.csv")
 
 
 
@@ -845,12 +845,12 @@ write.csv(bind13, file = "bind13.csv")
 #unique(df[c("yad", "per")])
 #lllist <- unique(alldata[c("lat","long")])
 
-#write.csv(lllist, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
+#write.csv(lllist, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
 
 
 ###########################################
 #bring in study means
-#setwd("/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/")
+#setwd("/Users/rana7082/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 studymeans$thick <- studymeans$bottomdepth_cm - studymeans$topdepth_cm
