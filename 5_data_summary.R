@@ -182,7 +182,7 @@ rawmeans2 <- joiny2 %>%
   ungroup()
 
 st_geometry(rawmeans2) = NULL
-write.csv(rawmeans2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawmeans2.csv")
+write.csv(rawmeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans2.csv")
 
 
 
@@ -215,7 +215,7 @@ surfacemeans2 <- joiny2 %>%
 #399 for org soil; 165 for total soil
 st_geometry(surfacemeans2) = NULL
 
-write.csv(surfacemeans2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
+write.csv(surfacemeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
 
 
 #for 10-20 cm only
@@ -227,7 +227,7 @@ tens2 <- joiny2 %>%
 #97 for org soil; 0 for total soil
 st_geometry(tens2) = NULL
 
-write.csv(tens2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/tens2.csv")
+write.csv(tens2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens2.csv")
 
 
 
