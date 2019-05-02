@@ -28,12 +28,14 @@ write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/p
 ############################
 #split into two dataframes of raws and means
 rawsonly <- siwf %>%
-  filter(!study %in% smeans)
+  filter(!study %in% smeans) %>%
+  filter(veg != "salt_desert")
 
 write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
 meansonly <- siwf %>%
-  filter(study %in% smeans)
+  filter(study %in% smeans) %>%
+  filter(veg != "salt_desert")
 
 write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
@@ -138,7 +140,8 @@ head(ttt)
 simraw <- simrawdata %>%
   left_join(ttt) %>%
   mutate(pool_value = simvalue) %>%
-  dplyr::select(-simvalue, -explode) 
+  dplyr::select(-simvalue, -explode) %>%
+  filter(veg != "salt_desert")
 
 unique(simraw$Article_ID)
 head(simraw)
@@ -378,18 +381,34 @@ ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) +
         legend.key.size =  unit(0.1, "in"))
 
 head(orgsoilC2)
+
+neworder <- c("shallow","mid","deep")
+neworder2 <- c("sagebrush","sagecheat","cheatgrass")
+#library(plyr)  ## or dplyr (transform -> mutate)
+orgsoilC2 <- arrange(transform(orgsoilC2,
+                           depth=factor(depth, levels = neworder)),depth)
+
+orgsoilC2 <- arrange(transform(orgsoilC2,
+                               veg=factor(veg, levels = neworder2)),veg)
+
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
-  facet_wrap(~veg+depth) + 
+  facet_wrap(~veg+depth, drop = FALSE) + 
   xlab("organic soil C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in"))
 
+totsoilC2 <- arrange(transform(totsoilC2,
+                               depth=factor(depth, levels = neworder)),depth)
+
+totsoilC2 <- arrange(transform(totsoilC2,
+                               veg=factor(veg, levels = neworder2)),veg)
+
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
-  facet_wrap(~veg+depth) + 
+  facet_wrap(~veg+depth, drop = FALSE) + 
   xlab("total soil C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
