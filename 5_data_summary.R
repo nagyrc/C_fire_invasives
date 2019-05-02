@@ -331,6 +331,12 @@ head(joiny2)
 joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 
 # Histogram for each pol-veg combo to look at distributions
+#reorder veg for plotting
+neworder2 <- c("sagebrush","sagecheat","cheatgrass")
+
+joiny2 <- arrange(transform(joiny2,
+                           veg=factor(veg, levels = neworder2)),veg)
+
 ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool2 ~ veg) + 
   xlab("pool_value") + theme_bw() + 
@@ -353,7 +359,6 @@ totsoilC2 <- totsoilC2 %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
 #reorder veg for plotting
-neworder2 <- c("sagebrush","sagecheat","cheatgrass")
 
 AGBC2 <- arrange(transform(AGBC2,
                                veg=factor(veg, levels = neworder2)),veg)
