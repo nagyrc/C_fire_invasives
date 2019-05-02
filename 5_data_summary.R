@@ -352,7 +352,20 @@ orgsoilC2 <- orgsoilC2 %>%
 totsoilC2 <- totsoilC2 %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
+#reorder veg for plotting
+neworder2 <- c("sagebrush","sagecheat","cheatgrass")
+
+AGBC2 <- arrange(transform(AGBC2,
+                               veg=factor(veg, levels = neworder2)),veg)
+
+BGBC2 <- arrange(transform(BGBC2,
+                           veg=factor(veg, levels = neworder2)),veg)
+
+litterC2 <- arrange(transform(litterC2,
+                           veg=factor(veg, levels = neworder2)),veg)
+
 head(AGBC)
+#Fig S1 a)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
@@ -362,6 +375,7 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
         legend.key.size =  unit(0.1, "in"))
 
+#Fig S1 b)
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
@@ -371,9 +385,10 @@ ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in"))
 
+#Fig S1 c)
 ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 50) + 
-  facet_wrap(~veg) + 
+  facet_wrap(~veg, drop = FALSE) + 
   xlab("litter C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -383,7 +398,7 @@ ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) +
 head(orgsoilC2)
 
 neworder <- c("shallow","mid","deep")
-neworder2 <- c("sagebrush","sagecheat","cheatgrass")
+
 #library(plyr)  ## or dplyr (transform -> mutate)
 orgsoilC2 <- arrange(transform(orgsoilC2,
                            depth=factor(depth, levels = neworder)),depth)
@@ -391,6 +406,7 @@ orgsoilC2 <- arrange(transform(orgsoilC2,
 orgsoilC2 <- arrange(transform(orgsoilC2,
                                veg=factor(veg, levels = neworder2)),veg)
 
+#Figure S1 d)
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
@@ -406,6 +422,7 @@ totsoilC2 <- arrange(transform(totsoilC2,
 totsoilC2 <- arrange(transform(totsoilC2,
                                veg=factor(veg, levels = neworder2)),veg)
 
+#Figure S1 e)
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
