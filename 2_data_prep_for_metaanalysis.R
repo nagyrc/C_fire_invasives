@@ -4,7 +4,7 @@
 
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc", "dplyr")
+x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc", "dplyr", "ggsn")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
@@ -169,7 +169,7 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 
 
 #bring in shapefile of US states
-usa_shp <- st_read(file.path('data/states_shp'), layer = 'cb_2016_us_state_20m') %>%
+usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
   filter(!(NAME %in% c("Alaska", "Hawaii", "Puerto Rico"))) %>%
   st_transform(crs1b) %>%  #Albers equal area
   dplyr::select(STATEFP, STUSPS) %>%
@@ -218,7 +218,7 @@ head(studyid_pt)
 #crop usa_shp to extent of studyid_pt
 us_crop <- st_crop(usa_shp, extent(studyid_pt))
 
-#Fig. 1...yahoo!!
+#Fig. 1b...yahoo!!
 ggplot(data = us_crop) +
   geom_sf() +
   geom_sf(data = studyid_pt, size = 1.5, aes(color = pool2, shape = pool2),
@@ -230,6 +230,34 @@ ggplot(data = us_crop) +
         axis.title.x = element_text(size = 12), 
         axis.title.y = element_text(size = 12), 
         legend.text=element_text(size = 12), 
-        legend.title=element_text(size = 12))
+        legend.title=element_text(size = 12)) 
 
+#+ggsn::scalebar(data = studyid_pt, dist_unit = "km", transform = TRUE)
+
+ggplot() +
+  geom_sf(data = usa_shp) +
+  geom_sf(data = us_crop, aes(color = "study area")) 
+
+
+
+#adding in ecoregion information
+#crop us_eco to extent of studyid_pt
+us_eco <- st_read(file.path('eco-us-shp'), layer = 'eco_us') %>%
+  st_transform(crs1b) 
+
+us_eco_crop <- st_crop(us_eco, extent(studyid_pt))
+
+
+ggplot(data = us_eco_crop) +
+  geom_sf() +
+  geom_sf(data = studyid_pt, size = 1.5, aes(color = pool2, shape = pool2),
+          show.legend = "point") +
+  scale_color_discrete(name = "Carbon Pool") +
+  scale_shape_discrete(name = "Carbon Pool") +
+  theme(axis.text.x = element_text(size = 12), 
+        axis.text.y = element_text(size = 12), 
+        axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12), 
+        legend.text=element_text(size = 12), 
+        legend.title=element_text(size = 12)) 
 
