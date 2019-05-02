@@ -44,6 +44,9 @@ clean_study <- alldata %>%
 
 is.na(clean_study$yr_samp)
 
+nortoncheck <- clean_study %>%
+  filter(study == "Norton et al. 2004")
+
 write.csv(clean_study, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/clean_study.csv", row.names = FALSE)
 
 #create Article_ID
