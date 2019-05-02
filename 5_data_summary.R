@@ -150,6 +150,7 @@ joiny2 <- rawsonly %>%
   mutate_if(is.character, as.factor) %>%
   filter(veg != "salt_desert")
 
+head(joiny2)
 write.csv(joiny2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/joiny2.csv")
 unique(joiny2$Article_ID)
 
@@ -342,6 +343,11 @@ litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
+orgsoilC2 <- orgsoilC2 %>%
+  mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
+
+totsoilC2 <- totsoilC2 %>%
+  mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
 head(AGBC)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
@@ -371,9 +377,10 @@ ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in"))
 
+head(orgsoilC2)
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
-  facet_wrap(~veg) + 
+  facet_wrap(~veg+depth) + 
   xlab("organic soil C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -382,7 +389,7 @@ ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) +
 
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
-  facet_wrap(~veg) + 
+  facet_wrap(~veg+depth) + 
   xlab("total soil C (gC m-2)") + 
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
