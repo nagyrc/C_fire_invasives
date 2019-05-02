@@ -8,6 +8,8 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
+citation("MCMCglmm")
+citation("metafor")
 
 ## get full dataset from github (includes all cases and studies)
 #dq2 <- read.csv("Meta_analysis_sheet_manual.csv", header = T)
