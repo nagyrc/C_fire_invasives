@@ -237,6 +237,7 @@ ggplot(data = us_crop) +
 ggplot() +
   geom_sf(data = usa_shp) +
   geom_sf(data = us_crop, aes(color = "study area")) 
+<<<<<<< HEAD
 
 
 
@@ -260,4 +261,6 @@ ggplot(data = us_eco_crop) +
         axis.title.y = element_text(size = 12), 
         legend.text=element_text(size = 12), 
         legend.title=element_text(size = 12)) 
+=======
+>>>>>>> 3132a59550ac1fb371b1b213b8aa067c48baa6c2
 
