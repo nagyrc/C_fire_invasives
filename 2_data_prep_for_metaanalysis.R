@@ -243,7 +243,7 @@ ggplot() +
 
 #adding in ecoregion information
 #crop us_eco to extent of studyid_pt
-us_eco <- st_read(file.path('eco-us-shp'), layer = 'eco_us') %>%
+us_eco <- st_read(file.path('LIII_eco'), layer = 'NA_CEC_Eco_Level3_conus') %>%
   st_transform(crs1b) 
 
 us_eco_crop <- st_crop(us_eco, extent(studyid_pt))
@@ -261,6 +261,6 @@ ggplot(data = us_eco_crop) +
         axis.title.y = element_text(size = 12), 
         legend.text=element_text(size = 12), 
         legend.title=element_text(size = 12)) 
-=======
->>>>>>> 3132a59550ac1fb371b1b213b8aa067c48baa6c2
+
+
 
