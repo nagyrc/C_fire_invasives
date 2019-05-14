@@ -208,7 +208,7 @@ plot(usa_shp["geometry"], add = TRUE)
 #plot with Study_ID as the color
 plot(studyid_pt["Study_ID"])
 plot(usa_shp["geometry"], add = TRUE)
-#more than 1500 'studies'; actually only 372 once the rows with NA's were removed
+#more than 1500 'studies'; actually only 344 once the rows with NA's were removed
 
 
 
