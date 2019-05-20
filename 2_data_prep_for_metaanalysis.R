@@ -71,7 +71,7 @@ studyid <- clean_study %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID) %>%
   dplyr::mutate_if(is.character, as.factor) %>%
-  dplyr::mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
+  dplyr::mutate(Study_ID = group_indices(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
   filter(!is.na(pool_value)) %>%
   separate(yr_samp, c("first", "sec"), sep = "-") %>%
   mutate(yr_samp = as.numeric(first)) %>%
@@ -195,19 +195,19 @@ studyid_pt$pool2 <- ifelse(studyid_pt$pool == "AGBC_g_m2", "AGB", ifelse(studyid
 
 
 #plot with pool as the color
-is.factor(studyid_pt$pool)
-levels(studyid_pt$pool)
-plot(studyid_pt["pool2"], key.pos = 1)
-plot(usa_shp["geometry"], add = TRUE)
+#is.factor(studyid_pt$pool)
+#levels(studyid_pt$pool)
+#plot(studyid_pt["pool2"], key.pos = 1)
+#plot(usa_shp["geometry"], add = TRUE)
 
 
 #plot with veg as the color
-plot(studyid_pt["veg"], key.pos = 1)
-plot(usa_shp["geometry"], add = TRUE)
+#plot(studyid_pt["veg"], key.pos = 1)
+#plot(usa_shp["geometry"], add = TRUE)
 
 #plot with Study_ID as the color
-plot(studyid_pt["Study_ID"])
-plot(usa_shp["geometry"], add = TRUE)
+#plot(studyid_pt["Study_ID"])
+#plot(usa_shp["geometry"], add = TRUE)
 #more than 1500 'studies'; actually only 344 once the rows with NA's were removed
 
 
@@ -234,10 +234,10 @@ ggplot(data = us_crop) +
 
 #+ggsn::scalebar(data = studyid_pt, dist_unit = "km", transform = TRUE)
 
-ggplot() +
-  geom_sf(data = usa_shp) +
-  geom_sf(data = us_crop, aes(color = "study area")) 
-<<<<<<< HEAD
+#ggplot() +
+  #geom_sf(data = usa_shp) +
+  #geom_sf(data = us_crop, aes(color = "study area")) 
+
 
 
 
