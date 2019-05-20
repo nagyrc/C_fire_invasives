@@ -84,9 +84,17 @@ unique(studyid$Study_ID)
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
 
+###
+#writing for Emily for alternative Figure 1
+studyidsub <- studyid %>%
+  dplyr::select("pool","Study_ID","lat","long","Article_ID","veg")
 
+studyidsub$pool2 <- ifelse(studyidsub$pool == "AGBC_g_m2", "AGB", ifelse(studyidsub$pool == "BGBC_g_m2", "BGB", ifelse(studyidsub$pool == "litterC_g_m2", "litter", ifelse(studyidsub$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 
-head(clean_study)
+zzz <- unique(studyidsub[c("pool","Study_ID","lat","long","Article_ID","veg")])
+write.csv(zzz, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/uniqueCstudies.csv", row.names = TRUE)
+
+###
 
 
 
