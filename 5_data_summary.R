@@ -337,6 +337,10 @@ neworder2 <- c("sagebrush","sagecheat","cheatgrass")
 joiny2 <- arrange(transform(joiny2,
                            veg=factor(veg, levels = neworder2)),veg)
 
+#change veg names
+joiny2$veg <- plyr::revalue(joiny2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+#Fig. 2
 ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool2 ~ veg) + 
   xlab("pool_value") + theme_bw() + 
@@ -345,12 +349,25 @@ ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) +
         legend.key.size =  unit(0.05, "in")) +
   xlab("Carbon Content (gC m-2)") 
 
+###
+#make joiny2 again with original veg types
+joiny2 <- rawsonly %>%
+  full_join(simraw) %>%
+  mutate_if(is.character, as.factor) %>%
+  filter(veg != "salt_desert")
+
+joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+joiny2 <- arrange(transform(joiny2,
+                            veg=factor(veg, levels = neworder2)),veg)
+
 #try with subsets for each pool
 AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
 BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
 litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
+
+
 
 orgsoilC2 <- orgsoilC2 %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
@@ -368,6 +385,11 @@ BGBC2 <- arrange(transform(BGBC2,
 
 litterC2 <- arrange(transform(litterC2,
                            veg=factor(veg, levels = neworder2)),veg)
+
+
+AGBC2$veg <- plyr::revalue(AGBC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+BGBC2$veg <- plyr::revalue(BGBC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+litterC2$veg <- plyr::revalue(litterC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 head(AGBC)
 #Fig S1 a)
@@ -411,6 +433,9 @@ orgsoilC2 <- arrange(transform(orgsoilC2,
 orgsoilC2 <- arrange(transform(orgsoilC2,
                                veg=factor(veg, levels = neworder2)),veg)
 
+orgsoilC2$veg <- plyr::revalue(orgsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+
 #Figure S1 d)
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
@@ -426,6 +451,8 @@ totsoilC2 <- arrange(transform(totsoilC2,
 
 totsoilC2 <- arrange(transform(totsoilC2,
                                veg=factor(veg, levels = neworder2)),veg)
+
+totsoilC2$veg <- plyr::revalue(totsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 #Figure S1 e)
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
