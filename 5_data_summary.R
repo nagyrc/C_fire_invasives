@@ -592,6 +592,9 @@ recentburn <- joiny2 %>%
 unique(recentburn$veg)
 recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
+
+recentburn$veg <- plyr::revalue(recentburn$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
 #Fig. 4
 ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, fill = veg)) +
   geom_point() + 
@@ -602,5 +605,57 @@ ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, fill = veg)) +
   geom_smooth(method = "lm", se=TRUE) + 
   theme(legend.position="bottom")
 
+#Fig. 4 alternative
+rbAGB <- subset.data.frame(recentburn, pool2 == "AGB")
+rbBGB <- subset.data.frame(recentburn, pool2 == "BGB")
+rblitter <- subset.data.frame(recentburn, pool2 == "litter")
+rborg <- subset.data.frame(recentburn, pool2 == "organic soil")
+rbtot <- subset.data.frame(recentburn, pool2 == "total soil")
+
+ggplot(data = rbAGB, aes(x = timesincefire, y = pool_value, color = veg)) +
+  geom_point() + 
+  xlab("Time since fire (years)") +
+  xlim(0,20) +
+  ylab("AGB carbon content (gC m-2)") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
+  #geom_smooth(method = "lm", se=TRUE) + 
+  theme(legend.position="bottom")
+
+#might not need BGB
+ggplot(data = rbBGB, aes(x = timesincefire, y = pool_value, color = veg)) +
+  geom_point() + 
+  xlab("Time since fire (years)") +
+  xlim(0,20) +
+  ylab("BGB carbon content (gC m-2)") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
+  #geom_smooth(method = "lm", se=TRUE) + 
+  theme(legend.position="bottom")
+
+ggplot(data = rblitter, aes(x = timesincefire, y = pool_value, color = veg)) +
+  geom_point() + 
+  xlab("Time since fire (years)") +
+  xlim(0,20) +
+  ylab("Litter carbon content (gC m-2)") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
+  #geom_smooth(method = "lm", se=TRUE) + 
+  theme(legend.position="bottom")
+
+ggplot(data = rborg, aes(x = timesincefire, y = pool_value, color = veg)) +
+  geom_point() + 
+  xlab("Time since fire (years)") +
+  xlim(0,20) +
+  ylab("Soil organic carbon content (gC m-2)") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
+  #geom_smooth(method = "lm", se=TRUE) + 
+  theme(legend.position="bottom")
+
+ggplot(data = rbtot, aes(x = timesincefire, y = pool_value, color = veg)) +
+  geom_point() + 
+  xlab("Time since fire (years)") +
+  xlim(0,20) +
+  ylab("Total soil carbon content (gC m-2)") +
+  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
+  geom_smooth(method = "lm", se=TRUE) + 
+  theme(legend.position="bottom")
 
 
