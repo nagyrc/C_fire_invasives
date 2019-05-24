@@ -481,6 +481,9 @@ totsoilmeans010$veg <- factor(totsoilmeans010$veg,levels = c("sagebrush", "sagec
 totsoilmeans010$veg <- plyr::revalue(totsoilmeans010$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 
+colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
+
+
 #Fig. 3c
 ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
@@ -488,7 +491,8 @@ ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) +
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
   labs(x = "vegetation type", y = "total soil carbon (gC m-2): 0-10 cm", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  scale_fill_manual(values = colours)
 
 
 
@@ -514,7 +518,8 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
   labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  scale_fill_manual(values = colours)
 
 
 
@@ -531,8 +536,8 @@ ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
   labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
-
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) + 
+  scale_fill_manual(values = colours)
 
 
 ################################
@@ -595,15 +600,19 @@ recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "ch
 
 recentburn$veg <- plyr::revalue(recentburn$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
+colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
+#springgreen4 alternative for native sagebrush
+
 #Fig. 4
-ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, fill = veg)) +
+ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
   facet_wrap(~pool2) +
   xlab("Time since fire (years)") +
   ylab("Carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
   geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_manual(values = colours)
 
 #Fig. 4 alternative
 rbAGB <- subset.data.frame(recentburn, pool2 == "AGB")
@@ -612,6 +621,7 @@ rblitter <- subset.data.frame(recentburn, pool2 == "litter")
 rborg <- subset.data.frame(recentburn, pool2 == "organic soil")
 rbtot <- subset.data.frame(recentburn, pool2 == "total soil")
 
+#Fig. 4a
 ggplot(data = rbAGB, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
   xlab("Time since fire (years)") +
@@ -619,8 +629,10 @@ ggplot(data = rbAGB, aes(x = timesincefire, y = pool_value, color = veg)) +
   ylab("AGB carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
   #geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_manual(values = colours)
 
+#Fig. 4b
 #might not need BGB
 ggplot(data = rbBGB, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
@@ -629,8 +641,10 @@ ggplot(data = rbBGB, aes(x = timesincefire, y = pool_value, color = veg)) +
   ylab("BGB carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
   #geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_manual(values = colours)
 
+#Fig. 4c
 ggplot(data = rblitter, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
   xlab("Time since fire (years)") +
@@ -638,8 +652,10 @@ ggplot(data = rblitter, aes(x = timesincefire, y = pool_value, color = veg)) +
   ylab("Litter carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
   #geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_manual(values = colours)
 
+#Fig. 4d
 ggplot(data = rborg, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
   xlab("Time since fire (years)") +
@@ -647,8 +663,10 @@ ggplot(data = rborg, aes(x = timesincefire, y = pool_value, color = veg)) +
   ylab("Soil organic carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
   #geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_manual(values = colours)
 
+#Fig. 4e
 ggplot(data = rbtot, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
   xlab("Time since fire (years)") +
@@ -656,6 +674,7 @@ ggplot(data = rbtot, aes(x = timesincefire, y = pool_value, color = veg)) +
   ylab("Total soil carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
   geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom")
+  theme(legend.position="bottom") +
+  scale_color_manual(values = colours)
 
 
