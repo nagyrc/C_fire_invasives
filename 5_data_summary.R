@@ -478,6 +478,9 @@ orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,levels = c("sagebrush", "sagec
 totsoilmeans010 <- add_row(totsoilmeans010, pool = "totsoilC_g_m2", veg = "sagebrush")
 totsoilmeans010$veg <- factor(totsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
+totsoilmeans010$veg <- plyr::revalue(totsoilmeans010$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+
 #Fig. 3c
 ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
@@ -488,7 +491,6 @@ ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
-orgsoilmeans1020$veg <- factor(orgsoilmeans1020$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 #ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
   #geom_bar(position=position_dodge(), stat="identity") +
@@ -496,11 +498,15 @@ orgsoilmeans1020$veg <- factor(orgsoilmeans1020$veg,levels = c("sagebrush", "sag
   #labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm", fill = "vegetation") +
   #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
-
+orgsoilmeans1020$veg <- factor(orgsoilmeans1020$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 org2 <- rbind(as.data.frame(orgsoilmeans010), as.data.frame(orgsoilmeans1020))
-
 org2$veg <- factor(org2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
+#rename veg
+org2$veg <- plyr::revalue(org2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+
+#plot SOC by depth and veg
 #Fig. 3b
 ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
@@ -511,18 +517,13 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
-rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+
 rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
+rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 rawmeans2$pool2 <- ifelse(rawmeans2$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans2$pool == "BGBC_g_m2", "BGB", "litter"))
 
-unique(rawmeans2$pool)
-head(rawmeans2)
-#ggplot(rawmeans2, aes(x = veg, y = meanpv, fill = veg)) + 
-  #geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
-  #geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se), width = .2, position = position_dodge(0.9)) + 
-  #facet_wrap(~pool) + 
-  #labs(x = "carbon pool by vegetation type", y = "carbon content (gC m-2)", fill = "vegetation") +
-  #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+rawmeans2
+rawmeans2$veg <- plyr::revalue(rawmeans2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 #Fig. 3a
 ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
