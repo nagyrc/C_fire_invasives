@@ -82,6 +82,18 @@ plot(dq2$g_cheat_v_sage, dq2$g_sagecheat_v_sage)
 plot(dq2$Article_ID, dq2$g_cheat_v_sage)
 plot(dq2$Article_ID, dq2$g_cheat_v_sagecheat)
 plot(dq2$Article_ID, dq2$g_sagecheat_v_sage)
+
+summary(dq2$g_cheat_v_sage)
+#   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#-2.8029 -0.8358  0.5795  0.4308  0.8052  7.0844      27
+
+summary(dq2$g_cheat_v_sagecheat)
+#    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+#-0.91954 -0.39820 -0.01347 -0.03948  0.33284  0.59109       20
+
+summary(dq2$g_sagecheat_v_sage)
+#    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+#-1.03766 -0.05919  0.16217  0.18132  0.70275  1.03849       23 
 ###
 
 
