@@ -606,7 +606,28 @@ write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/
 
 head(joiny2)
 #analysis with fire
+str(joiny2)
 joiny2$timesincefire <- joiny2$yr_samp - joiny2$masterlyb
+
+unique(joiny2$veg)
+summary(joiny2$veg)
+
+cheatfire <- joiny2 %>%
+  filter(veg == "cheatgrass")
+
+sagecheatfire <- joiny2 %>%
+  filter(veg == "sagecheat")
+
+sagefire <- joiny2 %>%
+  filter(veg == "sagebrush")
+
+unique(cheatfire$timesincefire)
+range(cheatfire$timesincefire, na.rm = TRUE)
+#1, 88
+range(sagecheatfire$timesincefire, na.rm = TRUE)
+#1, 96
+range(sagefire$timesincefire, na.rm = TRUE)
+#3, 96
 
 ggplot(data = joiny2) +
   geom_point(aes(x = timesincefire, y = pool_value)) +
