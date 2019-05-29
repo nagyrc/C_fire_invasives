@@ -96,6 +96,29 @@ st_geometry(tens) = NULL
 write.csv(tens, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens.csv")
 
 
+###
+AGBCraw <- subset.data.frame(rawsonly, pool == "AGBC_g_m2")
+BGBCraw <- subset.data.frame(rawsonly, pool == "BGBC_g_m2")
+litterCraw <- subset.data.frame(rawsonly, pool == "litterC_g_m2")
+orgsoilCraw010 <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
+totsoilCraw010 <- subset.data.frame(rawsonly, pool == "totsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
+orgsoilCraw1020 <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
+totsoilCraw1020 <- subset.data.frame(rawsonly, pool == "totsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
+
+
+#ranges
+range(AGBCraw$pool_value)
+range(BGBCraw$pool_value)
+range(litterCraw$pool_value)
+range(orgsoilCraw010$pool_value)
+range(orgsoilCraw1020$pool_value)
+range(totsoilCraw010$pool_value)
+range(totsoilCraw1020$pool_value)
+
+###
+
+
+
 
 #for organic soils with 0 as top depth
 #zerosorg <- rawsonly %>%
@@ -340,7 +363,7 @@ joiny2 <- arrange(transform(joiny2,
 #change veg names
 joiny2$veg <- plyr::revalue(joiny2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
-#Fig. 2
+#Fig. S1
 ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool2 ~ veg) + 
   xlab("pool_value") + theme_bw() + 
@@ -368,7 +391,6 @@ orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
 
-
 orgsoilC2 <- orgsoilC2 %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
@@ -392,7 +414,7 @@ BGBC2$veg <- plyr::revalue(BGBC2$veg, c("sagebrush" = "native sagebrush", "sagec
 litterC2$veg <- plyr::revalue(litterC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 head(AGBC)
-#Fig S1 a)
+#Fig 2 a)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
@@ -402,7 +424,7 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
         legend.key.size =  unit(0.1, "in"))
 
-#Fig S1 b)
+#Fig 2 b)
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
@@ -412,7 +434,7 @@ ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in"))
 
-#Fig S1 c)
+#Fig 2 c)
 ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 50) + 
   facet_wrap(~veg, drop = FALSE) + 
@@ -436,7 +458,7 @@ orgsoilC2 <- arrange(transform(orgsoilC2,
 orgsoilC2$veg <- plyr::revalue(orgsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 
-#Figure S1 d)
+#Figure 2 d)
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
@@ -454,7 +476,7 @@ totsoilC2 <- arrange(transform(totsoilC2,
 
 totsoilC2$veg <- plyr::revalue(totsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
-#Figure S1 e)
+#Figure 2 e)
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
