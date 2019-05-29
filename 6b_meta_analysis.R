@@ -69,6 +69,22 @@ dq2$g_cheat_v_sagecheat <- ((dq2$meancheat - dq2$meansagecheat)/ dq2$SD_hedge_ch
 dq2$g_sagecheat_v_sage <- ((dq2$meansagecheat - dq2$meansage)/ dq2$SD_hedge_sagecheat_v_sage)*dq2$J_sagecheat_v_sage
 
 
+###
+#explore Hedge's g
+plot(dq2$pool, dq2$g_cheat_v_sage)
+plot(dq2$pool, dq2$g_cheat_v_sagecheat)
+plot(dq2$pool, dq2$g_sagecheat_v_sage)
+
+plot(dq2$g_cheat_v_sage, dq2$g_cheat_v_sagecheat)
+plot(dq2$g_sagecheat_v_sage, dq2$g_cheat_v_sagecheat)
+plot(dq2$g_cheat_v_sage, dq2$g_sagecheat_v_sage)
+
+plot(dq2$Article_ID, dq2$g_cheat_v_sage)
+plot(dq2$Article_ID, dq2$g_cheat_v_sagecheat)
+plot(dq2$Article_ID, dq2$g_sagecheat_v_sage)
+###
+
+
 ## Calculate Variance (MEV)-- Whitlock 2014
 #calculates the variance of hedges statistic
 dq2$var_d_cheat_v_sage = ((dq2$nsage + dq2$ncheat/dq2$nsage * dq2$ncheat) + dq2$g_cheat_v_sage^2/(2*(dq2$nsage + dq2$ncheat -2))) * ((dq2$nsage + dq2$ncheat)/(dq2$nsage + dq2$ncheat -2))
