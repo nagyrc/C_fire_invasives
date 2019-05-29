@@ -652,7 +652,7 @@ ggplot(data = rblitter, aes(x = timesincefire, y = pool_value, color = veg)) +
   xlim(0,20) +
   ylab("Litter carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
-  #geom_smooth(method = "lm", se=TRUE) + 
+  geom_smooth(method = "lm", se=TRUE) + 
   theme(legend.position="bottom") +
   scale_color_manual(values = colours)
 
@@ -674,7 +674,7 @@ ggplot(data = rbtot, aes(x = timesincefire, y = pool_value, color = veg)) +
   xlim(0,20) +
   ylab("Total soil carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
-  geom_smooth(method = "lm", se=TRUE) + 
+  #geom_smooth(method = "lm", se=TRUE) + 
   theme(legend.position="bottom") +
   scale_color_manual(values = colours)
 
