@@ -94,10 +94,15 @@ prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -
 #make nitt smaller- 10,000 when we start to help run faster
 #fit= dq2
 
-#this is how you add in depth to the model (could be factor or numeric) as a fixed effect
+#this is with depth category in the model (could be factor or numeric) as a fixed effect
 m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
+
+#got this message when I added in just cheatfire, in addition to depth_cat
+#Warning message:
+#In MCMCglmm(g_cheat_v_sage ~ depth_cat + cheatfire, random = ~Article_ID,  :
+              #some fixed effects are not estimable and have been removed. Use singular.ok=TRUE to sample these effects, but use an informative prior!
 
 #this is without depth as a fixed effect
 #m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
