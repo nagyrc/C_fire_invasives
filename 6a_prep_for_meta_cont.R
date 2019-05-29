@@ -148,7 +148,7 @@ write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R
 #manually pasted in the correct spots in a .csv file
 
 #bring that file in here
-rawspmeans <- as.data.frame(read_csv("/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv"))
+rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv"))
 
 dq2 <- rawspmeans
 
@@ -194,6 +194,54 @@ deepid <- deep %>%
 
 ####manually added this categorical variable (depth_cat: shallow, mid, deep) into rawspmeans2.csv for use as a fixed effect in meta-analysis
 
+###
+#create categories of yrs since burn for fixed effect in model
+checkb <- pairs_long %>%
+  filter(!is.na(Study_ID)) 
+
+listy1 <- checkb$Study_ID
+
+check2ab <- joiny2 %>%
+  filter(Study_ID %in% listy1) 
+
+check3b <- unique(check2ab[c("Study_ID", "masterlyb", "yr_samp")])
+check3b
+
+check3b$yrssince <- check3b$yr_samp - check3b$masterlyb
+
+recentfire <- check3b %>%
+  filter(yrssince < 5)
+#10 study ids
+write.csv(recent, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/recentfireid.csv")
+
+recentfireid <- recentfire %>%
+  dplyr::select(Study_ID)
+
+
+midfire <- check3b %>%
+  filter(yrssince >= 5 & yrssince <= 20)
+#11 study ids
+write.csv(midfire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/midfireid.csv")
+
+midfireid <- midfire %>%
+  dplyr::select(Study_ID)
+
+
+oldfire <- check3b %>%
+  filter(yrssince > 20)
+#2 study ids
+write.csv(oldfire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/oldfireid.csv")
+
+oldfireid <- oldfire %>%
+  dplyr::select(Study_ID)
+
+####manually added this categorical variable (fire_cat: recentfire, midfire, oldfire) into rawspmeans2.csv for use as a fixed effect in meta-analysis
+
+
+
+
+
+###
 ####################################################
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
 st_geometry(joiny) = NULL
