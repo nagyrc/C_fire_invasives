@@ -35,7 +35,8 @@ write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/raws
 
 meansonly <- siwf %>%
   filter(study %in% smeans) %>%
-  filter(veg != "salt_desert")
+  filter(veg != "salt_desert") %>%
+  filter(study != "Cleary et al. 2010")
 
 write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
@@ -176,6 +177,7 @@ joiny2 <- rawsonly %>%
   mutate_if(is.character, as.factor) %>%
   filter(veg != "salt_desert") %>%
   filter(study !="Cleary et al. 2010")
+#1919 observations
 
 head(joiny2)
 write.csv(joiny2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/joiny2.csv")
