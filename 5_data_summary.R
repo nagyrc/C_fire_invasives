@@ -174,11 +174,13 @@ rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
-  filter(veg != "salt_desert")
+  filter(veg != "salt_desert") %>%
+  filter(study !="Cleary et al. 2010")
 
 head(joiny2)
-write.csv(joiny2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/joiny2.csv")
+write.csv(joiny2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/joiny2.csv")
 unique(joiny2$Article_ID)
+unique(joiny2$veg)
 
 #need to subset bbb for studies in smeans
 #bring in studymeans from script 2
@@ -238,7 +240,7 @@ surfacemeans2 <- joiny2 %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
   ungroup ()
-#399 for org soil; 165 for total soil
+
 st_geometry(surfacemeans2) = NULL
 
 write.csv(surfacemeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
@@ -250,7 +252,7 @@ tens2 <- joiny2 %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
-#97 for org soil; 0 for total soil
+
 st_geometry(tens2) = NULL
 
 write.csv(tens2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens2.csv")
@@ -377,7 +379,8 @@ ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) +
 joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
-  filter(veg != "salt_desert")
+  filter(veg != "salt_desert") %>%
+  filter(study != "Cleary et al. 2010")
 
 joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 joiny2 <- arrange(transform(joiny2,
@@ -562,47 +565,7 @@ ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) +
   scale_fill_manual(values = colours)
 
 
-################################
-#for ESA abstract values
-mean1 <- siwf %>%
-  group_by(pool) %>%
-  summarise(mean = mean(pool_value))
-
-invaded <- siwf %>%
-  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native"))
-
-invadedmeans <- invaded %>%  
-  group_by(pool, invaded) %>%
-  summarise(mean = mean(pool_value))
-
-#try this with MTBS as a test to see if it works
-#also may want to try a different threshold for burned here (e.g., burned in 10 yrs prior to sampling)
-invadedburned1 <- invaded %>%
-  mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0, "burned", "unburned")) %>%
-  group_by(pool, invaded, burned) %>%
-  dplyr::summarise(mean = mean(pool_value), n = n())
-
-write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_MTBS.csv")
-
-
-
-#try this with BAECV as a test to see if it works
-invadedburned2 <- invaded %>%
-  mutate(burned = ifelse(!is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
-  group_by(pool, invaded, burned) %>%
-  dplyr::summarise(mean = mean(pool_value), n = n())
-
-write.csv(invadedburned2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
-
-
-#try to combine MTBS and BAECV
-invadedburned3 <- invaded %>%
-  mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0 & !is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
-  group_by(pool, invaded, burned) %>%
-  dplyr::summarise(mean = mean(pool_value), n = n())
-
-write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
-################################
+#####################################
 
 head(joiny2)
 #analysis with fire
@@ -722,3 +685,46 @@ ggplot(data = rbtot, aes(x = timesincefire, y = pool_value, color = veg)) +
   scale_color_manual(values = colours)
 
 
+
+
+################################
+#for ESA abstract values
+mean1 <- siwf %>%
+  group_by(pool) %>%
+  summarise(mean = mean(pool_value))
+
+invaded <- siwf %>%
+  mutate(invaded = ifelse(veg == "cheatgrass" | veg == "sagecheat", "invaded", "native"))
+
+invadedmeans <- invaded %>%  
+  group_by(pool, invaded) %>%
+  summarise(mean = mean(pool_value))
+
+#try this with MTBS as a test to see if it works
+#also may want to try a different threshold for burned here (e.g., burned in 10 yrs prior to sampling)
+invadedburned1 <- invaded %>%
+  mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  dplyr::summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned1, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_MTBS.csv")
+
+
+
+#try this with BAECV as a test to see if it works
+invadedburned2 <- invaded %>%
+  mutate(burned = ifelse(!is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  dplyr::summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
+
+
+#try to combine MTBS and BAECV
+invadedburned3 <- invaded %>%
+  mutate(burned = ifelse(!is.na(MTBS_DISCOVERY_YEAR) > 0 & !is.na(baecv_lyb) > 0, "burned", "unburned")) %>%
+  group_by(pool, invaded, burned) %>%
+  dplyr::summarise(mean = mean(pool_value), n = n())
+
+write.csv(invadedburned3, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/means_BAECV.csv")
+################################
