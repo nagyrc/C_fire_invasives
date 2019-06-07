@@ -13,8 +13,9 @@ joiny2 <- as.data.frame(read_csv("joiny2.csv"))
 head(joiny2)
 
 joiny2 <- joiny2 %>%
-  filter(veg != "salt_desert")
-#2247 to 2123 obs.
+  filter(veg != "salt_desert") %>%
+  filter(study != "Cleary et al. 2010")
+
 
 summary(AGBC2$pool_value)
 
