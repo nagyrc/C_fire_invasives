@@ -175,13 +175,13 @@ kruskal.test(pool_value ~ veg, data = totsoil010)
 #p=0.4231
 
 kruskal.test(pool_value ~ veg, data = litterC2)
-#p=0.5052
-
-kruskal.test(pool_value ~ veg, data = AGBC2)
-#p=2.144e-07
+#p=0.01408
 
 kruskal.test(pool_value ~ veg, data = BGBC2)
-#p<4.034e-10
+#p=2.933e-10
+
+kruskal.test(pool_value ~ veg, data = AGBC2)
+#p=0.0008
 
 
 #Dunn test for multiple comparisons
@@ -209,20 +209,22 @@ PT3
 
 PT4 = dunnTest(pool_value ~ veg, data = litterC2, method = "none")    
 PT4
-#                Comparison          Z   P.unadj     P.adj
-#    cheatgrass - sagebrush -0.6662711 0.5052378 0.5052378
+#Comparison                      Z    P.unadj      P.adj
+#1 cheatgrass - sagebrush 2.455291 0.01407705 0.01407705
 
-PT5 = dunnTest(pool_value ~ veg, data = AGBC2, method = "none")    
+
+PT5 = dunnTest(pool_value ~ veg, data = BGBC2, method = "none")    
 PT5
-#             Comparison         Z      P.unadj        P.adj
-# cheatgrass - sagebrush  4.941802 7.740378e-07 7.740378e-07
-# cheatgrass - sagecheat -1.433650 1.516721e-01 1.516721e-01
-#  sagebrush - sagecheat -3.514443 4.406770e-04 4.406770e-04
+#              Comparison          Z      P.unadj        P.adj
+#1 cheatgrass - sagebrush -4.4919196 7.058407e-06 7.058407e-06
+#2 cheatgrass - sagecheat  0.1880232 8.508585e-01 8.508585e-01
+#3  sagebrush - sagecheat  5.7233270 1.044579e-08 1.044579e-08
 
-PT6 = dunnTest(pool_value ~ veg, data = BGBC2, method = "none")    
+
+PT6 = dunnTest(pool_value ~ veg, data = AGBC2, method = "none")    
 PT6
 #              Comparison          Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush -4.4266841 9.569273e-06 9.569273e-06
-#2 cheatgrass - sagecheat  0.1880842 8.508106e-01 8.508106e-01
-#3  sagebrush - sagecheat  5.6629182 1.488201e-08 1.488201e-08
+#1 cheatgrass - sagebrush -3.5199135 0.0004316876 0.0004316876
+#2 cheatgrass - sagecheat -1.7916213 0.0731936505 0.0731936505
+#3  sagebrush - sagecheat  0.3386746 0.7348548490 0.7348548490
 
