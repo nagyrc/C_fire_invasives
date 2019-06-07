@@ -87,7 +87,8 @@ write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/study
 ###
 #writing for Emily for alternative Figure 1
 studyidsub <- studyid %>%
-  dplyr::select("pool","Study_ID","lat","long","Article_ID","veg")
+  dplyr::select("pool","Study_ID","lat","long","Article_ID","veg") %>%
+  filter(study != "Cleary et al. 2010")
 
 studyidsub$pool2 <- ifelse(studyidsub$pool == "AGBC_g_m2", "AGB", ifelse(studyidsub$pool == "BGBC_g_m2", "BGB", ifelse(studyidsub$pool == "litterC_g_m2", "litter", ifelse(studyidsub$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 
