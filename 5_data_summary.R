@@ -611,6 +611,9 @@ recentburn$veg <- plyr::revalue(recentburn$veg, c("sagebrush" = "native sagebrus
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 #springgreen4 alternative for native sagebrush
 
+recentburn$pool2 <- ifelse(recentburn$pool == "AGBC_g_m2", "AGB", ifelse(recentburn$pool == "BGBC_g_m2", "BGB", ifelse(recentburn$pool == "litterC_g_m2", "litter", ifelse(recentburn$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+
+
 #Fig. 4
 ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, color = veg)) +
   geom_point() + 
@@ -618,7 +621,7 @@ ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, color = veg)) +
   xlab("Time since fire (years)") +
   ylab("Carbon content (gC m-2)") +
   theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
-  geom_smooth(method = "lm", se=TRUE) + 
+  #geom_smooth(method = "lm", se=TRUE) + 
   theme(legend.position="bottom") +
   scale_color_manual(values = colours) +
   xlim(0,20)
