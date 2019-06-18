@@ -3,7 +3,7 @@
 #created March 15, 2019
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "ggplot2", "doBy", "lme4")
+x <- c("tidyverse", "sf", "ggplot2", "doBy", "lme4", "lmerTest")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
