@@ -374,7 +374,12 @@ ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.05, "in")) +
-  xlab("Carbon Content (gC m-2)") 
+  xlab("square root (carbon content (gC m-2))") +
+  ylab("square root (count)") +
+  scale_y_sqrt() +
+  scale_x_sqrt() +
+  theme(axis.text.x = element_text(angle=90))
+#the log scaling of y removes a bunch of rows
 
 ###
 #make joiny2 again with original veg types
