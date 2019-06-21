@@ -367,7 +367,10 @@ joiny2 <- arrange(transform(joiny2,
 #change veg names
 joiny2$veg <- plyr::revalue(joiny2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
+
+
 #Fig. S1
+###original, keep
 ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool2 ~ veg) + 
   xlab("pool_value") + theme_bw() + 
@@ -379,7 +382,36 @@ ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) +
   scale_y_sqrt() +
   scale_x_sqrt() +
   theme(axis.text.x = element_text(angle=90))
-#the log scaling of y removes a bunch of rows
+#the log scaling of y removes a bunch of rows; so used sqrt instead
+###
+
+DistNormDF = data.frame(Type = "Normal", pool_value = DistNorm)
+DistGammaDF = data.frame(Type = "Gamma", pool_value = DistGamma)
+
+
+###
+#try adding normal and gamma distributions
+#not working
+ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
+  geom_histogram() + 
+  xlab("pool_value") + 
+  theme_bw() + 
+  facet_grid(pool2 ~ veg) +
+  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+        legend.key.size =  unit(0.05, "in")) +
+  xlab("square root (carbon content (gC m-2))") +
+  ylab("square root (count)") +
+  scale_y_sqrt() +
+  scale_x_sqrt() +
+  theme(axis.text.x = element_text(angle=90)) +
+  stat_density(colour="blue", geom="line", position="identity") +
+  stat_function(fun=dnorm, args=list(mean=mean(joiny2$pool_value), sd=sd(joiny2$pool_value))) + 
+  stat_function(fun=dgamma, args=list(shape=mean(joiny2$pool_value)^2/sd(joiny2$pool_value)^2, scale=sd(joiny2$pool_value)^2/mean(joiny2$pool_value)))
+
+
+
+
 
 ###
 #make joiny2 again with original veg types
@@ -432,7 +464,7 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
-        legend.key.size =  unit(0.1, "in"))
+        legend.key.size =  unit(0.1, "in")) 
 
 #Fig 2 b)
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
@@ -442,7 +474,8 @@ ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        legend.key.size =  unit(0.1, "in"))
+        legend.key.size =  unit(0.1, "in")) 
+
 
 #Fig 2 c)
 ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
@@ -476,7 +509,9 @@ ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        legend.key.size =  unit(0.1, "in"))
+        legend.key.size =  unit(0.1, "in")) 
+
+#+scale_y_sqrt()
 
 totsoilC2 <- arrange(transform(totsoilC2,
                                depth=factor(depth, levels = neworder)),depth)
@@ -494,7 +529,9 @@ ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
-        legend.key.size =  unit(0.1, "in"))
+        legend.key.size =  unit(0.1, "in")) 
+
+#+scale_y_sqrt()
 
 
 
