@@ -211,6 +211,13 @@ rawmeans2 <- joiny2 %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
   ungroup()
 
+rawmeans2b <- joiny2 %>%
+  filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
 st_geometry(rawmeans2) = NULL
 write.csv(rawmeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans2.csv")
 
@@ -243,6 +250,13 @@ surfacemeans2 <- joiny2 %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
   ungroup ()
 
+surfacemeans2b <- joiny2 %>%
+  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup ()
+
 st_geometry(surfacemeans2) = NULL
 
 write.csv(surfacemeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
@@ -252,6 +266,12 @@ write.csv(surfacemeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/resu
 tens2 <- joiny2 %>%
   filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
   group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+tens2b <- joiny2 %>%
+  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
+  group_by(pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
