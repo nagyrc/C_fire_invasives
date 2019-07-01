@@ -250,6 +250,11 @@ surfacemeans2 <- joiny2 %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
   ungroup ()
 
+st_geometry(surfacemeans2) = NULL
+
+write.csv(surfacemeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
+
+
 surfacemeans2b <- joiny2 %>%
   filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool) %>%
@@ -257,9 +262,8 @@ surfacemeans2b <- joiny2 %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
   ungroup ()
 
-st_geometry(surfacemeans2) = NULL
 
-write.csv(surfacemeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans2.csv")
+
 
 
 #for 10-20 cm only
@@ -269,16 +273,53 @@ tens2 <- joiny2 %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
+st_geometry(tens2) = NULL
+
+write.csv(tens2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens2.csv")
+
+
 tens2b <- joiny2 %>%
   filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
   group_by(pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
-st_geometry(tens2) = NULL
 
-write.csv(tens2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens2.csv")
+#for deeper subsets
+deep1 <- joiny2 %>%
+  filter(bottomdepth_cm > 20 & bottomdepth_cm <= 40) 
 
+unique(deep1$topdepth_cm)
+#many depths
+unique(deep1$bottomdepth_cm)
+#many depths
+unique(deep1$Article_ID)
+#Norton 2004; Stark 2015
+
+
+deep1summary <- joiny2 %>%
+  filter(topdepth_cm > 10 & bottomdepth_cm > 20) %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+
+deep2 <- joiny2 %>%
+  filter(topdepth_cm > 20 & bottomdepth_cm > 40) 
+
+unique(deep2$topdepth_cm)
+#many depths
+unique(deep2$bottomdepth_cm)
+#many depths
+unique(deep2$Article_ID)
+#Norton 2004; Stark 2015; Sorensen 2013
+
+
+deep2summary <- joiny2 %>%
+  filter(topdepth_cm > 20 & bottomdepth_cm > 40) %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
 
 
 #for organic soils with 0 as top depth
