@@ -287,40 +287,94 @@ tens2b <- joiny2 %>%
 
 #for deeper subsets
 deep1 <- joiny2 %>%
-  filter(bottomdepth_cm > 20 & bottomdepth_cm <= 40) 
+  filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
+  filter(bottomdepth_cm > 20 & bottomdepth_cm <= 40) %>%
+  mutate(Cpercm = pool_value/thick)
 
 unique(deep1$topdepth_cm)
 #many depths
 unique(deep1$bottomdepth_cm)
 #many depths
 unique(deep1$Article_ID)
-#Norton 2004; Stark 2015
+#NORT2004; STAR2015
 
-
-deep1summary <- joiny2 %>%
-  filter(topdepth_cm > 10 & bottomdepth_cm > 20) %>%
+deep1summary <- deep1 %>%
   group_by(pool, veg) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
+  dplyr::summarise(meanpvpercm = mean(Cpercm), n = n(), var = var(Cpercm)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  mutate(bottom_depth = "20 - 40 cm")
 
+summary(deep1$Cpercm) 
+
+#rename and reorder veg and color by veg
+neworder2 <- c("sagebrush","sagecheat","cheatgrass")
+
+deep1summary <- arrange(transform(deep1summary,
+                                  veg=factor(veg, levels = neworder2)),veg)
+
+deep1summary$veg <- plyr::revalue(deep1summary$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+ggplot(deep1summary, aes(x = veg, y = meanpvpercm))+
+  geom_bar(stat = "identity")
 
 deep2 <- joiny2 %>%
-  filter(topdepth_cm > 20 & bottomdepth_cm > 40) 
+  filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
+  filter(bottomdepth_cm > 40) %>%
+  mutate(Cpercm = pool_value/thick)
 
 unique(deep2$topdepth_cm)
 #many depths
 unique(deep2$bottomdepth_cm)
 #many depths
 unique(deep2$Article_ID)
-#Norton 2004; Stark 2015; Sorensen 2013
+#NORT2004; STAR2015; GOER2011; RAU2011; SORE2013
 
 
-deep2summary <- joiny2 %>%
-  filter(topdepth_cm > 20 & bottomdepth_cm > 40) %>%
+deep2summary <- deep2 %>%
   group_by(pool, veg) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  dplyr::summarise(meanpvpercm = mean(Cpercm), n = n(), var = var(Cpercm)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
+summary(deep2$Cpercm)
+
+#rename and reorder veg; color by veg
+deep2summary <- arrange(transform(deep2summary,
+                            veg=factor(veg, levels = neworder2)),veg)
+deep2summary$veg <- plyr::revalue(deep2summary$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+orgonly <- deep2summary %>%
+  filter(pool == "orgsoilC_g_m2") %>%
+  mutate(bottom_depth = "> 40 cm")
+
+#combine with shallower depth; merge deep1summary with orgonly
+orgzz <- deep1summary %>%
+  rbind(orgonly)
+
+neworder3 <- c("20 - 40 cm","> 40 cm")
+
+orgzz <- arrange(transform(orgzz,
+                                  bottom_depth=factor(bottom_depth, levels = neworder3)),bottom_depth)
+
+colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
+
+#add this plot to manuscript# new figure
+ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
+  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
+  labs(y = "Soil organic C (gC cm-2) per cm thickness: deep soils", x = "bottom depth sampled (cm)") +
+  scale_fill_manual(values = colours) +
+  geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se),
+                                                    width=.2,                    # Width of the error bars
+                                                    position=position_dodge(.9))
+
+totonly <- deep2summary %>%
+  filter(pool == "totsoilC_g_m2")
+#mean is 216.6959
+#se is 9.7055
+#n is 72
+
+ggplot(totonly, aes(x = veg, y = meanpvpercm)) +
+  geom_bar(position=position_dodge(), stat = "identity")
+#only 1 bar; just report this number; don't need a figure; see values above
 
 #for organic soils with 0 as top depth
 #zerosorg2 <- joiny2 %>%
