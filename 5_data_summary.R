@@ -357,7 +357,7 @@ orgzz <- arrange(transform(orgzz,
 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
-#add this plot to manuscript# new figure
+#add this plot to manuscript# new Fig. 3c
 ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   labs(y = "Soil organic C (gC cm-2) per cm thickness: deep soils", x = "bottom depth sampled (cm)") +
@@ -668,7 +668,7 @@ totsoilmeans010$veg <- plyr::revalue(totsoilmeans010$veg, c("sagebrush" = "nativ
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
 
-#Fig. 3c
+#Fig. 3d
 ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
