@@ -985,11 +985,14 @@ Bansalkp$study <- 'Bansal et al. 2014'
 #Bansalkp$long <- -116.20000000
 Bansalkp$veg <- ifelse (Bansalkp$comm == 'brte', 'cheatgrass', ifelse (Bansalkp$comm == 'mix', 'sagecheat', 'sagebrush'))
 
-
 colnames(Bansalkp)[colnames(Bansalkp) == 'year'] <- 'yr_samp'
 
+Bansalkp$Month_sampled <- ifelse (Bansalkp$yr_samp == 2010, 'August', 'June')
 
 Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
+
+#removing comm field
+Bansalkp <- Bansalkp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study")]
 
 #need to append Bansalkp to alldata then write out
 bind15 <- rbind.all.columns(bind14, Bansalkp)
