@@ -938,31 +938,31 @@ studymeans
 
 
 bind13 = read_csv("bind13.csv")
-alldata <- rbind.all.columns(bind13, studymeans)
+bind14 <- rbind.all.columns(bind13, studymeans)
 
 
 #making sure all numeric fields are numeric
-str(alldata)
+str(bind14)
 
-alldata$litterC_g_m2 <- as.numeric(alldata$litterC_g_m2)
-alldata$bottomdepth_cm <- as.numeric(alldata$bottomdepth_cm)
-alldata$elevation <- as.numeric(alldata$elevation)
-#alldata$cheat_cover <- as.numeric(alldata$cheat_cover)
-alldata$BGB_g_m2 <- as.numeric(alldata$BGB_g_m2)
-alldata$BGB_g_m2_SE <- as.numeric(alldata$BGB_g_m2_SE)
-alldata$litter_g_m2 <- as.numeric(alldata$litter_g_m2)
-alldata$litter_g_m2_SE <- as.numeric(alldata$litter_g_m2_SE)
-alldata$n_sampled <- as.numeric(alldata$n_sampled)
-alldata$totsoilC_g_m2_SE <- as.numeric(alldata$totsoilC_g_m2_SE)
+bind14$litterC_g_m2 <- as.numeric(bind14$litterC_g_m2)
+bind14$bottomdepth_cm <- as.numeric(bind14$bottomdepth_cm)
+bind14$elevation <- as.numeric(bind14$elevation)
+#bind14$cheat_cover <- as.numeric(bind14$cheat_cover)
+bind14$BGB_g_m2 <- as.numeric(bind14$BGB_g_m2)
+bind14$BGB_g_m2_SE <- as.numeric(bind14$BGB_g_m2_SE)
+bind14$litter_g_m2 <- as.numeric(bind14$litter_g_m2)
+bind14$litter_g_m2_SE <- as.numeric(bind14$litter_g_m2_SE)
+bind14$n_sampled <- as.numeric(bind14$n_sampled)
+bind14$totsoilC_g_m2_SE <- as.numeric(bind14$totsoilC_g_m2_SE)
 
-colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
-colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
+colnames(bind14)[colnames(bind14) == 'orgsoil%C'] <- 'orgsoilperC'
+colnames(bind14)[colnames(bind14) == 'totsoil%C'] <- 'totsoilperC'
 
-alldata$X1 <- as.factor(rownames(alldata))
+bind14$X1 <- as.factor(rownames(bind14))
 
 
-unique(alldata$yr_samp)
-unique(alldata$n_sampled)
+unique(bind14$yr_samp)
+unique(bind14$n_sampled)
 
 ###
 #add three new datasets
@@ -992,4 +992,6 @@ colnames(Bansalkp)[colnames(Bansalkp) == 'year'] <- 'yr_samp'
 Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
 
 #need to append Bansalkp to alldata then write out
-write.csv(alldata, file = "alldata.csv", row.names = FALSE)
+
+bind15 <- rbind.all.columns(bind14, Bansalkp)
+write.csv(bind15, file = "alldata.csv", row.names = FALSE)
