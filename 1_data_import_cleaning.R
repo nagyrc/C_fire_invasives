@@ -992,6 +992,5 @@ colnames(Bansalkp)[colnames(Bansalkp) == 'year'] <- 'yr_samp'
 Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
 
 #need to append Bansalkp to alldata then write out
-
 bind15 <- rbind.all.columns(bind14, Bansalkp)
 write.csv(bind15, file = "alldata.csv", row.names = FALSE)
