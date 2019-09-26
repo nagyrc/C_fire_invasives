@@ -959,10 +959,26 @@ colnames(alldata)[colnames(alldata) == 'orgsoil%C'] <- 'orgsoilperC'
 colnames(alldata)[colnames(alldata) == 'totsoil%C'] <- 'totsoilperC'
 
 alldata$X1 <- as.factor(rownames(alldata))
-write.csv(alldata, file = "alldata.csv", row.names = FALSE)
 
 
 unique(alldata$yr_samp)
 unique(alldata$n_sampled)
 
+###
+#add three new datasets
 
+#Bansal data
+Bansal <- as.data.frame(read_csv("Bansal_data.csv"))
+
+#Bansal$brushb <- as.numeric(Bansal$brushb)
+Bansal$AGB_g_m2 <- Bansal$afb + Bansal$pfb + Bansal$brushb + Bansal$bulbb_ + Bansal$anngrassb + Bansal$bunchb
+
+summary(Bansal$AGB_g_m2)
+
+Bansalkp <- na.omit(Bansal)
+
+summary(Bansalkp$AGB_g_m2)
+
+Bansalkp <- 
+
+write.csv(alldata, file = "alldata.csv", row.names = FALSE)
