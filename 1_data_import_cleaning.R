@@ -970,7 +970,7 @@ unique(alldata$n_sampled)
 #Bansal data
 Bansal <- as.data.frame(read_csv("Bansal_data.csv"))
 
-#Bansal$brushb <- as.numeric(Bansal$brushb)
+Bansal$brushb <- as.numeric(Bansal$brushb)
 Bansal$AGB_g_m2 <- Bansal$afb + Bansal$pfb + Bansal$brushb + Bansal$bulbb_ + Bansal$anngrassb + Bansal$bunchb
 
 summary(Bansal$AGB_g_m2)
@@ -979,6 +979,17 @@ Bansalkp <- na.omit(Bansal)
 
 summary(Bansalkp$AGB_g_m2)
 
-Bansalkp <- 
+Bansalkp <- Bansalkp[,c("year", "site", "comm", "AGB_g_m2")]
+Bansalkp$study <- 'Bansal et al. 2014'
+#Bansalkp$lat <- 43.28333333
+#Bansalkp$long <- -116.20000000
+Bansalkp$veg <- ifelse (Bansalkp$comm == 'brte', 'cheatgrass', ifelse (Bansalkp$comm == 'mix', 'sagecheat', 'sagebrush'))
 
+
+colnames(Bansalkp)[colnames(Bansalkp) == 'year'] <- 'yr_samp'
+
+
+Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
+
+#need to append Bansalkp to alldata then write out
 write.csv(alldata, file = "alldata.csv", row.names = FALSE)
