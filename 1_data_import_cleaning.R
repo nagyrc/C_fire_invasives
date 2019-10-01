@@ -996,4 +996,33 @@ Bansalkp <- Bansalkp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat"
 
 #need to append Bansalkp to alldata then write out
 bind15 <- rbind.all.columns(bind14, Bansalkp)
+
+
+
+###
+#Porensky data
+Porensky <- as.data.frame(read_csv("Porensky_data.csv"))
+unique(Porensky$Grazed)
+
+sub1 <- Porensky %>%
+  filter(Grazed == 'ungrazed'| Grazed == "Ungrazed")
+
+unique(sub1$Grazed)
+
+sub1$Grazed <- c("ungrazed")
+
+unique(sub1$Grazed)
+
+unique(sub1$type)
+
+sub2 <- sub1 %>%
+  filter(type == 'control'| Grazed == "Control")
+
+sub3 <- sub2 %>%
+  group_by(Block, Paddock, Quadrat, yr_samp, Month_sampled) %>%
+  summarize(totwt = sum(`Weight (g)`))
+
+#put in conversion factor here
+sub3$biomass_gm2 <- sub3$totwt * 1
+
 write.csv(bind15, file = "alldata.csv", row.names = FALSE)
