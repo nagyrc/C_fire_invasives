@@ -1032,8 +1032,15 @@ sub3$AGBC_g_m2 <- sub3$AGB_g_m2*cheat_percC
 
 #block is kind of like site according to Figure 2a
 colnames(sub3)[colnames(sub3) == 'Block'] <- 'site'
+colnames(sub3)[colnames(sub3) == 'Paddock'] <- 'paddock'
 
-#need to append Bansalkp to alldata then write out
-bind16 <- rbind.all.columns(bind15, sub3)
+sub3$study <- 'Porensky et al. 2018'
+sub3$veg <- 'cheatgrass'
+#sub3$lat <- XXX
+#sub3$long <- XXX
+
+Porenskykp <- Porenskykp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study", "rep", "paddock")]
+
+bind16 <- rbind.all.columns(bind15, kpPorensky)
 
 write.csv(bind16, file = "alldata.csv", row.names = FALSE)
