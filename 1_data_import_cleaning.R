@@ -994,7 +994,7 @@ Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
 #removing comm field
 Bansalkp <- Bansalkp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study")]
 
-#need to append Bansalkp to alldata then write out
+#need to append Bansalkp to alldata
 bind15 <- rbind.all.columns(bind14, Bansalkp)
 
 
@@ -1019,10 +1019,21 @@ sub2 <- sub1 %>%
   filter(type == 'control'| Grazed == "Control")
 
 sub3 <- sub2 %>%
-  group_by(Block, Paddock, Quadrat, yr_samp, Month_sampled) %>%
+  group_by(Block, Paddock, Quadrat, yr_samp, Month_sampled, Grazed, type) %>%
   summarize(totwt = sum(`Weight (g)`))
 
-#put in conversion factor here
-sub3$biomass_gm2 <- sub3$totwt * 1
+colnames(sub3)[colnames(sub3) == 'totwt'] <- 'AGB_g_m2'
 
-write.csv(bind15, file = "alldata.csv", row.names = FALSE)
+#split Quadrat column to make rep
+sub3$rep <- parse_number(sub3$Quadrat)
+
+#confirm veg class for conversion to carbon
+sub3$AGBC_g_m2 <- sub3$AGB_g_m2*cheat_percC
+
+#block is kind of like site according to Figure 2a
+colnames(sub3)[colnames(sub3) == 'Block'] <- 'site'
+
+#need to append Bansalkp to alldata then write out
+bind16 <- rbind.all.columns(bind15, sub3)
+
+write.csv(bind16, file = "alldata.csv", row.names = FALSE)
