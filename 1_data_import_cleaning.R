@@ -1043,4 +1043,9 @@ Porenskykp <- Porenskykp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "
 
 bind16 <- rbind.all.columns(bind15, kpPorensky)
 
-write.csv(bind16, file = "alldata.csv", row.names = FALSE)
+
+###bring in individual data points (means that are lacking SE or n)
+ind_points <- as.data.frame(read_csv("ind_points.csv"))
+bind17 <- rbind.all.columns(bind16, ind_points)
+
+write.csv(bind17, file = "alldata.csv", row.names = FALSE)
