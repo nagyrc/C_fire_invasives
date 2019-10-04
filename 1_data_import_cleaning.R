@@ -981,8 +981,8 @@ summary(Bansalkp$AGB_g_m2)
 
 Bansalkp <- Bansalkp[,c("year", "site", "comm", "AGB_g_m2")]
 Bansalkp$study <- 'Bansal et al. 2014'
-#Bansalkp$lat <- 43.28333333
-#Bansalkp$long <- -116.20000000
+Bansalkp$lat <- 43.791665
+Bansalkp$long <- -118.4417
 Bansalkp$veg <- ifelse (Bansalkp$comm == 'brte', 'cheatgrass', ifelse (Bansalkp$comm == 'mix', 'sagecheat', 'sagebrush'))
 
 colnames(Bansalkp)[colnames(Bansalkp) == 'year'] <- 'yr_samp'
@@ -1036,8 +1036,8 @@ colnames(sub3)[colnames(sub3) == 'Paddock'] <- 'paddock'
 
 sub3$study <- 'Porensky et al. 2018'
 sub3$veg <- 'cheatgrass'
-#sub3$lat <- XXX
-#sub3$long <- XXX
+sub3$lat <- 40.869
+sub3$long <- -116.5315
 
 Porenskykp <- Porenskykp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study", "rep", "paddock")]
 
