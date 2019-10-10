@@ -1041,6 +1041,18 @@ bind16 <- rbind.all.columns(bind15, kpPorensky)
 
 ###bring in individual data points (means that are lacking SE or n)
 ind_points <- as.data.frame(read_csv("ind_points.csv"))
+
+#repeat rows n times where n is specified
+
+#ind_points$ntimes <- ind_points$n_sampled
+#cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
+#cp <- ind_points[rep(seq_len(nrow(ind_points)), ind_points$ntimes),]
+#n.times <- ind_points$n_sampled
+#cp <- ind_points[rep(seq_len(nrow(ind_points)), n.times),]
+#cp <- rep (ind_points[,], times = ind_points$n_sampled)
+#cp <- ind_points[rep(seq(nrow(ind_points)), ind_points$n_sampled),]
+#cp <- rep(ind_points, ind_points$n_sampled)
+
 bind17 <- rbind.all.columns(bind16, ind_points)
 
 write.csv(bind17, file = "alldata.csv", row.names = FALSE)
