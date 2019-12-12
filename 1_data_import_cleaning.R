@@ -807,7 +807,7 @@ cheatBGBpercC010 <- 0.31 #from Svejcar and Sheley 2001 Table 3
 sageBGBpercC1030 <- 0.314 #from Svejcar and Sheley 2001 Table 3
 cheatBGBpercC1030 <- 0.337 #from Svejcar and Sheley 2001 Table 3
 
-
+saltBGBpercC <- 0.313 #from ???
 ###########################################
 rbind.all.columns <- function(x, y) {
   
@@ -836,6 +836,8 @@ bind10 <- rbind.all.columns(bind9, kpRau)
 bind11 <- rbind.all.columns(bind10, kpPeschel)
 bind12 <- rbind.all.columns(bind11, kpNorton2012)
 bind13 <- rbind.all.columns(bind12, kpAnderson)
+
+names(bind13)
 
 write.csv(bind13, file = "bind13.csv")
 
@@ -964,6 +966,10 @@ bind14$X1 <- as.factor(rownames(bind14))
 unique(bind14$yr_samp)
 unique(bind14$n_sampled)
 
+names(bind14)
+
+
+
 ###
 #add three new datasets
 
@@ -1034,7 +1040,7 @@ sub2$veg <- 'cheatgrass'
 sub2$lat <- 40.869
 sub2$long <- -116.5315
 
-Porenskykp <- sub2[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study", "rep", "paddock")]
+kpPorensky <- sub2[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study", "rep", "paddock")]
 
 bind16 <- rbind.all.columns(bind15, kpPorensky)
 
@@ -1044,8 +1050,9 @@ ind_points <- as.data.frame(read_csv("ind_points.csv"))
 
 #repeat rows n times where n is specified
 
-#ind_points$ntimes <- ind_points$n_sampled
-#cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
+ind_points$ntimes <- ind_points$n_sampled
+cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
+cp$uniqvar <- 1:nrow(cp)
 #cp <- ind_points[rep(seq_len(nrow(ind_points)), ind_points$ntimes),]
 #n.times <- ind_points$n_sampled
 #cp <- ind_points[rep(seq_len(nrow(ind_points)), n.times),]
@@ -1053,6 +1060,50 @@ ind_points <- as.data.frame(read_csv("ind_points.csv"))
 #cp <- ind_points[rep(seq(nrow(ind_points)), ind_points$n_sampled),]
 #cp <- rep(ind_points, ind_points$n_sampled)
 
-bind17 <- rbind.all.columns(bind16, ind_points)
+#do conversions of biomass or %C to carbon content
+#AGB
+cp$AGBC_g_m2 <- ifelse(cp$study == 'Thacker et al. 2009'| cp$study == 'Shinn & Thill 2002' | cp$study == 'Rickard 1985b' | cp$study == 'Diamond et al. 2012' & cp$veg == 'cheatgrass', cp$AGB_g_m2 * cheat_percC/100,
+                               ifelse(cp$study == 'Driese and Reiners 1997' | cp$study == 'Rickard 1985a'  & cp$veg == 'sagebrush', cp$AGB_g_m2 * sagepercC, 
+                                      ifelse(cp$study == 'Driese and Reiners 1997' | cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$AGB_g_m2 * saltpercC, cp$AGBC_g_m2)))
+#AGB SE
+cp$AGBC_g_m2_SE <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$AGB_g_m2_SE * saltpercC, cp$AGBC_g_m2_SE)
+
+
+#BGB
+cp$BGBC_g_m2 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$BGB_g_m2 * saltBGBpercC, cp$BGBC_g_m2)
+
+#BGB SE
+cp$BGBC_g_m2_SE <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$BGB_g_m2_SE * saltBGBpercC, cp$BGBC_g_m2_SE)
+
+#litter
+cp$litterC_g_m2 <- ifelse(cp$study == 'Rickard 1985b' & cp$veg == 'cheatgrass', cp$litter_g_m2 * cheatlitterpercC,
+                       ifelse(cp$study == 'Rickard 1985a'  & cp$veg == 'sagebrush', cp$litter_g_m2 * sagelitterpercC, 
+                              ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2 * saltlitterpercC, cp$litter_g_m2)))
+
+#litter SE
+cp$litterC_g_m2_SE <- ifelse(cp$study == 'Rickard 1985b' & cp$veg == 'cheatgrass', cp$litter_g_m2_SE * cheatlitterpercC,
+                          ifelse(cp$study == 'Rickard 1985a'  & cp$veg == 'sagebrush', cp$litter_g_m2_SE * sagelitterpercC, 
+                                 ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2_SE * saltlitterpercC, cp$litter_g_m2_SE)))
+
+#applying avg BDs to studies that are missing BD
+cp$BD_g_cm3 <- ifelse(cp$study == 'Saetre and Stark 2005' & cp$bottomdepth_cm == 10, BD010, cp$BD_g_cm3)
+
+
+cp$BD_g_cm3 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm == 2, BD010, 
+                      ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm == 30, BD020,
+                             ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm == 60, BD60, 
+                                    ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm == 90, BD90, cp$BD_g_cm3))))
+
+
+#calculating soil C content
+
+
+
+bind17 <- rbind.all.columns(bind16, cp)
+
+bind17$X1 <- as.factor(rownames(bind17))
+
+unique(bind17$n_sampled)
+names(bind17)
 
 write.csv(bind17, file = "alldata.csv", row.names = FALSE)
