@@ -788,6 +788,9 @@ cheat_percC <- mean(meancheat_percC, na.rm = TRUE)
 sagepercC <- 0.45 #sage AGB % C = 45; from West 1972 Table 8
 saltpercC <- 0.454 #salt desert AGB % C = 45.5; from Bjerregaard et al. 1984
 
+sagecheatpercC <- ((cheat_percC/100)+ sagepercC) /2
+#0.4383225
+
 #convert aboveground biomass into AGB C by using mean values
 kpPeschel$AGBC_g_m2 <- kpPeschel$AGB_g_m2*sagepercC
 kpAnderson$AGBC_g_m2 <- kpAnderson$AGB_g_m2*cheat_percC/100
@@ -808,6 +811,7 @@ sageBGBpercC1030 <- 0.314 #from Svejcar and Sheley 2001 Table 3
 cheatBGBpercC1030 <- 0.337 #from Svejcar and Sheley 2001 Table 3
 
 saltBGBpercC <- 0.313 #from ???
+sagecheatBGBpercC010 <- (sageBGBpercC010+cheatBGBpercC010)/2
 ###########################################
 rbind.all.columns <- function(x, y) {
   
@@ -860,14 +864,23 @@ is.numeric(studymeans$thick)
 
 #need to write this section of code to do the following...
 #if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985b' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC/100,
-                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Driese and Reiners 1997' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
-                                      ifelse(studymeans$study == 'Driese and Reiners 1997' & studymeans$veg == 'salt_desert',studymeans$AGB_g_m2 * saltpercC, studymeans$AGBC_g_m2)))
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC/100,
+                               ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
+                                        ifelse(studymeans$study == 'Witwicki et al. 2013' | studymeans$study == 'Veblen et al. 2015' & studymeans$veg == 'sagecheat', studymeans$AGB_g_m2 * sagecheatpercC, studymeans$AGBC_g_m2)))
 
 #do the same for SE here
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Rickard 1985b' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC/100,
-                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Driese and Reiners 1997' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2_SE * sagepercC, 
-                                      ifelse(studymeans$study == 'Driese and Reiners 1997' & studymeans$veg == 'salt_desert',studymeans$AGB_g_m2_SE * saltpercC, studymeans$AGBC_g_m2_SE)))
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC/100,
+                               ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2_SE * sagepercC, 
+                                      ifelse(studymeans$study == 'Witwicki et al. 2013' | studymeans$study == 'Veblen et al. 2015' & studymeans$veg == 'sagecheat', studymeans$AGB_g_m2_SE * sagecheatpercC, studymeans$AGBC_g_m2_SE)))
+
+#BGB here
+studymeans$BGBC_g_m2 <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2 * cheatBGBpercC010,
+                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2 * sageBGBpercC1030, 
+                                      ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2 * sagecheatBGBpercC010, studymeans$BGBC_g_m2)))
+
+studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2_SE * cheatBGBpercC010,
+                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2_SE * sageBGBpercC1030, 
+                                      ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2_SE * sagecheatBGBpercC010, studymeans$BGBC_g_m2_SE)))
 
 
 #do the same for litter mean and SE here
