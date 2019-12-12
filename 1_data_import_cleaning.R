@@ -1094,9 +1094,17 @@ cp$BD_g_cm3 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm 
                              ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm == 60, BD60, 
                                     ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm == 90, BD90, cp$BD_g_cm3))))
 
+#make sure thick is calculated correctly
+cp$thick <- cp$bottomdepth_cm - cp$topdepth_cm
 
 #calculating soil C content
+#total
+cp$totsoilC_g_m2 <- ifelse(cp$study == 'Boulton et al. 1993', cp$totsoilC_g_m2, cp$`totsoil%C` * cp$BD_g_cm3 *cp$thick *100)
+cp$totsoilC_g_m2_SE <- cp$`totsoil%C_SE` * cp$BD_g_cm3 *cp$thick *100
 
+#organic
+cp$orgsoilC_g_m2 <- cp$`orgsoil%C` * cp$BD_g_cm3 *cp$thick *100
+cp$orgsoilC_g_m2_SE <- cp$`orgsoil%C_SE` * cp$BD_g_cm3 *cp$thick *100
 
 
 bind17 <- rbind.all.columns(bind16, cp)
