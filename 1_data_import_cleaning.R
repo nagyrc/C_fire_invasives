@@ -1112,6 +1112,7 @@ colnames(bind17)[colnames(bind17) == 'totsoil%C'] <- 'totsoilperC'
 colnames(bind17)[colnames(bind17) == 'orgsoil%C_SE'] <- 'orgsoilperC_SE'
 colnames(bind17)[colnames(bind17) == 'totsoil%C_SE'] <- 'totsoilperC_SE'
 
+colnames(bind17)[colnames(bind17) == 'litter%C'] <- 'litterperC'
 
 bind17$X1 <- as.factor(rownames(bind17))
 
