@@ -951,10 +951,7 @@ bind14$litter_g_m2_SE <- as.numeric(bind14$litter_g_m2_SE)
 bind14$n_sampled <- as.numeric(bind14$n_sampled)
 bind14$totsoilC_g_m2_SE <- as.numeric(bind14$totsoilC_g_m2_SE)
 
-colnames(bind14)[colnames(bind14) == 'orgsoil%C'] <- 'orgsoilperC'
-colnames(bind14)[colnames(bind14) == 'totsoil%C'] <- 'totsoilperC'
-
-bind14$X1 <- as.factor(rownames(bind14))
+#bind14$X1 <- as.factor(rownames(bind14))
 
 
 unique(bind14$yr_samp)
@@ -1046,6 +1043,13 @@ ind_points <- as.data.frame(read_csv("ind_points.csv"))
 
 ind_points$ntimes <- ind_points$n_sampled
 cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
+
+#correct names of %C soils columns
+colnames(cp)[colnames(cp) == 'orgsoil.C'] <- 'orgsoil%C'
+colnames(cp)[colnames(cp) == 'totsoil.C'] <- 'totsoil%C'
+colnames(cp)[colnames(cp) == 'orgsoil.C_SE'] <- 'orgsoil%C_SE'
+colnames(cp)[colnames(cp) == 'totsoil.C_SE'] <- 'totsoil%C_SE'
+
 cp$uniqvar <- 1:nrow(cp)
 #cp <- ind_points[rep(seq_len(nrow(ind_points)), ind_points$ntimes),]
 #n.times <- ind_points$n_sampled
@@ -1102,6 +1106,9 @@ cp$orgsoilC_g_m2_SE <- cp$`orgsoil%C_SE` * cp$BD_g_cm3 *cp$thick *100
 
 
 bind17 <- rbind.all.columns(bind16, cp)
+
+colnames(bind17)[colnames(bind17) == 'orgsoil%C'] <- 'orgsoilperC'
+colnames(bind17)[colnames(bind17) == 'totsoil%C'] <- 'totsoilperC'
 
 bind17$X1 <- as.factor(rownames(bind17))
 
