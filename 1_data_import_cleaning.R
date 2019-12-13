@@ -1109,6 +1109,9 @@ bind17 <- rbind.all.columns(bind16, cp)
 
 colnames(bind17)[colnames(bind17) == 'orgsoil%C'] <- 'orgsoilperC'
 colnames(bind17)[colnames(bind17) == 'totsoil%C'] <- 'totsoilperC'
+colnames(bind17)[colnames(bind17) == 'orgsoil%C_SE'] <- 'orgsoilperC_SE'
+colnames(bind17)[colnames(bind17) == 'totsoil%C_SE'] <- 'totsoilperC_SE'
+
 
 bind17$X1 <- as.factor(rownames(bind17))
 
