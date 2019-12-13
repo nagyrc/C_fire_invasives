@@ -917,10 +917,6 @@ studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Acker 1992', studymea
                                           ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C_SE` * BD1020 *studymeans$thick *100, 
                                                  ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2_SE))))
 
-#apply mean %C to BGB
-studymeans$BGBC_g_m2 <- ifelse(studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2 * sageBGBpercC010, studymeans$BGBC_g_m2)
-
-studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2_SE * sageBGBpercC010, studymeans$BGBC_g_m2_SE)
 
 
 ###
