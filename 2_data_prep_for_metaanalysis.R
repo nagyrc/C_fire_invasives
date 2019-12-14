@@ -76,11 +76,16 @@ studyid <- clean_study %>%
   filter(!is.na(pool_value)) %>%
   separate(yr_samp, c("first", "sec"), sep = "-") %>%
   mutate(yr_samp = as.numeric(first)) %>%
-  dplyr::select(-sec, -first)
+  dplyr::select(-sec, -first) %>%
+  ungroup()
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
 #396 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+unique(studyid$study)
+
+#cleary <- studyid %>%
+  #filter(study== "Cleary et al. 2010")
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
@@ -88,12 +93,11 @@ write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/study
 ###
 #writing for Emily for alternative Figure 1
 studyidsub <- studyid %>%
-  dplyr::select("pool","Study_ID","lat","long","Article_ID","veg") %>%
-  filter(study != "Cleary et al. 2010")
+  dplyr::select("pool","Study_ID","lat","long","Article_ID","veg") 
 
 studyidsub$pool2 <- ifelse(studyidsub$pool == "AGBC_g_m2", "AGB", ifelse(studyidsub$pool == "BGBC_g_m2", "BGB", ifelse(studyidsub$pool == "litterC_g_m2", "litter", ifelse(studyidsub$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 
-zzz <- unique(studyidsub[c("pool","Study_ID","lat","long","Article_ID","veg")])
+zzz <- unique(studyidsub[c("pool2","Study_ID","lat","long","Article_ID","veg")])
 write.csv(zzz, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/uniqueCstudies.csv", row.names = TRUE)
 
 ###
@@ -129,11 +133,13 @@ studyidSE <- clean_studynvar %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, -litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE, -n_sampled) %>%
   #dplyr::mutate_if(is.character, as.factor) %>%
-  dplyr::mutate(Study_ID = group_indices_(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
+  group_by(study, lat, long, veg, site, bottomdepth_cm, pool, yr_samp) %>%
+  dplyr::mutate(Study_ID = group_indices()) %>%
   filter(!is.na(pool_value)) %>%
   separate(yr_samp, c("first", "sec"), sep = "-") %>%
   mutate(yr_samp = as.numeric(first)) %>%
-  dplyr::select(-sec, -first)
+  dplyr::select(-sec, -first) %>%
+  ungroup ()
 
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
