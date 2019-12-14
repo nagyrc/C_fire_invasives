@@ -144,9 +144,20 @@ studyidSE <- clean_studynvar %>%
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
+smeans
 
-meansonlynvar <- studyidSE %>%
-  filter(study %in% smeans) 
+smeans1 <- smeans[-c(6, 9)]
+smeans1  
+
+#but Rickard 1985a is in both (BGB only in means)!! Also West 1972 (salt desert only)
+meansonlynvar1 <- studyidSE %>%
+  filter(study %in% smeans1) 
+
+meansonlyvar2 <- studyidSE %>%
+  filter(study == "West 1972" & veg == 'salt_desert' | study == 'Rickard 1985a' & pool =='BGBC_g_m2')
+
+#join together
+meansonlynvar <- rbind(meansonlynvar1, meansonlyvar2)
 
 write.csv(meansonlynvar, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
 
