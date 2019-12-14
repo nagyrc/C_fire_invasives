@@ -68,10 +68,24 @@ head(alldata)
 #clean yr_samp
 #take either first year if yr_samp is a range
 studyid <- clean_study %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","totsoilC_g_m2","orgsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID") 
+  
+studyid <-studyid %>%  
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID) %>%
-  dplyr::mutate_if(is.character, as.factor) %>%
+  dplyr::mutate_if(is.character, as.factor)
+
+#original
+studyid <- studyid %>%
   dplyr::mutate(Study_ID = group_indices(., .dots = c("study", "lat", "long", "veg", "site", "bottomdepth_cm", "pool", "yr_samp"))) %>%
+  filter(!is.na(pool_value)) %>%
+  separate(yr_samp, c("first", "sec"), sep = "-") %>%
+  mutate(yr_samp = as.numeric(first)) %>%
+  dplyr::select(-sec, -first)
+
+#new
+studyid <- studyid %>%
+  group_by(study, lat, long, veg, site, bottomdepth_cm, pool, yr_samp) %>%
+  dplyr::mutate(Study_ID = group_indices()) %>%
   filter(!is.na(pool_value)) %>%
   separate(yr_samp, c("first", "sec"), sep = "-") %>%
   mutate(yr_samp = as.numeric(first)) %>%
@@ -79,7 +93,7 @@ studyid <- clean_study %>%
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
-#344 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+#396 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
