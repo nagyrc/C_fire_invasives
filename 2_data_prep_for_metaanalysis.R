@@ -191,12 +191,12 @@ studyidSE2 <- clean_studynvar %>%
   tidyr::gather(key = pool, value = pool_value_SE, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -n_sampled) 
 
 summary(studyidSE2$pool_value_SE)
+#this has some SEs != NA
 
 #step 3: join back together
 #this step makes all SEs == NA
 studyidSEalmost <- left_join(studyidSE1, studyidSE2)
 summary(studyidSEalmost$pool_value_SE)
-
 
 studyidSE <- studyidSEalmost %>%
   dplyr::mutate_if(is.character, as.factor) %>%
