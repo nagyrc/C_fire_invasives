@@ -183,7 +183,8 @@ studyidSE1 <- clean_studynvar %>%
 studyidSE2 <- clean_studynvar %>%
   dplyr::select("site","yr_samp","AGBC_g_m2_SE", "BGBC_g_m2_SE", "litterC_g_m2_SE", "totsoilC_g_m2_SE", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
   tidyr::gather(key = pool, value = pool_value_SE, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -n_sampled) 
-  
+
+summary(studyidSE2$pool_value_SE)
 
 #step 3: join back together
 studyidSEalmost <- left_join(studyidSE1, studyidSE2)
@@ -198,6 +199,9 @@ studyidSE <- studyidSEalmost %>%
   mutate(yr_samp = as.numeric(first)) %>%
   dplyr::select(-sec, -first) %>%
   ungroup ()
+
+
+summary(studyidSE$pool_value_SE)
 
 #split data into means and raw data
 studymeans <- as.data.frame(read_csv("study_means.csv"))
