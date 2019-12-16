@@ -107,6 +107,7 @@ write.csv(zzz, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/uniqueCst
 ######################################
 #to retain SEs and n_sampled
 #this works, but has some remnant values in other pool fields of SE that might be confusing
+summary(alldata$n_sampled)
 
 clean_studynvar <- alldata %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","BGBC_g_m2","litterC_g_m2","orgsoilperC", "totsoilperC", "BD_g_cm3","orgsoilC_g_m2","totsoilC_g_m2","topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick", "orgsoilC_g_m2_SE", "totsoilC_g_m2_SE", "litterC_g_m2_SE", "BGBC_g_m2_SE", "AGBC_g_m2_SE", "n_sampled") %>%
@@ -128,6 +129,8 @@ clean_studynvar$Article_ID <- gsub("MAHOpub2", "MAHO2018b", clean_studynvar$Arti
 clean_studynvar$Article_ID <- gsub("RICK985a", "RICK1985a", clean_studynvar$Article_ID)
 clean_studynvar$Article_ID <- gsub("RICK985b", "RICK1985b", clean_studynvar$Article_ID)
 clean_studynvar$Article_ID <- as.factor(clean_studynvar$Article_ID)
+
+unique(clean_studynvar$yr_samp)
 
 studyidSE <- clean_studynvar %>%
   dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
