@@ -5,7 +5,7 @@
 
 #load multiple libraries 
 #x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "raster", "ggplot2", "doBy", "reshape", "velox", "tidyr", "Rmisc", "dplyr", "ggsn")
-x <- c("sf", "plyr", "raster", "ggplot2", "doBy", "reshape", "tidyr", "dplyr", "tidyverse")
+x <- c("sf", "plyr", "tidyverse", "raster", "ggplot2", "doBy", "reshape", "tidyr", "dplyr")
 
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
