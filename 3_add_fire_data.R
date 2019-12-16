@@ -17,11 +17,13 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 #bring in dataframe and convert dataframe to sf object with ESRI projection 102003
 studyid = read_csv("studyid.csv")
 
+studyidplot <- studyid[!is.na(studyid$lat),]
+
 #check to see if X1 came through...if not, add it here
-studyid$X1 <- 1:nrow(studyid)
+studyidplot$X1 <- 1:nrow(studyidplot)
 
 #transform to sf object
-studyid_sf  <-  st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
+studyid_sf  <-  st_as_sf(studyidplot, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs1b) 
 #rm(studyid)
 st_crs(studyid_sf)
@@ -111,7 +113,7 @@ mtbs_keep <- mtbs_keep %>%
   filter(MTBS_DISCOVERY_YEAR == max_yr) %>%
   dplyr::select(-max_yr) %>%
   ungroup
-#432 observations once less recent burns are removed
+#583 observations once less recent burns are removed
 
 #adding MTBS last year burn to studyid_df
 mtbs_add <- studyid_sf %>%
@@ -144,7 +146,7 @@ crs(studyid_sf)
 #crs(baecvlyb_trans)
 
 #option 2: or reproject points to match raster
-studyidsfrep <- st_as_sf(studyid, coords = c('long', 'lat'), crs = 4326) %>%
+studyidsfrep <- st_as_sf(studyidplot, coords = c('long', 'lat'), crs = 4326) %>%
   st_transform(crs = st_crs(baecvlyb))
 
 
@@ -180,19 +182,19 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 #after choosing option #1 or #2, go on here
 baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1282 observations
+#1865 observations
 #these ones are keepers
 
 baecv_no <- baecvtest_sfb  %>%
   filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
   dplyr::select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
-#127 observations
+#151 observations
 #these are burn date after sample collection
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
 
 #join these no points back to studyid_sf for Adam
 Xno <- unique(baecv_no$X1)
-baecv_no_Adamll <- studyid %>%
+baecv_no_Adamll <- studyidplot %>%
   filter(X1 %in% Xno)
 write.csv(baecv_no_Adamll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
 #go to Adams' script for dealing with these points; then come back here
