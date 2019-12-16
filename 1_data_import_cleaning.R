@@ -933,7 +933,7 @@ head(studymeans)
 studymeans
 
 
-bind13 = read_csv("bind13.csv")
+#bind13 = read_csv("bind13.csv")
 bind14 <- rbind.all.columns(bind13, studymeans)
 
 
