@@ -1117,6 +1117,12 @@ colnames(bind17)[colnames(bind17) == 'litter%C'] <- 'litterperC'
 bind17$X1 <- as.factor(rownames(bind17))
 
 unique(bind17$n_sampled)
+
+#if n_sampled = NA, make it a 1
+#bind17$n_sampled <- ifelse(bind17$n_sampled != NA, bind17$n_sampled, 1)
+bind17[["n_sampled"]][is.na(bind17[["n_sampled"]])] <- 1
+
+summary(bind17$n_sampled)
 names(bind17)
 
 write.csv(bind17, file = "alldata.csv", row.names = FALSE)
