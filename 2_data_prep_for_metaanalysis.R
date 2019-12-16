@@ -12,6 +12,7 @@ setwd("data/")
 # Read in alldata.csv
 alldata = read_csv("alldata.csv")
 
+alldata <- bind17
 
 ####
 #pull last year burned from alldata as overwriting the last year burned
@@ -117,6 +118,31 @@ clean_studynvar <- alldata %>%
          study_year = ifelse(study_year == 'pub1', 2017, study_year)) %>%
   mutate(yr_samp = ifelse(is.na(yr_samp), study_year, yr_samp))
 
+###this is only if pulling in all data from .csv creates NAs in SEs
+#all SEs are NAs for some weird reason
+summary(clean_studynvar$AGBC_g_m2_SE)
+summary(clean_studynvar$BGBC_g_m2_SE)
+summary(clean_studynvar$litterC_g_m2_SE)
+summary(clean_studynvar$totsoilC_g_m2_SE)
+summary(clean_studynvar$orgsoilC_g_m2_SE)
+
+
+#check alldata- all NAs also
+summary(alldata$AGBC_g_m2_SE)
+summary(alldata$BGBC_g_m2_SE)
+summary(alldata$litterC_g_m2_SE)
+summary(alldata$totsoilC_g_m2_SE)
+summary(alldata$orgsoilC_g_m2_SE)
+
+
+#check bind17...these have data
+summary(bind17$AGBC_g_m2_SE)
+summary(bind17$BGBC_g_m2_SE)
+summary(bind17$litterC_g_m2_SE)
+summary(bind17$totsoilC_g_m2_SE)
+summary(bind17$orgsoilC_g_m2_SE)
+###
+
 
 
 #create Article_ID
@@ -132,10 +158,39 @@ clean_studynvar$Article_ID <- as.factor(clean_studynvar$Article_ID)
 
 unique(clean_studynvar$yr_samp)
 
-studyidSE <- clean_studynvar %>%
-  dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
-  tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, -litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE, -n_sampled) %>%
+#old code
+#studyidSE <- clean_studynvar %>%
+  #dplyr::select("site","yr_samp","AGBC_g_m2","AGBC_g_m2_SE", "BGBC_g_m2","BGBC_g_m2_SE", "litterC_g_m2","litterC_g_m2_SE", "totsoilC_g_m2","totsoilC_g_m2_SE", "orgsoilC_g_m2", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
+  #tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -orgsoilC_g_m2_SE, -totsoilC_g_m2_SE, -litterC_g_m2_SE, -BGBC_g_m2_SE, -AGBC_g_m2_SE, -n_sampled) %>%
   #dplyr::mutate_if(is.character, as.factor) %>%
+  #group_by(study, lat, long, veg, site, bottomdepth_cm, pool, yr_samp) %>%
+  #dplyr::mutate(Study_ID = group_indices()) %>%
+  #filter(!is.na(pool_value)) %>%
+  #separate(yr_samp, c("first", "sec"), sep = "-") %>%
+  #mutate(yr_samp = as.numeric(first)) %>%
+  #dplyr::select(-sec, -first) %>%
+  #ungroup ()
+
+#new code
+#try this as two steps
+#step 1
+studyidSE1 <- clean_studynvar %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2", "BGBC_g_m2", "litterC_g_m2", "totsoilC_g_m2", "orgsoilC_g_m2", "topdepth_cm", "bottomdepth_cm", "BD_estimated", "veg", "study","lat","long","thick","Article_ID", "n_sampled") %>%
+  tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -n_sampled)
+  
+  
+#step 2
+studyidSE2 <- clean_studynvar %>%
+  dplyr::select("site","yr_samp","AGBC_g_m2_SE", "BGBC_g_m2_SE", "litterC_g_m2_SE", "totsoilC_g_m2_SE", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
+  tidyr::gather(key = pool, value = pool_value_SE, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -n_sampled) 
+  
+
+#step 3: join back together
+studyidSEalmost <- left_join(studyidSE1, studyidSE2)
+
+
+studyidSE <- studyidSEalmost %>%
+  dplyr::mutate_if(is.character, as.factor) %>%
   group_by(study, lat, long, veg, site, bottomdepth_cm, pool, yr_samp) %>%
   dplyr::mutate(Study_ID = group_indices()) %>%
   filter(!is.na(pool_value)) %>%
@@ -149,7 +204,7 @@ studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 smeans
 
-#removing Rickard 1985a and West 1972
+#removing Rickard 1985a and West 1972 because they appear in both studymeans in ind_points
 smeans1 <- smeans[-c(6, 9)]
 smeans1  
 
