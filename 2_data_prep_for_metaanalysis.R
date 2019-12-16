@@ -14,6 +14,8 @@ setwd("data/")
 # Read in alldata.csv
 alldata = read_csv("alldata.csv")
 
+summary(alldata$litterC_g_m2_SE)
+
 alldata <- bind17
 
 ####
@@ -120,6 +122,9 @@ clean_studynvar <- alldata %>%
          study_year = ifelse(study_year == 'pub1', 2017, study_year)) %>%
   mutate(yr_samp = ifelse(is.na(yr_samp), study_year, yr_samp))
 
+
+
+###
 ###this is only if pulling in all data from .csv creates NAs in SEs
 #all SEs are NAs for some weird reason
 summary(clean_studynvar$AGBC_g_m2_SE)
@@ -180,7 +185,6 @@ studyidSE1 <- clean_studynvar %>%
   dplyr::select("site","yr_samp","AGBC_g_m2", "BGBC_g_m2", "litterC_g_m2", "totsoilC_g_m2", "orgsoilC_g_m2", "topdepth_cm", "bottomdepth_cm", "BD_estimated", "veg", "study","lat","long","thick","Article_ID", "n_sampled") %>%
   tidyr::gather(key = pool, value = pool_value, -site, -study, -yr_samp, -lat, -long, -veg, -thick, -BD_estimated, -topdepth_cm, -bottomdepth_cm, -Article_ID, -n_sampled)
   
-  
 #step 2
 studyidSE2 <- clean_studynvar %>%
   dplyr::select("site","yr_samp","AGBC_g_m2_SE", "BGBC_g_m2_SE", "litterC_g_m2_SE", "totsoilC_g_m2_SE", "orgsoilC_g_m2_SE", "topdepth_cm","bottomdepth_cm","BD_estimated","veg","study","lat","long","thick","Article_ID", "n_sampled") %>%
@@ -189,7 +193,9 @@ studyidSE2 <- clean_studynvar %>%
 summary(studyidSE2$pool_value_SE)
 
 #step 3: join back together
+#this step makes all SEs == NA
 studyidSEalmost <- left_join(studyidSE1, studyidSE2)
+summary(studyidSEalmost$pool_value_SE)
 
 
 studyidSE <- studyidSEalmost %>%
