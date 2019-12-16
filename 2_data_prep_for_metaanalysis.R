@@ -146,6 +146,7 @@ studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 smeans
 
+#removing Rickard 1985a and West 1972
 smeans1 <- smeans[-c(6, 9)]
 smeans1  
 
@@ -204,8 +205,10 @@ usa_shp <- st_read(file.path('states_shp'), layer = 'cb_2016_us_state_20m') %>%
 
 plot(usa_shp["geometry"])
 
+studyidplot <- studyid[!is.na(studyid$lat),]
+
 #to show data points across the study area
-studyid_pt <- st_as_sf(studyid, coords = c("long", "lat"),
+studyid_pt <- st_as_sf(studyidplot, coords = c("long", "lat"),
                        crs = 4326) %>%
   st_transform(crs = st_crs(usa_shp))
 
