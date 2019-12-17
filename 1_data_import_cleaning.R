@@ -786,7 +786,7 @@ cheat_percC <- mean(meancheat_percC, na.rm = TRUE)
 ###
 
 sagepercC <- 0.45 #sage AGB % C = 45; from West 1972 Table 8
-saltpercC <- 0.454 #salt desert AGB % C = 45.5; from Bjerregaard et al. 1984
+saltpercC <- 0.45 #salt desert AGB % C = 45.0; from West 1972 (average of 1968, 69, 70)
 
 sagecheatpercC <- ((cheat_percC/100)+ sagepercC) /2
 #0.4383225
@@ -801,7 +801,7 @@ kpAnderson$AGBC_g_m2 <- kpAnderson$AGB_g_m2*cheat_percC/100
 #Litter conversion factors (if needed)
 sagelitterpercC <- 0.38 #from West 1972 Table 8
 cheatlitterpercC <- 0.33667 #from Mahood2
-saltlitterpercC <- 0.435 # from Bjerregaard et al. 1984 
+saltlitterpercC <- 0.4555 # from West 1972 (average of 1968, 69, 70)
 
 
 #BGB conversion factors (if needed)
@@ -810,7 +810,11 @@ cheatBGBpercC010 <- 0.31 #from Svejcar and Sheley 2001 Table 3
 sageBGBpercC1030 <- 0.314 #from Svejcar and Sheley 2001 Table 3
 cheatBGBpercC1030 <- 0.337 #from Svejcar and Sheley 2001 Table 3
 
-saltBGBpercC <- 0.313 #from ???
+saltBGBpercC <- 0.2942 #from West 1972 (average across all depths; all years)
+saltBGBpercC230 <-0.277 #from West 1972 (average across all years)
+saltBGBpercC3060 <- 0.322 #from West 1972 (average across all years)
+saltBGBpercC6090 <- 0.2836 #from West 1972 (average across all years)
+  
 sagecheatBGBpercC010 <- (sageBGBpercC010+cheatBGBpercC010)/2
 ###########################################
 rbind.all.columns <- function(x, y) {
@@ -1068,10 +1072,14 @@ cp$AGBC_g_m2_SE <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'sal
 
 
 #BGB
-cp$BGBC_g_m2 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$BGB_g_m2 * saltBGBpercC, cp$BGBC_g_m2)
+cp$BGBC_g_m2 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert' & cp$bottomdepth_cm == 30, cp$BGB_g_m2 * saltBGBpercC230, 
+                       ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert' & cp$bottomdepth_cm == 60, cp$BGB_g_m2 * saltBGBpercC3060, 
+                              ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert' & cp$bottomdepth_cm == 90, cp$BGB_g_m2 * saltBGBpercC6090, cp$BGBC_g_m2)))
+
 
 #BGB SE
-cp$BGBC_g_m2_SE <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$BGB_g_m2_SE * saltBGBpercC, cp$BGBC_g_m2_SE)
+#don't need this; don't have n for Bjerregaard, so can't calculate SE
+#cp$BGBC_g_m2_SE <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$BGB_g_m2_SE * saltBGBpercC, cp$BGBC_g_m2_SE)
 
 #litter
 cp$litterC_g_m2 <- ifelse(cp$study == 'Rickard 1985b' & cp$veg == 'cheatgrass', cp$litter_g_m2 * cheatlitterpercC,
