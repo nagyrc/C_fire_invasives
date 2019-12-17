@@ -810,7 +810,7 @@ cheatBGBpercC010 <- 0.31 #from Svejcar and Sheley 2001 Table 3
 sageBGBpercC1030 <- 0.314 #from Svejcar and Sheley 2001 Table 3
 cheatBGBpercC1030 <- 0.337 #from Svejcar and Sheley 2001 Table 3
 
-saltBGBpercC <- 0.2942 #from West 1972 (average across all depths; all years)
+#saltBGBpercC <- 0.2942 #from West 1972 (average across all depths; all years)
 saltBGBpercC230 <-0.277 #from West 1972 (average across all years)
 saltBGBpercC3060 <- 0.322 #from West 1972 (average across all years)
 saltBGBpercC6090 <- 0.2836 #from West 1972 (average across all years)
