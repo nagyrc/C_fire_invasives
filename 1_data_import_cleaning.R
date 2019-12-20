@@ -847,8 +847,6 @@ bind13 <- rbind.all.columns(bind12, kpAnderson)
 
 names(bind13)
 
-write.csv(bind13, file = "bind13.csv")
-
 ###########################################
 #only need to run the code below one time; then turn off
 #get unique lat/longs for Emily to extract burn data
@@ -858,115 +856,9 @@ write.csv(bind13, file = "bind13.csv")
 #write.csv(lllist, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
 
 
-###########################################
-#bring in study means
-#setwd("/Users/rana7082/Dropbox/C_fire_invasives_R/data/")
-studymeans <- as.data.frame(read_csv("study_means.csv"))
-
-studymeans$thick <- studymeans$bottomdepth_cm - studymeans$topdepth_cm
-is.numeric(studymeans$thick)
-
-#need to write this section of code to do the following...
-#if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
-studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC/100,
-                               ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
-                                        ifelse(studymeans$study == 'Witwicki et al. 2013' | studymeans$study == 'Veblen et al. 2015' & studymeans$veg == 'sagecheat', studymeans$AGB_g_m2 * sagecheatpercC, studymeans$AGBC_g_m2)))
-
-#do the same for SE here
-studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC/100,
-                               ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2_SE * sagepercC, 
-                                      ifelse(studymeans$study == 'Witwicki et al. 2013' | studymeans$study == 'Veblen et al. 2015' & studymeans$veg == 'sagecheat', studymeans$AGB_g_m2_SE * sagecheatpercC, studymeans$AGBC_g_m2_SE)))
-
-#BGB here
-studymeans$BGBC_g_m2 <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2 * cheatBGBpercC010,
-                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2 * sageBGBpercC1030, 
-                                      ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2 * sagecheatBGBpercC010, studymeans$BGBC_g_m2)))
-
-studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2_SE * cheatBGBpercC010,
-                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2_SE * sageBGBpercC1030, 
-                                      ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2_SE * sagecheatBGBpercC010, studymeans$BGBC_g_m2_SE)))
-
-
-#do the same for litter mean and SE here
-#there are no litter mass samples that need to be converted to litter C!!
-
-
-#apply mean BDs from the closest depth to studymeans data (may not be exact depth match)
-BD010 <- 1.422
-BD1020 <- 1.35
-BD020 <- 1.386
-BD60 <- 1.562
-BD90 <- BD60
-
-studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick *100, 
-                                   ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick *100, 
-                                          ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C` * BD020 *studymeans$thick *100,
-                                                ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick *100, 
-                                                        ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick *100, studymeans$totsoilC_g_m2)))))
-  
-studymeans$totsoilC_g_m2_SE <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100, 
-                                    ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C_SE` * BD010 *studymeans$thick *100, 
-                                           ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100,
-                                                  ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C_SE` * BD1020 *studymeans$thick *100, 
-                                                         ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$totsoilC_g_m2_SE)))))
-
-
-studymeans$orgsoilC_g_m2 <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
-                                    ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
-                                              ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick *100, 
-                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2))))
-
-studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
-                                   ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
-                                          ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C_SE` * BD1020 *studymeans$thick *100, 
-                                                 ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2_SE))))
-
-
 
 ###
-#Diamond and Bjerregaard studies had C data in addition to biomass data
-#studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
-#studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * cheat_percC / 100)
-
-#update these numbers below now that more studies have been added
-#studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * cheatlitterpercC
-#studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * cheatlitterpercC
-###
-
-head(studymeans)
-studymeans
-
-
-#bind13 = read_csv("bind13.csv")
-bind14 <- rbind.all.columns(bind13, studymeans)
-
-
-#making sure all numeric fields are numeric
-str(bind14)
-
-bind14$litterC_g_m2 <- as.numeric(bind14$litterC_g_m2)
-bind14$bottomdepth_cm <- as.numeric(bind14$bottomdepth_cm)
-bind14$elevation <- as.numeric(bind14$elevation)
-#bind14$cheat_cover <- as.numeric(bind14$cheat_cover)
-bind14$BGB_g_m2 <- as.numeric(bind14$BGB_g_m2)
-bind14$BGB_g_m2_SE <- as.numeric(bind14$BGB_g_m2_SE)
-bind14$litter_g_m2 <- as.numeric(bind14$litter_g_m2)
-bind14$litter_g_m2_SE <- as.numeric(bind14$litter_g_m2_SE)
-bind14$n_sampled <- as.numeric(bind14$n_sampled)
-bind14$totsoilC_g_m2_SE <- as.numeric(bind14$totsoilC_g_m2_SE)
-
-#bind14$X1 <- as.factor(rownames(bind14))
-
-
-unique(bind14$yr_samp)
-unique(bind14$n_sampled)
-
-names(bind14)
-
-
-
-###
-#add three new datasets
+#add new datasets
 
 #Bansal data
 Bansal <- as.data.frame(read_csv("Bansal_data.csv"))
@@ -996,7 +888,7 @@ Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
 Bansalkp <- Bansalkp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study")]
 
 #need to append Bansalkp to alldata
-bind15 <- rbind.all.columns(bind14, Bansalkp)
+bind14 <- rbind.all.columns(bind13, Bansalkp)
 
 
 
@@ -1037,7 +929,11 @@ sub2$long <- -116.5315
 
 kpPorensky <- sub2[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study", "rep", "paddock")]
 
-bind16 <- rbind.all.columns(bind15, kpPorensky)
+bind15 <- rbind.all.columns(bind14, kpPorensky)
+
+
+
+
 
 
 ###bring in individual data points (means that are lacking SE or n)
@@ -1115,13 +1011,120 @@ cp$orgsoilC_g_m2 <- cp$`orgsoil%C` * cp$BD_g_cm3 *cp$thick *100
 cp$orgsoilC_g_m2_SE <- cp$`orgsoil%C_SE` * cp$BD_g_cm3 *cp$thick *100
 
 
-bind17 <- rbind.all.columns(bind16, cp)
+bind16 <- rbind.all.columns(bind15, cp)
+
+#write.csv(bind16, file = "rawsonly.csv")
+
+###########################################
+#bring in study means
+#setwd("/Users/rana7082/Dropbox/C_fire_invasives_R/data/")
+studymeans <- as.data.frame(read_csv("study_means.csv"))
+
+studymeans$thick <- studymeans$bottomdepth_cm - studymeans$topdepth_cm
+is.numeric(studymeans$thick)
+
+#need to write this section of code to do the following...
+#if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
+studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC/100,
+                               ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
+                                      ifelse(studymeans$study == 'Witwicki et al. 2013' | studymeans$study == 'Veblen et al. 2015' & studymeans$veg == 'sagecheat', studymeans$AGB_g_m2 * sagecheatpercC, studymeans$AGBC_g_m2)))
+
+#do the same for SE here
+studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2_SE * cheat_percC/100,
+                                  ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2_SE * sagepercC, 
+                                         ifelse(studymeans$study == 'Witwicki et al. 2013' | studymeans$study == 'Veblen et al. 2015' & studymeans$veg == 'sagecheat', studymeans$AGB_g_m2_SE * sagecheatpercC, studymeans$AGBC_g_m2_SE)))
+
+#BGB here
+studymeans$BGBC_g_m2 <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2 * cheatBGBpercC010,
+                               ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2 * sageBGBpercC1030, 
+                                      ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2 * sagecheatBGBpercC010, studymeans$BGBC_g_m2)))
+
+studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2_SE * cheatBGBpercC010,
+                                  ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2_SE * sageBGBpercC1030, 
+                                         ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2_SE * sagecheatBGBpercC010, studymeans$BGBC_g_m2_SE)))
+
+
+#do the same for litter mean and SE here
+#there are no litter mass samples that need to be converted to litter C!!
+
+
+#apply mean BDs from the closest depth to studymeans data (may not be exact depth match)
+BD010 <- 1.422
+BD1020 <- 1.35
+BD020 <- 1.386
+BD60 <- 1.562
+BD90 <- BD60
+
+studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick *100, 
+                                    ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick *100, 
+                                           ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C` * BD020 *studymeans$thick *100,
+                                                  ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick *100, 
+                                                         ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick *100, studymeans$totsoilC_g_m2)))))
+
+studymeans$totsoilC_g_m2_SE <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100, 
+                                       ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                              ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100,
+                                                     ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C_SE` * BD1020 *studymeans$thick *100, 
+                                                            ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$totsoilC_g_m2_SE)))))
+
+
+studymeans$orgsoilC_g_m2 <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
+                                   ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
+                                          ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick *100, 
+                                                 ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2))))
+
+studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                      ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C_SE` * BD1020 *studymeans$thick *100, 
+                                                    ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2_SE))))
+
+
+
+###
+#Diamond and Bjerregaard studies had C data in addition to biomass data
+#studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
+#studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * cheat_percC / 100)
+
+#update these numbers below now that more studies have been added
+#studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * cheatlitterpercC
+#studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * cheatlitterpercC
+###
+
+head(studymeans)
+studymeans
+
+
+#bind13 = read_csv("bind13.csv")
+bind17 <- rbind.all.columns(bind16, studymeans)
+
+
+#making sure all numeric fields are numeric
+str(bind17)
+
+bind17$litterC_g_m2 <- as.numeric(bind17$litterC_g_m2)
+bind17$bottomdepth_cm <- as.numeric(bind17$bottomdepth_cm)
+bind17$elevation <- as.numeric(bind17$elevation)
+#bind17$cheat_cover <- as.numeric(bind17$cheat_cover)
+bind17$BGB_g_m2 <- as.numeric(bind17$BGB_g_m2)
+bind17$BGB_g_m2_SE <- as.numeric(bind17$BGB_g_m2_SE)
+bind17$litter_g_m2 <- as.numeric(bind17$litter_g_m2)
+bind17$litter_g_m2_SE <- as.numeric(bind17$litter_g_m2_SE)
+bind17$n_sampled <- as.numeric(bind17$n_sampled)
+bind17$totsoilC_g_m2_SE <- as.numeric(bind17$totsoilC_g_m2_SE)
+
+#bind17$X1 <- as.factor(rownames(bind17))
+
+
+unique(bind17$yr_samp)
+unique(bind17$n_sampled)
+
+names(bind17)
+
 
 colnames(bind17)[colnames(bind17) == 'orgsoil%C'] <- 'orgsoilperC'
 colnames(bind17)[colnames(bind17) == 'totsoil%C'] <- 'totsoilperC'
 colnames(bind17)[colnames(bind17) == 'orgsoil%C_SE'] <- 'orgsoilperC_SE'
 colnames(bind17)[colnames(bind17) == 'totsoil%C_SE'] <- 'totsoilperC_SE'
-
 colnames(bind17)[colnames(bind17) == 'litter%C'] <- 'litterperC'
 
 bind17$X1 <- as.factor(rownames(bind17))
