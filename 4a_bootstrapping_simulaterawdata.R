@@ -20,19 +20,19 @@ write.csv(ttt, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ttt.csv",
 
 #Subset the data to only values that have n_sampled and SE
 studymeanssubset1 <- subset(meansonlynvar, !is.na(n_sampled))
-#94 observations
+#84 observations
                           
-sms1 <- subset(studymeanssubset1, !is.na(AGBC_g_m2_SE) & pool == "AGBC_g_m2")
-sms2 <- subset(studymeanssubset1, !is.na(BGBC_g_m2_SE) & pool == "BGBC_g_m2")
-sms3 <- subset(studymeanssubset1, !is.na(litterC_g_m2_SE) & pool == "litterC_g_m2")
-sms4 <- subset(studymeanssubset1, !is.na(totsoilC_g_m2_SE) & pool == "totsoilC_g_m2")
-sms5 <- subset(studymeanssubset1, !is.na(orgsoilC_g_m2_SE) & pool == "orgsoilC_g_m2")
+sms1 <- subset(studymeanssubset1, !is.na(pool_value_SE) & pool == "AGBC_g_m2")
+sms2 <- subset(studymeanssubset1, !is.na(pool_value_SE) & pool == "BGBC_g_m2")
+sms3 <- subset(studymeanssubset1, !is.na(pool_value_SE) & pool == "litterC_g_m2")
+sms4 <- subset(studymeanssubset1, !is.na(pool_value_SE) & pool == "totsoilC_g_m2")
+sms5 <- subset(studymeanssubset1, !is.na(pool_value_SE) & pool == "orgsoilC_g_m2")
 
 smsa <- rbind(sms1, sms2)
 smsb <- rbind(smsa, sms3)
 smsc <- rbind(smsb, sms4)
 sms <- rbind(smsc, sms5)
-#40 observations
+#84 observations
 
 glimpse(sms)
 
