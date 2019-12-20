@@ -197,6 +197,11 @@ summary(studyidSE2$pool_value_SE)
 #this step makes all SEs == NA
 studyidSEalmost <- left_join(studyidSE1, studyidSE2)
 summary(studyidSEalmost$pool_value_SE)
+unique(studyidSEalmost$site)
+unique(studyidSEalmost$yr_samp)
+
+#try column bind instead?
+#save it as a vector?? then mutate
 
 studyidSE <- studyidSEalmost %>%
   dplyr::mutate_if(is.character, as.factor) %>%
