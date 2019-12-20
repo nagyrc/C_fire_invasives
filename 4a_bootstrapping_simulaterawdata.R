@@ -37,11 +37,12 @@ sms <- rbind(smsc, sms5)
 glimpse(sms)
 
 #make sure all SEs of other pools are NA...there were some remnant values from the gather step to make the Study_IDs
-sms$AGBC_g_m2_SE <- ifelse(sms$pool == "AGBC_g_m2", sms$AGBC_g_m2_SE, NA)
-sms$BGBC_g_m2_SE <- ifelse(sms$pool == "BGBC_g_m2", sms$BGBC_g_m2_SE, NA)
-sms$litterC_g_m2_SE <- ifelse(sms$pool == "litterC_g_m2", sms$litterC_g_m2_SE, NA)
-sms$totsoilC_g_m2_SE <- ifelse(sms$pool == "totsoilC_g_m2", sms$totsoilC_g_m2_SE, NA)
-sms$orgsoilC_g_m2_SE <- ifelse(sms$pool == "orgsoilC_g_m2", sms$orgsoilC_g_m2_SE, NA)
+#creating individual SE fields for each pool
+sms$AGBC_g_m2_SE <- ifelse(sms$pool == "AGBC_g_m2", sms$pool_value_SE, NA)
+sms$BGBC_g_m2_SE <- ifelse(sms$pool == "BGBC_g_m2", sms$pool_value_SE, NA)
+sms$litterC_g_m2_SE <- ifelse(sms$pool == "litterC_g_m2", sms$pool_value_SE, NA)
+sms$totsoilC_g_m2_SE <- ifelse(sms$pool == "totsoilC_g_m2", sms$pool_value_SE, NA)
+sms$orgsoilC_g_m2_SE <- ifelse(sms$pool == "orgsoilC_g_m2", sms$pool_value_SE, NA)
 
 
 
@@ -98,8 +99,11 @@ dflistsim <- lapply(dflist, function(x) Dist1 = rgamma(n = x$n_sampled, shape = 
 newrawdata <- ldply(dflistsim, cbind)
 
 #rename columns to match original data
-newrawdata <- rename(newrawdata, c(".id" = "explode"))
-newrawdata <- rename(newrawdata, c("1" = "simvalue"))
+#newrawdata <- rename(newrawdata, c(".id" = "explode"))
+colnames(newrawdata)[colnames(newrawdata) == '.id'] <- 'explode'
+#newrawdata <- rename(newrawdata, c("1" = "simvalue"))
+colnames(newrawdata)[colnames(newrawdata) == '1'] <- 'simvalue'
+
 newrawdata$explode <- as.factor(newrawdata$explode)
 
 #make a df to connect new raw data to original data
@@ -110,5 +114,5 @@ key$explode <- as.factor(key$explode)
 simrawdata <- newrawdata %>%
   left_join(key)
 
-write.csv(simrawdata, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/simrawdata.csv", row.names = FALSE)
+write.csv(simrawdata, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/simrawdata.csv", row.names = FALSE)
 ###
