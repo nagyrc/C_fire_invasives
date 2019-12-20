@@ -195,7 +195,13 @@ summary(studyidSE2$pool_value_SE)
 
 #step 3: join back together
 #this step makes all SEs == NA
-studyidSEalmost <- left_join(studyidSE1, studyidSE2)
+#studyidSEalmost <- left_join(studyidSE1, studyidSE2)
+
+bindy <-studyidSE2$pool_value_SE
+
+studyidSEalmost <- cbind(studyidSE1, bindy)
+colnames(studyidSEalmost)[colnames(studyidSEalmost) == 'bindy'] <- 'pool_value_SE'
+
 summary(studyidSEalmost$pool_value_SE)
 unique(studyidSEalmost$site)
 unique(studyidSEalmost$yr_samp)
