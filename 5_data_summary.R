@@ -60,6 +60,9 @@ rawmeans <- rawsonly %>%
 st_geometry(rawmeans) = NULL
 write.csv(rawmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans.csv")
 
+checksagelitter <- rawsonly %>%
+  filter(pool == "litterC_g_m2" & veg == 'sagebrush')
+#only 1 value, repeated 72 times
 
 #now get into more detail in the soils (organic and total)
 unique(rawsonly$topdepth_cm)
