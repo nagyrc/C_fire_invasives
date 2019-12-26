@@ -11,6 +11,7 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 #bring in raw data
 rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 
+
 # Histogram for each pol-veg combo to look at distributions
 ggplot(rawsonly, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool ~ veg) + 
