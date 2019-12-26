@@ -85,7 +85,7 @@ studyid <- clean_study %>%
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
-#396 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+#401 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 unique(studyid$study)
 
 #cleary <- studyid %>%
@@ -125,28 +125,12 @@ clean_studynvar <- alldata %>%
 
 ###
 ###this is only if pulling in all data from .csv creates NAs in SEs
-#all SEs are NAs for some weird reason
+#these look good, some non NA values
 summary(clean_studynvar$AGBC_g_m2_SE)
 summary(clean_studynvar$BGBC_g_m2_SE)
 summary(clean_studynvar$litterC_g_m2_SE)
 summary(clean_studynvar$totsoilC_g_m2_SE)
 summary(clean_studynvar$orgsoilC_g_m2_SE)
-
-
-#check alldata- all NAs also
-summary(alldata$AGBC_g_m2_SE)
-summary(alldata$BGBC_g_m2_SE)
-summary(alldata$litterC_g_m2_SE)
-summary(alldata$totsoilC_g_m2_SE)
-summary(alldata$orgsoilC_g_m2_SE)
-
-
-#check bind17...these have data
-summary(bind17$AGBC_g_m2_SE)
-summary(bind17$BGBC_g_m2_SE)
-summary(bind17$litterC_g_m2_SE)
-summary(bind17$totsoilC_g_m2_SE)
-summary(bind17$orgsoilC_g_m2_SE)
 ###
 
 
@@ -196,6 +180,7 @@ summary(studyidSE2$pool_value_SE)
 #this step makes all SEs == NA
 #studyidSEalmost <- left_join(studyidSE1, studyidSE2)
 
+#try column bind instead
 bindy <-studyidSE2$pool_value_SE
 
 studyidSEalmost <- cbind(studyidSE1, bindy)
@@ -205,8 +190,7 @@ summary(studyidSEalmost$pool_value_SE)
 unique(studyidSEalmost$site)
 unique(studyidSEalmost$yr_samp)
 
-#try column bind instead?
-#save it as a vector?? then mutate
+
 
 studyidSE <- studyidSEalmost %>%
   dplyr::mutate_if(is.character, as.factor) %>%
