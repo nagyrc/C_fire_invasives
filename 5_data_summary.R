@@ -367,13 +367,12 @@ orgzz <- arrange(transform(orgzz,
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
 #add this plot to manuscript# new Fig. 3c
+#the error bars are not displaying properly
 ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
-  labs(y = "Soil organic C (gC cm-2) per cm thickness: deep soils", x = "bottom depth sampled (cm)", fill = "vegetation") +
+  labs(y = "Soil organic C (gC cm-2) per cm thickness", x = "bottom depth sampled (cm)", fill = "vegetation") +
   scale_fill_manual(values = colours) +
-  geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se),
-                                                    width=.2,                    # Width of the error bars
-                                                    position=position_dodge(.9)) + 
+  geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se), width=.2, position=position_dodge(.9))   +                 # Width of the error bars 
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
@@ -384,7 +383,7 @@ ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   scale_fill_manual(values = colours) +
   geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se),
                 width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) + 
+                position=position_dodge(0.9)) + 
   theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18))
 
 
