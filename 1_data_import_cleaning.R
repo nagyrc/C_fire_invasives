@@ -1015,7 +1015,7 @@ cp$orgsoilC_g_m2_SE <- cp$`orgsoil%C_SE` * cp$BD_g_cm3 *cp$thick *100
 
 bind16 <- rbind.all.columns(bind15, cp)
 
-write.csv(bind16, file = "rawsonlypre.csv")
+#write.csv(bind16, file = "rawsonlypre.csv")
 
 
 
