@@ -611,6 +611,9 @@ Peschel2$veg <- 'sagebrush'
 Peschel2$Month_sampled <- 'July'
 Peschel2$yr_samp <- c(2013)
 
+
+summary(kpPeschel$AGB_g_m2)
+
 kpPeschel <- Peschel2[,c("site", "treatment", "AGB_g_m2", "lat", "long", "study", "veg", "Month_sampled", "yr_samp")]
 head(kpPeschel)
 
