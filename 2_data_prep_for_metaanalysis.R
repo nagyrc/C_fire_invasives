@@ -240,6 +240,9 @@ step2 <- studyidSE %>%
 rawsonly <- step2
 
 write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv", row.names = FALSE)
+
+meansonly <- studyidSE %>%
+  filter(Study_ID %in% step1) 
 ######################################
 
 
