@@ -882,7 +882,9 @@ colnames(Bansalkp)[colnames(Bansalkp) == 'year'] <- 'yr_samp'
 
 Bansalkp$Month_sampled <- ifelse (Bansalkp$yr_samp == 2010, 'August', 'June')
 
-Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC
+Bansalkp$AGBC_g_m2 <- Bansalkp$AGB_g_m2*cheat_percC/100
+
+summary(Bansalkp$AGBC_g_m2)
 
 #removing comm field
 Bansalkp <- Bansalkp[,c("yr_samp", "site", "veg", "AGB_g_m2", "AGBC_g_m2", "lat", "long", "Month_sampled", "study")]
@@ -916,7 +918,7 @@ colnames(sub2)[colnames(sub2) == 'totwt'] <- 'AGB_g_m2'
 sub2$rep <- parse_number(sub2$Quadrat)
 
 #convert AGB to carbon
-sub2$AGBC_g_m2 <- sub2$AGB_g_m2*cheat_percC
+sub2$AGBC_g_m2 <- sub2$AGB_g_m2*cheat_percC/100
 
 #block is kind of like site according to Figure 2a
 colnames(sub2)[colnames(sub2) == 'Block'] <- 'site'
