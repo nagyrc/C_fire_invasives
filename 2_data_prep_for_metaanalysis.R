@@ -191,7 +191,6 @@ unique(studyidSEalmost$site)
 unique(studyidSEalmost$yr_samp)
 
 
-
 studyidSE <- studyidSEalmost %>%
   dplyr::mutate_if(is.character, as.factor) %>%
   group_by(study, lat, long, veg, site, bottomdepth_cm, pool, yr_samp) %>%
@@ -205,7 +204,7 @@ studyidSE <- studyidSEalmost %>%
 
 summary(studyidSE$pool_value_SE)
 
-#split data into means and raw data
+#split data into means and raw data once studyIDs have been assigned
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 smeans
@@ -249,7 +248,7 @@ write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/raws
 
 
 
-
+#DON'T REALLY NEED CODE BELOW
 ###################################
 ###plotting example: pool value by year sampled, colored by pool         
 studyid %>%
