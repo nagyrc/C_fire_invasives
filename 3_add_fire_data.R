@@ -20,7 +20,7 @@ studyid = read_csv("studyid.csv")
 studyidplot <- studyid[!is.na(studyid$lat),]
 
 #check to see if X1 came through...if not, add it here
-studyidplot$X1 <- 1:nrow(studyidplot)
+studyidplot$X1 <- as.factor(1:nrow(studyidplot))
 
 #transform to sf object
 studyid_sf  <-  st_as_sf(studyidplot, coords = c('long', 'lat'), crs = 4326) %>%
@@ -89,7 +89,7 @@ st_crs(mtbs_fire)
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
 mtbs_int <- sf::st_intersection(studyid_sf, mtbs_fire)
-#524 observations; so some points didn't burn
+#723 observations; so some points didn't burn
 
 unique(mtbs_int$X1)
 
@@ -105,7 +105,7 @@ mtbs_keep <- mtbs_int %>%
   mutate(yr_samp = as.numeric(yr_samp)) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
-#465 had fires before the sampling date
+#617 had fires before the sampling date
 
 mtbs_keep <- mtbs_keep %>%
   group_by(X1) %>%
@@ -182,7 +182,7 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 #after choosing option #1 or #2, go on here
 baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1865 observations
+#1870 observations
 #these ones are keepers
 
 baecv_no <- baecvtest_sfb  %>%
@@ -199,6 +199,7 @@ baecv_no_Adamll <- studyidplot %>%
 write.csv(baecv_no_Adamll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/baecv_no_ll.csv")
 #go to Adams' script for dealing with these points; then come back here
 
+stdids <- unique(baecv_no_Adamll$Study_ID)
 
 baecv_add <- mtbs_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
@@ -206,7 +207,7 @@ baecv_add <- mtbs_add %>%
 #MTBS and BAECV look good
 
 #add lat/long back in for plotting, quick id, etc.
-ll <- studyid %>%
+ll <- studyidplot %>%
   dplyr::select(lat, long, X1)
 
 baecv_add_ll <- baecv_add %>%
@@ -217,18 +218,18 @@ write.csv(baecv_add_ll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/
 
 #adding in BAECV info (second to last year burned) from Adam's script
 #open data
-baecv_gpkg <- rgdal::readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
+baecv_gpkg <- rgdal::readOGR("baecv/lyb_preliminary.gpkg", "lyb_preliminary")
 
 #turn this into a dataframe
-as.data.frame(baecv_gpkg)
+baecv_from_Adam <- as.data.frame(baecv_gpkg)
 
 #add these points from Adam by replacing values
 baecv_rep <- baecv_add_ll %>%
-  mutate(baecvlyb = ifelse(Study_ID == 154, 2001,lyb_usa_baecv_1984_2015)) %>%
-  mutate(baecv_lyb = ifelse(Study_ID == 226, 1986, baecvlyb)) %>%
+  mutate(baecvlyb = ifelse(Study_ID == 249, 2001,lyb_usa_baecv_1984_2015)) %>%
+  mutate(baecv_lyb = ifelse(Study_ID == 321, 1986, baecvlyb)) %>%
   dplyr::select(-lyb_usa_baecv_1984_2015, -baecvlyb)
 
-#write.csv(baecv_rep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
+#write.csv(baecv_rep, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
 
 yrbn <- read_csv("last_year_burn_overwrite.csv")
 
@@ -238,6 +239,12 @@ yrbn <- yrbn %>%
 
 last_year_burned <- yrbn %>%
   dplyr::select(X1, last_year_burned)
+
+baecv_rep %>%
+  mutate(as.factor(baecv_rep$X1))
+
+is.factor(baecv_rep$X1)
+is.factor(last_year_burned$X1)
 
 #take the max of the satellite data
 baecv_rep <- baecv_rep %>%
@@ -251,6 +258,17 @@ siwf <- baecv_rep %>%
 write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
 
+siwf$Study_ID <- as.factor(siwf$Study_ID)
+is.factor(siwf$Study_ID)
+
+siwf$masterlyb <- as.factor(siwf$masterlyb)
+is.factor(siwf$masterlyb)
+
 bbb <- unique(siwf[c("Study_ID", "masterlyb", "study")])
+
+bbb <- siwf %>%
+  group_by(Study_ID, masterlyb, study) %>%
+  dplyr::select(Study_ID, masterlyb, study)
+
 write.csv(bbb, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/bbb.csv", row.names = FALSE)
 
