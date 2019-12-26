@@ -36,6 +36,9 @@ ggplot(AGBC, aes(x = pool_value, fill = Article_ID)) +
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
+summary(AGBC$pool_value)
+
+
 ggplot(BGBC, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + 
   facet_wrap(~veg) + 
