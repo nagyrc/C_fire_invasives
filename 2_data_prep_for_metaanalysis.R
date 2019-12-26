@@ -16,6 +16,8 @@ alldata = read_csv("alldata.csv")
 
 alldata <- bind17
 
+summary(bind17$AGBC_g_m2)
+summary(studyid$pool_value)
 
 ####
 #pull last year burned from alldata as overwriting the last year burned
@@ -238,11 +240,14 @@ step2 <- studyidSE %>%
 #looks good
 
 rawsonlynofire <- step2
+summary(rawsonlynofire$pool_value)
 
 write.csv(rawsonlynofire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv", row.names = FALSE)
 
 meansonlynofire <- studyidSE %>%
   filter(Study_ID %in% step1) 
+
+summary(meansonlynofire$pool_value)
 ######################################
 
 
