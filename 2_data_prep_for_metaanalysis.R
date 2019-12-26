@@ -244,6 +244,14 @@ meansonlynvar <- rbind(meansonlynvar1, meansonlyvar2)
 write.csv(meansonlynvar, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
 
 
+
+#get unique studyIDs of raw data only (will need this in script 4b)
+step1 <- unique(meansonlynvar$Study_ID)
+
+step2 <- studyidSE %>%
+  filter(!Study_ID %in% step1) 
+
+write.csv(step2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv", row.names = FALSE)
 ######################################
 
 
