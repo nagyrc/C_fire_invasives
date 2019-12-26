@@ -251,7 +251,9 @@ step1 <- unique(meansonlynvar$Study_ID)
 step2 <- studyidSE %>%
   filter(!Study_ID %in% step1) 
 
-write.csv(step2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv", row.names = FALSE)
+rawsonly <- step2
+
+write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv", row.names = FALSE)
 ######################################
 
 
