@@ -7,6 +7,15 @@ x <- c("tidyverse", "sf", "assertthat", "purrr", "httr", "plyr", "stringr", "ras
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 
+###
+#need to decide whether or not to keep salt_desert in 
+checkveg <- studyid %>%
+  filter(veg == "salt_desert") 
+
+unique(checkveg$study) #5 studies
+unique(checkveg$pool) #5 pools
+###
+
 ###############################
 #bring in raw data
 rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
@@ -37,7 +46,6 @@ ggplot(AGBC, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))
 
 summary(AGBC$pool_value)
-
 
 ggplot(BGBC, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + 
