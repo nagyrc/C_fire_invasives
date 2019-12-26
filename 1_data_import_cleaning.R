@@ -1143,4 +1143,5 @@ bind17[["n_sampled"]][is.na(bind17[["n_sampled"]])] <- 1
 summary(bind17$n_sampled)
 names(bind17)
 
+
 write.csv(bind17, file = "alldata.csv", row.names = FALSE)
