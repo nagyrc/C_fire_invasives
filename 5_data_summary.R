@@ -12,6 +12,8 @@ setwd("data/")
 studyid <- as.data.frame(read_csv("studyid.csv"))
 siwf <- as.data.frame(read_csv("siwf.csv"))
 
+summary(siwf$pool_value)
+
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 
@@ -554,8 +556,8 @@ ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) +
 joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
-  filter(veg != "salt_desert") %>%
-  filter(study != "Cleary et al. 2010")
+  filter(veg != "salt_desert")
+
 
 joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 joiny2 <- arrange(transform(joiny2,
@@ -592,6 +594,10 @@ BGBC2$veg <- plyr::revalue(BGBC2$veg, c("sagebrush" = "native sagebrush", "sagec
 litterC2$veg <- plyr::revalue(litterC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 head(AGBC)
+
+summary(AGBC2$pool_value)
+summary(rawsonly$pool_value)
+
 #Fig 2 a)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
