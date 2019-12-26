@@ -176,13 +176,15 @@ unique(simraw$Article_ID)
 head(simraw)
 
 #need to join simrawdata and rawsonly
-rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
+#rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
+simraw$Study_ID <-as.factor(simraw$Study_ID)
+is.factor(simraw$Study_ID)
+
 joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
-  filter(veg != "salt_desert") %>%
-  filter(study !="Cleary et al. 2010")
-#1919 observations
+  filter(veg != "salt_desert") 
+#3011 observations
 
 head(joiny2)
 write.csv(joiny2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/joiny2.csv")
@@ -208,6 +210,8 @@ unique(joiny2$veg)
 
 unique(joiny2$Article_ID)
 
+
+#for Table 1 (raw + simulated raw)
 #AGB, BGB, and litter only
 rawmeans2 <- joiny2 %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
@@ -246,7 +250,7 @@ count(joiny2$bottomdepth_cm == 10 & joiny2$pool == "totsoilC_g_m2")
 #165
 
 
-
+#for Table 1 (raw + simulated)
 #for 0-10 cm only
 surfacemeans2 <- joiny2 %>%
   filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
@@ -270,7 +274,7 @@ surfacemeans2b <- joiny2 %>%
 
 
 
-
+#for Table 1 (raw + simulated)
 #for 10-20 cm only
 tens2 <- joiny2 %>%
   filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
