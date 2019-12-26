@@ -11,12 +11,11 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-# Read in alldata.csv
+# Read in alldata.csv or assign it from bind17 (script 1)
 alldata = read_csv("alldata.csv")
 
-summary(alldata$litterC_g_m2_SE)
-
 alldata <- bind17
+
 
 ####
 #pull last year burned from alldata as overwriting the last year burned
