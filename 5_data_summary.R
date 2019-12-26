@@ -49,6 +49,7 @@ write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/mea
 ############################
 #summary of raws only
 #AGB, BGB, and litter only
+#For Table 1
 rawmeans <- rawsonly %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
   group_by(pool, veg) %>%
