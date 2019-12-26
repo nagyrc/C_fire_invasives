@@ -243,6 +243,7 @@ meansonlynvar <- rbind(meansonlynvar1, meansonlyvar2)
 
 write.csv(meansonlynvar, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
 
+
 ######################################
 
 
