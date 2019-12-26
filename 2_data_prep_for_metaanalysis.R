@@ -251,6 +251,10 @@ step1 <- unique(meansonlynvar$Study_ID)
 step2 <- studyidSE %>%
   filter(!Study_ID %in% step1) 
 
+#make sure raws + means = total
+1941 + 84 
+#looks good
+
 rawsonly <- step2
 
 write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv", row.names = FALSE)
