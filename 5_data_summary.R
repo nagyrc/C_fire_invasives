@@ -26,17 +26,24 @@ write.csv(sum99, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/p
 
 
 ############################
+
+#these two remove salt desert...think about this
 #split into two dataframes of raws and means
+rawstdids <- unique(rawsonlynofire$Study_ID)
+
 rawsonly <- siwf %>%
-  filter(!study %in% smeans) %>%
+  filter(Study_ID %in% rawstdids) %>%
   filter(veg != "salt_desert")
 
 write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
+meanstdids <- unique(meansonlynofire)
+
 meansonly <- siwf %>%
-  filter(study %in% smeans) %>%
-  filter(veg != "salt_desert") %>%
-  filter(study != "Cleary et al. 2010")
+  filter(Study_ID %in% meanstdids) %>%
+  filter(veg != "salt_desert") 
+
+unique(siwf$Article_ID)
 
 write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
