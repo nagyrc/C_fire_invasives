@@ -403,9 +403,9 @@ ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
 
 totonly <- deep2summary %>%
   filter(pool == "totsoilC_g_m2")
-#mean is 216.6959
-#se is 9.7055
-#n is 72
+#mean is 162.35
+#se is 8.54
+#n is 92
 
 ggplot(totonly, aes(x = veg, y = meanpvpercm)) +
   geom_bar(position=position_dodge(), stat = "identity")
