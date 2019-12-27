@@ -261,6 +261,14 @@ write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv
 siwf$Study_ID <- as.factor(siwf$Study_ID)
 is.factor(siwf$Study_ID)
 
+is.numeric(siwf$masterlyb)
+siwf$timesincefire <- siwf$yr_samp - siwf$masterlyb
+
+
+
+
+###
+#not sure if I need this below other than as a check
 siwf$masterlyb <- as.factor(siwf$masterlyb)
 is.factor(siwf$masterlyb)
 
