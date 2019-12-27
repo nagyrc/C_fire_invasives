@@ -70,10 +70,14 @@ unique(rawsonly$veg)
 unique(rawsonly$study)
 unique(rawsonly$pool)
 
-ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
+#ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
+
+ccc <- rawsonly %>% 
+  distinct(Study_ID, veg, study, pool, .keep_all = FALSE)
 
 ccc$geometry <- NULL
 write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
+
 
 
 ###
@@ -82,6 +86,7 @@ pcheat <- pairscheat %>%
 
 pcheat2 <- semi_join(pcheat, rawsonly)
 pcheat2
+
 
 #select only the paired studies
 rawsonlycheat <- rawsonly %>%
