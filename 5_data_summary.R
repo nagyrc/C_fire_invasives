@@ -19,12 +19,12 @@ smeans <- unique(studymeans$study)
 
 ############################
 #to get a count of mean values vs. raw data
-checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
-write.csv(checkwithveg2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/checkwithveg2.csv")
+#checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
+#write.csv(checkwithveg2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/checkwithveg2.csv")
 
-unique(studyid$veg)
-sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("pool", "veg"))
-write.csv(sum99, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/pool_means.csv")
+#unique(studyid$veg)
+#sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("pool", "veg"))
+#write.csv(sum99, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/pool_means.csv")
 
 
 ############################
@@ -805,26 +805,12 @@ str(joiny2)
 unique(joiny2$yr_samp)
 unique(joiny2$masterlyb)
 
+#replace NAs with 1900
+joiny2$masterlyb <- joiny2$masterlyb %>%
+  replace_na(1900)
+
 is.numeric(joiny2$yr_samp)
 is.numeric(joiny2$masterlyb)
-
-testing <- joiny2 %>%
-  mutate(masterlyb2 = as.numeric(masterlyb)) %>%
-  mutate(masterlyb2 = ifelse(is.na(masterlyb2), 1900, masterlyb2))
-
-testing <- as.numeric(joiny2$masterlyb) %>%
-  replace_na(1900)
-unique(testing$masterlyb2)
-
-
-#timesincefire variable isn't calculating correctly
-joiny2 %>%
-  mutate(timesincefire = as.numeric(joiny2$yr_samp) - as.numeric(joiny2$masterlyb))
-
-joiny2$timesincefire <- as.numeric(joiny2$yr_samp) - as.numeric(joiny2$masterlyb)
-###
-
-
 
 
 unique(joiny2$veg)
@@ -841,11 +827,11 @@ sagefire <- joiny2 %>%
 
 unique(cheatfire$timesincefire)
 range(cheatfire$timesincefire, na.rm = TRUE)
-#1, 88
+#1, 117
 range(sagecheatfire$timesincefire, na.rm = TRUE)
-#1, 96
+#1, 117
 range(sagefire$timesincefire, na.rm = TRUE)
-#3, 96
+#1, 113
 
 ggplot(data = joiny2) +
   geom_point(aes(x = timesincefire, y = pool_value)) +
@@ -853,7 +839,7 @@ ggplot(data = joiny2) +
 
 recentburn <- joiny2 %>%
   filter(timesincefire < 20)
-#only 303 observations of 2123
+#only 692 observations of 3227
 #need to check and make sure fire info came in with simraw data
 unique(recentburn$veg)
 recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
