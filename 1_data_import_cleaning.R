@@ -1077,12 +1077,12 @@ studymeans$totsoilC_g_m2_SE <- ifelse (studymeans$study == 'Johnson et al. 2011'
 
 
 studymeans$orgsoilC_g_m2 <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
-                                   ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
+                                   ifelse(studymeans$study == 'Gasch et al. 2016', studymeans$`orgsoil%C` * studymeans$BD_g_cm3 *studymeans$thick *100, 
                                           ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick *100, 
                                                  ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2))))
 
 studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
-                                      ifelse(studymeans$study == 'Gasch et al. 2015', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
+                                      ifelse(studymeans$study == 'Gasch et al. 2016', studymeans$`orgsoil%C_SE` * studymeans$BD_g_cm3 *studymeans$thick *100, 
                                              ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C_SE` * BD1020 *studymeans$thick *100, 
                                                     ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2_SE))))
 
