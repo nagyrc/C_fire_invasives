@@ -306,6 +306,8 @@ deep1 <- joiny2 %>%
   filter(bottomdepth_cm > 20 & bottomdepth_cm <= 40) %>%
   mutate(Cpercm = pool_value/thick)
 
+st_geometry(deep1) = NULL
+
 unique(deep1$topdepth_cm)
 #many depths
 unique(deep1$bottomdepth_cm)
@@ -336,6 +338,8 @@ deep2 <- joiny2 %>%
   filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
   filter(bottomdepth_cm > 40) %>%
   mutate(Cpercm = pool_value/thick)
+
+st_geometry(deep2) = NULL
 
 unique(deep2$topdepth_cm)
 #many depths
@@ -369,12 +373,16 @@ neworder3 <- c("20 - 40 cm","> 40 cm")
 
 orgzz <- arrange(transform(orgzz,
                                   bottom_depth=factor(bottom_depth, levels = neworder3)),bottom_depth)
-
+orgzz
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
+
+#need to remove total soil C for Fig. 3c
+orgzzo <- orgzz %>%
+  filter(pool == "orgsoilC_g_m2")
+
 #add this plot to manuscript# new Fig. 3c
-#the error bars are not displaying properly
-ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
+ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   labs(y = "Soil organic C (gC cm-2) per cm thickness", x = "bottom depth sampled (cm)", fill = "vegetation") +
   scale_fill_manual(values = colours) +
@@ -383,7 +391,7 @@ ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
 
 
 #for presentation: new Fig. 3c
-ggplot(orgzz, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
+ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   labs(y = "Soil organic C (gC cm-2) per cm depth", x = "bottom depth sampled (cm)", fill = "vegetation") +
   scale_fill_manual(values = colours) +
