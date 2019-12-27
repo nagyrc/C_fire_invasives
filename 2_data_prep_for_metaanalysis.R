@@ -225,6 +225,8 @@ meansonlyvar2 <- studyidSE %>%
 #join together
 meansonlynvar <- rbind(meansonlynvar1, meansonlyvar2)
 
+unique(meansonlynvar$study) #includes West 1972 and Rickard 1985a
+
 write.csv(meansonlynvar, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonlynvar.csv", row.names = FALSE)
 
 
