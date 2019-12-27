@@ -42,23 +42,23 @@ totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
 lm1 <- lm(pool_value ~ timesincefire + veg, data = AGBC2)
 summary(lm1)
-#veg is sig. in one case; timesincefire is not; overall p-value = 0.0001
+#veg and fire are significant; overall p-value < 2.2e-16
 
 lm2 <- lm(pool_value ~ timesincefire + veg, data = BGBC2)
 summary(lm2)
-#only intercept is significant; overall p-value = 0.8597
+#veg is sig in one case and so is timesincefire; overall p-value = 5.67e-07
 
 lm3 <- lm(pool_value ~ timesincefire, data = litterC2)
 summary(lm3)
-#only intercept; overall p-value = 0.726
+#timesincefire is sig; overall p-value = 2.93e-05
 
 lm4 <- lm(pool_value ~ timesincefire + veg, data = orgsoilC2)
 summary(lm4)
-#veg is sig.; timesincefire is not; overall p-value = 0.01146
+#veg is sig in one case and so is timesincefire; overall p-value = 0.0006847
 
 lm5 <- lm(pool_value ~ timesincefire + veg, data = totsoilC2)
 summary(lm5)
-#veg is significant; timesincefire is not; overall p-value = 0.03507
+#only intercept; overall p-value = 0.1817
 
 
 
@@ -71,23 +71,22 @@ summary(lm5)
 head(AGBC2)
 
 unique(AGBC2$firecat)
-#only mid and NA
+#mid, old, recent, NA
 
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 AGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=AGBC2)
 summary(AGBC.model)
+#veg (sagecheat) is sig. (different from cheatgrass)
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
 AGBC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=AGBC2)
 summary(AGBC.model2a)
-#this runs, but gives me this message: boundary (singular) fit: see ?isSingular
+#veg (sagecheat) is sig (different from cheatgrass)
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 AGBC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=AGBC2)
 summary(AGBC.model2b)
-#this gives me an error: Error in `contrasts<-`(`*tmp*`, value = contr.funs[1 + isOF[nn]]) : 
-#contrasts can be applied only to factors with 2 or more levels
-#only mid and NA for AGBC
+#veg (sagecheat) is sig (different from cheatgrass)
 
 
 
@@ -95,16 +94,17 @@ summary(AGBC.model2b)
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 BGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=BGBC2)
 summary(BGBC.model)
+#veg not sig
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
 BGBC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=BGBC2)
 summary(BGBC.model2a)
-#Error: grouping factors must have > 1 sampled level
+#timesincefire is sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 BGBC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=BGBC2)
 summary(BGBC.model2b)
-#Error: grouping factors must have > 1 sampled level
+#timesincefire is sig.
 
 
 
@@ -113,16 +113,17 @@ summary(BGBC.model2b)
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 litterC.model = lmer(pool_value ~ veg + (1|Article_ID), data=litterC2)
 summary(litterC.model)
+#nothing sig.
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
 litterC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=litterC2)
 summary(litterC.model2a)
-#Error: grouping factors must have > 1 sampled level
+#timesincefire is sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 litterC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=litterC2)
 summary(litterC.model2b)
-#Error: grouping factors must have > 1 sampled level
+#firecatold is sig.
 
 
 
@@ -130,51 +131,51 @@ summary(litterC.model2b)
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 orgsoilC.model = lmer(pool_value ~ veg + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model)
+#veg not sig
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
 orgsoilC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2a)
+#timesincefire is sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 orgsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2b)
-#Warning message:
-#In checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
-#Model failed to converge with max|grad| = 0.00347935 (tol = 0.002, component 1)
+#firecatrecent is sig
 
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
 orgsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2c)
+#firecatrecent is sig; depthcatmid is sig
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
 orgsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2d)
+#timesincefire is sig; depthcatmid is sig
 
 
 #tot soil
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 totsoilC.model = lmer(pool_value ~ veg + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model)
+#veg(sagebrush) is sig (than cheatgrass)
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
 totsoilC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2a)
+#nothing sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 totsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2b)
-#Warning message:
-#In checkConv(attr(opt, "derivs"), opt$par, ctrl = control$checkConv,  :
-#Model failed to converge with max|grad| = 0.00347935 (tol = 0.002, component 1)
+#nothing sig
 
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2c)
-#Error in `contrasts<-`(`*tmp*`, value = contr.funs[1 + isOF[nn]]) : 
-#contrasts can be applied only to factors with 2 or more levels
+#depthcatshallow is sig
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2d)
-#Error in `contrasts<-`(`*tmp*`, value = contr.funs[1 + isOF[nn]]) : 
-#contrasts can be applied only to factors with 2 or more levels
+#depthcatshallow is sig
