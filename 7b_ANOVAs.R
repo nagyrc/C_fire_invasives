@@ -12,11 +12,6 @@ setwd("data/")
 joiny2 <- as.data.frame(read_csv("joiny2.csv"))
 head(joiny2)
 
-joiny2 <- joiny2 %>%
-  filter(veg != "salt_desert") %>%
-  filter(study != "Cleary et al. 2010")
-
-
 summary(AGBC2$pool_value)
 
 #subset by pool
@@ -30,8 +25,6 @@ unique(totsoilC2$veg)
 #has sagebrush
 
 unique(totsoilC2$bottomdepth_cm)
-#5, 10, 100, 15, 20
-#160 of 404 observations are 0-10 cm
 
 #subset soils to appropriate depths
 orgsoil010 <- orgsoilC2 %>%
@@ -48,7 +41,7 @@ unique(totsoil010$veg)
 #run ANOVAs
 fit <- aov(pool_value ~ veg, data = orgsoil010)
 summary(fit)
-#p = 7.18e-07
+#p = 1.07e-05
 
 fit2 <- aov(pool_value ~ veg, data = orgsoil1020)
 summary(fit2)
@@ -56,19 +49,19 @@ summary(fit2)
 
 fit3 <- aov(pool_value ~ veg, data = totsoil010)
 summary(fit3)
-#p = 3.98e-05
+#p = 0.451
 
 fit4 <- aov(pool_value ~ veg, data = litterC2)
 summary(fit4)
-#p = 5.6e-12
+#p = 5.34e-15
 
 fit5 <- aov(pool_value ~ veg, data = AGBC2)
 summary(fit5)
-#p = 0.00274
+#p = 0.0002
 
 fit6 <- aov(pool_value ~ veg, data = BGBC2)
 summary(fit6)
-#p < 2e-16
+#p = 2.75e-09
 
 
 ###
@@ -83,19 +76,19 @@ plot(fit6)
 #test for normality
 test.lm = lm(pool_value ~ veg, data = orgsoil010)
 shapiro.test(residuals(test.lm))
-#p = 2.588e-12; so not normal
+#p = 6.45e-11; so not normal
 
 test.lm2 = lm(pool_value ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2))
-#p = 2.59e-10; so not normal
+#p = 9.246e-10; so not normal
 
 test.lm3 = lm(pool_value ~ veg, data = totsoil010)
 shapiro.test(residuals(test.lm3))
-#p = 1.74e-12; so not normal
+#p = 5.802e-12; so not normal
 
 test.lm4 = lm(pool_value ~ veg, data = litterC2)
 shapiro.test(residuals(test.lm4))
-#p = 5.512e-13; so not normal
+#p = 1.462e-11; so not normal
 
 test.lm5 = lm(pool_value ~ veg, data = AGBC2)
 shapiro.test(residuals(test.lm5))
@@ -103,7 +96,7 @@ shapiro.test(residuals(test.lm5))
 
 test.lm6 = lm(pool_value ~ veg, data = BGBC2)
 shapiro.test(residuals(test.lm6))
-#p = 6.515e-08; so not normal
+#p < 2.2e-16; so not normal
 
 
 ###
@@ -118,7 +111,7 @@ shapiro.test(residuals(test.lm1b))
 
 test.lm2a <- lm(log(pool_value) ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2a))
-#still not normal
+#p= 0.16, normal
 
 test.lm2b <- lm(sqrt(pool_value) ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2b))
@@ -126,12 +119,13 @@ shapiro.test(residuals(test.lm2b))
 
 test.lm3a <- lm(log(pool_value) ~ veg, data = totsoil010)
 shapiro.test(residuals(test.lm3a))
-#normal
+#p=0.99, normal
 
 ###
+#why is this here?
 fit3b <- aov(log(pool_value) ~ veg, data = totsoil010)
 summary(fit3b)
-#p = 1.58e-09; compare to non-parametric below
+#p = 0.257; compare to non-parametric below
 ###
 
 test.lm3b <- lm(sqrt(pool_value) ~ veg, data = totsoil010)
@@ -166,65 +160,65 @@ shapiro.test(residuals(test.lm6b))
 ###
 #run non-parametrics
 kruskal.test(pool_value ~ veg, data = orgsoil010)
-#p=3.05e-09
+#p=5.452e-08
 
 kruskal.test(pool_value ~ veg, data = orgsoil1020)
-#p=0.0619
+#p=0.3021
 
 kruskal.test(pool_value ~ veg, data = totsoil010)
-#p=0.4231
+#p=0.4431
 
 kruskal.test(pool_value ~ veg, data = litterC2)
-#p=0.01408
+#p<2.2e-16
 
 kruskal.test(pool_value ~ veg, data = BGBC2)
-#p=2.933e-10
+#p=1.843e-12
 
 kruskal.test(pool_value ~ veg, data = AGBC2)
-#p=0.0008
+#p=2.563e-10
 
 
 #Dunn test for multiple comparisons
 PT = dunnTest(pool_value ~ veg, data = orgsoil010, method = "none")    
 PT
 #              Comparison          Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush  5.9285168 3.056832e-09 3.056832e-09
-#2 cheatgrass - sagecheat  4.2694903 1.959202e-05 1.959202e-05
-#3  sagebrush - sagecheat -0.3678727 7.129682e-01 7.129682e-01
+#1 cheatgrass - sagebrush  5.6052772 2.079219e-08 2.079219e-08
+#2 cheatgrass - sagecheat  3.4427176 5.759004e-04 5.759004e-04
+#3  sagebrush - sagecheat -0.6843736 4.937393e-01 4.937393e-01
 
 PT2 = dunnTest(pool_value ~ veg, data = orgsoil1020, method = "none")    
 PT2
-#              Comparison        Z    P.unadj      P.adj
-#1 cheatgrass - sagebrush 1.697932 0.08952060 0.08952060
-#2 cheatgrass - sagecheat 2.206175 0.02737176 0.02737176
-#3  sagebrush - sagecheat 1.198108 0.23087490 0.23087490
+#              Comparison         Z   P.unadj     P.adj
+#1 cheatgrass - sagebrush 0.6116447 0.5407729 0.5407729
+#2 cheatgrass - sagecheat 1.2397524 0.2150670 0.2150670
+#3  sagebrush - sagecheat 1.1751932 0.2399174 0.2399174
 
 PT3 = dunnTest(pool_value ~ veg, data = totsoil010, method = "none")    
 PT3
 #             Comparison          Z   P.unadj     P.adj
-# cheatgrass - sagecheat -0.8010422 0.4231072 0.4231072
+#1 cheatgrass - sagecheat -0.7670266 0.4430657 0.4430657
 ###this should have sagebrush...where is sagebrush?
 #no sagebrush from 0-10 cm; other depth increments only
 
 
 PT4 = dunnTest(pool_value ~ veg, data = litterC2, method = "none")    
 PT4
-#Comparison                      Z    P.unadj      P.adj
-#1 cheatgrass - sagebrush 2.455291 0.01407705 0.01407705
+#              Comparison        Z      P.unadj        P.adj
+#1 cheatgrass - sagebrush 8.271197 1.326212e-16 1.326212e-16
 
 
 PT5 = dunnTest(pool_value ~ veg, data = BGBC2, method = "none")    
 PT5
-#              Comparison          Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush -4.4919196 7.058407e-06 7.058407e-06
-#2 cheatgrass - sagecheat  0.1880232 8.508585e-01 8.508585e-01
-#3  sagebrush - sagecheat  5.7233270 1.044579e-08 1.044579e-08
+#              Comparison         Z      P.unadj        P.adj
+#1 cheatgrass - sagebrush -7.156016 8.305573e-13 8.305573e-13
+#2 cheatgrass - sagecheat -2.569059 1.019751e-02 1.019751e-02
+#3  sagebrush - sagecheat  2.925096 3.443497e-03 3.443497e-03
 
 
 PT6 = dunnTest(pool_value ~ veg, data = AGBC2, method = "none")    
 PT6
 #              Comparison          Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush -3.5199135 0.0004316876 0.0004316876
-#2 cheatgrass - sagecheat -1.7916213 0.0731936505 0.0731936505
-#3  sagebrush - sagecheat  0.3386746 0.7348548490 0.7348548490
+#1 cheatgrass - sagebrush -6.1700722 6.825882e-10 6.825882e-10
+#2 cheatgrass - sagecheat  0.8533113 3.934867e-01 3.934867e-01
+#3  sagebrush - sagecheat  4.9621569 6.971466e-07 6.971466e-07
 
