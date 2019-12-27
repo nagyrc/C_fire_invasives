@@ -10,13 +10,14 @@ setwd("data/")
 
 joiny2 <- as.data.frame(read_csv("joiny2.csv"))
 
-joiny2 <- joiny2 %>%
-  filter(veg != "salt_desert") %>%
-  filter(study != "Cleary et al. 2010")
+#joiny2 <- joiny2 %>%
+  #filter(veg != "salt_desert") 
+
+unique(joiny2$veg)
 
 head(joiny2)
 
-joiny2$timesincefire <- joiny2$yr_samp - joiny2$masterlyb
+#joiny2$timesincefire <- joiny2$yr_samp - joiny2$masterlyb
 
 #create categorical variable of years since fire
 #recent = < 5 years since fire
