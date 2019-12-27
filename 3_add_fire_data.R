@@ -246,6 +246,19 @@ baecv_rep %>%
 is.factor(baecv_rep$X1)
 is.factor(last_year_burned$X1)
 
+
+
+#replace NAs in fire data with 1900
+baecv_rep$MTBS_DISCOVERY_YEAR <- baecv_rep$MTBS_DISCOVERY_YEAR %>%
+  replace_na(1900)
+
+summary(baecv_rep$MTBS_DISCOVERY_YEAR)
+
+baecv_rep$baecv_lyb <- baecv_rep$baecv_lyb %>%
+  replace_na(1900)
+
+summary(baecv_rep$baecv_lyb)
+
 #take the max of the satellite data
 baecv_rep <- baecv_rep %>%
   mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb)) %>%
@@ -255,14 +268,22 @@ baecv_rep <- baecv_rep %>%
 siwf <- baecv_rep %>%
   mutate(masterlyb = case_when(last_year_burned > 1900 ~ last_year_burned, maxsat > 1900 ~ maxsat))
 
+#replace NAs with 1900
+siwf$masterlyb <- siwf$masterlyb %>%
+  replace_na(1900)
+
 write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
 
 siwf$Study_ID <- as.factor(siwf$Study_ID)
 is.factor(siwf$Study_ID)
 
+#create timesincefire variable
 is.numeric(siwf$masterlyb)
 siwf$timesincefire <- siwf$yr_samp - siwf$masterlyb
+
+
+
 
 
 
