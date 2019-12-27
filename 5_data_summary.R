@@ -185,12 +185,14 @@ head(simraw)
 #rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 simraw$Study_ID <-as.factor(simraw$Study_ID)
 is.factor(simraw$Study_ID)
+rawsonly$Study_ID <-as.factor(rawsonly$Study_ID)
+is.factor(rawsonly$Study_ID)
 
 joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
   filter(veg != "salt_desert") 
-#3011 observations
+#3227 observations
 
 head(joiny2)
 write.csv(joiny2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/joiny2.csv")
