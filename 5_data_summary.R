@@ -178,6 +178,11 @@ simraw <- simrawdata %>%
   dplyr::select(-simvalue, -explode) %>%
   filter(veg != "salt_desert")
 
+simrawsalt <- simrawdata %>%
+  left_join(ttt) %>%
+  mutate(pool_value = simvalue) %>%
+  dplyr::select(-simvalue, -explode) 
+
 unique(simraw$Article_ID)
 head(simraw)
 
@@ -196,15 +201,18 @@ joiny2 <- rawsonly %>%
 
 ###
 #making an option with salt desert; 3274 observations
+simrawsalt$Study_ID <-as.factor(simrawsalt$Study_ID)
+is.factor(simrawsalt$Study_ID)
+
 joiny2salt <-rawsonly %>%
-  full_join(simraw) %>%
+  full_join(simrawsalt) %>%
   mutate_if(is.character, as.factor)  
 
 saltonly <- joiny2salt %>%
   filter(veg == 'salt_desert') 
 
 unique(saltonly$pool) #all 5 pools
-unique(saltonly$study) #3 studies, missing West 1972
+unique(saltonly$study) #5 studies
 ###
 
 head(joiny2)
