@@ -13,6 +13,80 @@ studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
 
+#####
+#rawsonly <- siwf %>%
+#filter(!study %in% smeans) %>%
+#mutate(Study_ID = factor(Study_ID))
+
+#write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+
+rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
+
+unique(rawsonly$Study_ID)
+rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
+is.numeric(rawsonly$Study_ID)
+
+unique(rawsonly$veg)
+unique(rawsonly$study)
+unique(rawsonly$pool)
+
+#ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
+
+ccc <- rawsonly %>% 
+  distinct(Study_ID, veg, study, pool, .keep_all = FALSE)
+
+ccc$geometry <- NULL
+write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
+
+#to update pairs of studyids in paired_StudyIDs3
+Blankcheck <- rawsonly %>% 
+  filter(study == 'Blank and Norton 2006') %>%
+  distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
+
+Bradleycheck <- rawsonly %>% 
+  filter(study == 'Bradley et al. 2006') %>%
+  distinct(Study_ID, veg, pool, site, .keep_all = FALSE)
+#get rid of 280, 281, 290, 291 if not using salt desert
+
+Goercheck <- rawsonly %>% 
+  filter(study == 'Goergen et al. 2011') %>%
+  distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
+
+#this is summary data
+Hookcheck <- siwf %>% 
+  filter(study == 'Hooker et al. 2008') %>%
+  distinct(Study_ID, veg, pool, .keep_all = FALSE)
+
+#this is summary data
+Johncheck <- siwf %>% 
+  filter(study == 'Johnson et al. 2011') %>%
+  distinct(Study_ID, veg, pool, .keep_all = FALSE)
+
+#not sure which of these to pair- check with Emily and Bethany
+Mahocheck <- rawsonly %>% 
+  filter(Article_ID == 'MAHO2018a') %>%
+  distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
+
+Nortcheck <- rawsonly %>% 
+  filter(Article_ID == 'NORT2008') %>%
+  distinct(Study_ID, veg, pool, .keep_all = FALSE)
+
+Nortcheck2012 <- rawsonly %>% 
+  filter(Article_ID == 'NORT2012') %>%
+  distinct(Study_ID, veg, pool, yr_samp, .keep_all = FALSE)
+
+Starcheck <- rawsonly %>% 
+  filter(Article_ID == 'STAR2015') %>%
+  distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
+
+#litter did not come through...why?
+Svejcheck <- rawsonly %>% 
+  filter(Article_ID == 'SVEJ2001') %>%
+  distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
+
+Webecheck <- rawsonly %>% 
+  filter(Article_ID == 'WEBE2015') %>%
+  distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
 #bring in paired Study_IDs
 #need to update this
@@ -46,37 +120,10 @@ StudyIDp <- pairs %>%
 
 
 
-#split data into means and raw data
-#studymeans <- as.data.frame(read_csv("study_means.csv"))
-#smeans <- unique(studymeans$study)
 
 
 
 
-#####
-#rawsonly <- siwf %>%
-  #filter(!study %in% smeans) %>%
-  #mutate(Study_ID = factor(Study_ID))
-
-#write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
-
-rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
-
-unique(rawsonly$Study_ID)
-rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
-is.numeric(rawsonly$Study_ID)
-
-unique(rawsonly$veg)
-unique(rawsonly$study)
-unique(rawsonly$pool)
-
-#ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
-
-ccc <- rawsonly %>% 
-  distinct(Study_ID, veg, study, pool, .keep_all = FALSE)
-
-ccc$geometry <- NULL
-write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
 
 
 
