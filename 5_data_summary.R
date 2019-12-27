@@ -204,7 +204,7 @@ saltonly <- joiny2salt %>%
   filter(veg == 'salt_desert') 
 
 unique(saltonly$pool) #all 5 pools
-unique(saltonly$study) #3 studies, but these are not the correct studies
+unique(saltonly$study) #3 studies, missing West 1972
 ###
 
 head(joiny2)
