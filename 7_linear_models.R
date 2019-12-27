@@ -123,7 +123,7 @@ summary(litterC.model2a)
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 litterC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=litterC2)
 summary(litterC.model2b)
-#firecatold is sig.
+#firecatold is sig. (different from mid)
 
 
 
@@ -141,17 +141,17 @@ summary(orgsoilC.model2a)
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
 orgsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2b)
-#firecatrecent is sig
+#firecatrecent is sig (different from mid)
 
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
 orgsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2c)
-#firecatrecent is sig; depthcatmid is sig
+#firecatrecent is sig (different from mid); depthcatmid is sig (different from deep)
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
 orgsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=orgsoilC2)
 summary(orgsoilC.model2d)
-#timesincefire is sig; depthcatmid is sig
+#timesincefire is sig; depthcatmid is sig (different from deep)
 
 
 #tot soil
@@ -173,9 +173,9 @@ summary(totsoilC.model2b)
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2c)
-#depthcatshallow is sig
+#depthcatshallow is sig (different from deep)
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2d)
-#depthcatshallow is sig
+#depthcatshallow is sig (different from deep)
