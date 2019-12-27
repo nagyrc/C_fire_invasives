@@ -15,7 +15,10 @@ siwf = read_csv("siwf.csv")
 
 
 #bring in paired Study_IDs
+#need to update this
 pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
+
+#need to update this
 pairs <- as.data.frame(read_csv("paired_studyIDs2.csv"))
 pairs <- pairs %>%
   dplyr::select(-Article_ID, -pool) %>%
@@ -44,25 +47,33 @@ StudyIDp <- pairs %>%
 
 
 #split data into means and raw data
-studymeans <- as.data.frame(read_csv("study_means.csv"))
-smeans <- unique(studymeans$study)
+#studymeans <- as.data.frame(read_csv("study_means.csv"))
+#smeans <- unique(studymeans$study)
 
 
 
 
 #####
-rawsonly <- siwf %>%
-  filter(!study %in% smeans) %>%
-  mutate(Study_ID = factor(Study_ID))
+#rawsonly <- siwf %>%
+  #filter(!study %in% smeans) %>%
+  #mutate(Study_ID = factor(Study_ID))
 
-write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+#write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
+rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 
 unique(rawsonly$Study_ID)
+rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
+is.numeric(rawsonly$Study_ID)
+
+unique(rawsonly$veg)
+unique(rawsonly$study)
+unique(rawsonly$pool)
+
 ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
 
 ccc$geometry <- NULL
-write.csv(ccc, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
+write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
 
 
 ###
@@ -72,6 +83,7 @@ pcheat <- pairscheat %>%
 pcheat2 <- semi_join(pcheat, rawsonly)
 pcheat2
 
+#select only the paired studies
 rawsonlycheat <- rawsonly %>%
   filter(Study_ID == 226 | Study_ID == 206 | Study_ID == 382 | Study_ID == 392 | Study_ID == 372 | Study_ID == 402 | Study_ID == 384 | Study_ID == 394 | Study_ID == 374 | Study_ID == 404 | Study_ID == 1089 | Study_ID == 1102 | Study_ID == 1103 | Study_ID == 1304 | Study_ID == 1309 | Study_ID == 1314 | Study_ID == 1319 | Study_ID == 1454 | Study_ID == 1459 | Study_ID == 205 | Study_ID == 225 | Study_ID == 505 | Study_ID == 530)
 
