@@ -286,7 +286,7 @@ siwf$timesincefire <- siwf$yr_samp - siwf$masterlyb
 
 summary(siwf$timesincefire)
 
-nogood <- subset(siwf, timesincefire < 0)
+#nogood <- subset(siwf, timesincefire < 0)
 
 
 
