@@ -194,6 +194,19 @@ joiny2 <- rawsonly %>%
   filter(veg != "salt_desert") 
 #3227 observations
 
+###
+#making an option with salt desert; 3274 observations
+joiny2salt <-rawsonly %>%
+  full_join(simraw) %>%
+  mutate_if(is.character, as.factor)  
+
+saltonly <- joiny2salt %>%
+  filter(veg == 'salt_desert') 
+
+unique(saltonly$pool) #all 5 pools
+unique(saltonly$study) #3 studies, but these are not the correct studies
+###
+
 head(joiny2)
 write.csv(joiny2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/joiny2.csv")
 unique(joiny2$Article_ID)
