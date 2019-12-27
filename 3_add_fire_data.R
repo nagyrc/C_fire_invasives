@@ -240,6 +240,8 @@ yrbn <- yrbn %>%
 last_year_burned <- yrbn %>%
   dplyr::select(X1, last_year_burned)
 
+summary(last_year_burned)
+
 baecv_rep %>%
   mutate(as.factor(baecv_rep$X1))
 
@@ -266,7 +268,7 @@ baecv_rep <- baecv_rep %>%
 
 #need to replace the 6 values here with those in yrbn
 siwf <- baecv_rep %>%
-  mutate(masterlyb = case_when(last_year_burned > 1900 ~ last_year_burned, maxsat > 1900 ~ maxsat))
+  mutate(masterlyb = case_when(last_year_burned > 1900 & last_year_burned < yr_samp ~ last_year_burned, maxsat > 1900 ~ maxsat))
 
 #replace NAs with 1900
 siwf$masterlyb <- siwf$masterlyb %>%
@@ -282,8 +284,9 @@ is.factor(siwf$Study_ID)
 is.numeric(siwf$masterlyb)
 siwf$timesincefire <- siwf$yr_samp - siwf$masterlyb
 
+summary(siwf$timesincefire)
 
-
+nogood <- subset(siwf, timesincefire < 0)
 
 
 
