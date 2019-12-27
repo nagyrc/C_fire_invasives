@@ -795,7 +795,14 @@ ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) +
 head(joiny2)
 #analysis with fire
 str(joiny2)
-joiny2$timesincefire <- joiny2$yr_samp - joiny2$masterlyb
+
+unique(joiny2$yr_samp)
+unique(joiny2$masterlyb)
+
+#joiny2$masterlyb2 <- ifelse(joiny2$masterlyb == NA, 1900, joiny2$masterlyb)
+#timesincefire variable isn't calculating correctly
+joiny2 %>%
+  mutate(timesincefire = (as.numeric(joiny2$yr_samp) - as.numeric(joiny2$masterlyb)))
 
 unique(joiny2$veg)
 summary(joiny2$veg)
