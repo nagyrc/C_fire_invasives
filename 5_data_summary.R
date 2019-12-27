@@ -796,13 +796,34 @@ head(joiny2)
 #analysis with fire
 str(joiny2)
 
+
+
+
+###
 unique(joiny2$yr_samp)
 unique(joiny2$masterlyb)
 
-#joiny2$masterlyb2 <- ifelse(joiny2$masterlyb == NA, 1900, joiny2$masterlyb)
+is.numeric(joiny2$yr_samp)
+is.numeric(joiny2$masterlyb)
+
+testing <- joiny2 %>%
+  mutate(masterlyb2 = as.numeric(masterlyb)) %>%
+  mutate(masterlyb2 = ifelse(is.na(masterlyb2), 1900, masterlyb2))
+
+testing <- as.numeric(joiny2$masterlyb) %>%
+  replace_na(1900)
+unique(testing$masterlyb2)
+
+
 #timesincefire variable isn't calculating correctly
 joiny2 %>%
-  mutate(timesincefire = (as.numeric(joiny2$yr_samp) - as.numeric(joiny2$masterlyb)))
+  mutate(timesincefire = as.numeric(joiny2$yr_samp) - as.numeric(joiny2$masterlyb))
+
+joiny2$timesincefire <- as.numeric(joiny2$yr_samp) - as.numeric(joiny2$masterlyb)
+###
+
+
+
 
 unique(joiny2$veg)
 summary(joiny2$veg)
