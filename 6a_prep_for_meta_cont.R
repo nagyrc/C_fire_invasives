@@ -65,7 +65,7 @@ Johncheck <- siwf %>%
 #not sure which of these to pair- check with Emily and Bethany
 Mahocheck <- rawsonly %>% 
   filter(Article_ID == 'MAHO2018a') %>%
-  distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
+  distinct(Study_ID, veg, pool, site, lat, long, .keep_all = FALSE)
 
 Nortcheck <- rawsonly %>% 
   filter(Article_ID == 'NORT2008') %>%
