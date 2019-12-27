@@ -50,8 +50,8 @@ clean_study <- alldata %>%
 
 is.na(clean_study$yr_samp)
 
-nortoncheck <- clean_study %>%
-  filter(study == "Norton et al. 2004")
+#nortoncheck <- clean_study %>%
+  #filter(study == "Norton et al. 2004")
 
 write.csv(clean_study, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/clean_study.csv", row.names = FALSE)
 
@@ -87,7 +87,7 @@ studyid <- clean_study %>%
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
-#401 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+#403 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 unique(studyid$study)
 
 #cleary <- studyid %>%
