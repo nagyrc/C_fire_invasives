@@ -88,6 +88,28 @@ Webecheck <- rawsonly %>%
   filter(Article_ID == 'WEBE2015') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
+Banscheck <- rawsonly %>% 
+  filter(Article_ID == 'BANS2014') %>%
+  distinct(Study_ID, veg, pool, site, keep_all = FALSE)
+
+Boulcheck <- rawsonly %>% 
+  filter(Article_ID == 'BOUL1993') %>%
+  distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
+
+#this is summary data
+Ackecheck <- siwf %>% 
+  filter(Article_ID == 'ACKE1992') %>%
+  distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
+
+#this is summary data
+Gascchecka <- siwf %>% 
+  filter(Article_ID == 'GASC2013') %>%
+  distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
+
+#this is summary data
+Witwcheck <- siwf %>% 
+  filter(Article_ID == 'WITW2013') %>%
+  distinct(Study_ID, veg, pool, keep_all = FALSE)
 
 
 
