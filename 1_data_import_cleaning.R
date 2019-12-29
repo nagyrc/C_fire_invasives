@@ -987,12 +987,12 @@ cp$BGBC_g_m2 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_d
 #litter
 cp$litterC_g_m2 <- ifelse(cp$study == 'Rickard 1985b' & cp$veg == 'cheatgrass', cp$litter_g_m2 * cheatlitterpercC,
                        ifelse(cp$study == 'Rickard 1985a'  & cp$veg == 'sagebrush', cp$litter_g_m2 * sagelitterpercC, 
-                              ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2 * saltlitterpercC, cp$litter_g_m2)))
+                              ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2 * saltlitterpercC, cp$litterC_g_m2)))
 
 #litter SE
 cp$litterC_g_m2_SE <- ifelse(cp$study == 'Rickard 1985b' & cp$veg == 'cheatgrass', cp$litter_g_m2_SE * cheatlitterpercC,
                           ifelse(cp$study == 'Rickard 1985a'  & cp$veg == 'sagebrush', cp$litter_g_m2_SE * sagelitterpercC, 
-                                 ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2_SE * saltlitterpercC, cp$litter_g_m2_SE)))
+                                 ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2_SE * saltlitterpercC, cp$litterC_g_m2_SE)))
 
 #applying avg BDs to studies that are missing BD
 cp$BD_g_cm3 <- ifelse(cp$study == 'Saetre and Stark 2005' & cp$bottomdepth_cm == 10, BD010, cp$BD_g_cm3)
