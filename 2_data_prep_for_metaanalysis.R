@@ -16,8 +16,12 @@ alldata = read_csv("alldata.csv")
 
 alldata <- bind17
 
+#svej <- alldata %>%
+  #filter(study == 'Svejcar and Sheley 2001')
+
 summary(bind17$AGBC_g_m2)
 summary(studyid$pool_value)
+
 
 ####
 #pull last year burned from alldata as overwriting the last year burned
@@ -92,6 +96,10 @@ unique(studyid$study)
 
 #cleary <- studyid %>%
   #filter(study== "Cleary et al. 2010")
+
+#svejlitter <- studyid %>%
+  #filter(pool == "litterC_g_m2" & Article_ID == 'SVEJ2001')
+
 
 #export long format for later use
 write.csv(studyid, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid.csv", row.names = FALSE)
