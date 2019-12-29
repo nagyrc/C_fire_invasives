@@ -17,6 +17,7 @@ crs1b <- '+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0
 #bring in dataframe and convert dataframe to sf object with ESRI projection 102003
 studyid = read_csv("studyid.csv")
 
+
 studyidplot <- studyid[!is.na(studyid$lat),]
 
 #check to see if X1 came through...if not, add it here
@@ -182,7 +183,7 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 #after choosing option #1 or #2, go on here
 baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1870 observations
+#1961 observations
 #these ones are keepers
 
 baecv_no <- baecvtest_sfb  %>%
