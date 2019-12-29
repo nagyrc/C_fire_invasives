@@ -38,7 +38,7 @@ rawsonly <- siwf %>%
 
 write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
-meanstdids <- unique(meansonlynofire)
+meanstdids <- unique(meansonlynofire$Study_ID)
 
 meansonly <- siwf %>%
   filter(Study_ID %in% meanstdids) 
@@ -197,7 +197,7 @@ joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
   filter(veg != "salt_desert") 
-#3227 observations
+#3312 observations
 
 ###
 #making an option with salt desert; 3274 observations
