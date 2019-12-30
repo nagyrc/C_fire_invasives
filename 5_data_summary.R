@@ -199,6 +199,9 @@ joiny2 <- rawsonly %>%
   filter(veg != "salt_desert") 
 #3312 observations
 
+unique(joiny2$study)
+unique(joiny2$Study_ID)
+
 ###
 #making an option with salt desert; 3274 observations
 simrawsalt$Study_ID <-as.factor(simrawsalt$Study_ID)
