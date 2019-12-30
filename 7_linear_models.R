@@ -42,23 +42,23 @@ totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
 lm1 <- lm(pool_value ~ timesincefire + veg, data = AGBC2)
 summary(lm1)
-#veg and fire are significant; overall p-value < 2.2e-16
+#veg is significant in one case and so is timesincefire; overall p-value < 2.2e-16
 
 lm2 <- lm(pool_value ~ timesincefire + veg, data = BGBC2)
 summary(lm2)
-#veg is sig in one case and so is timesincefire; overall p-value = 5.67e-07
+#veg is sig and so is timesincefire; overall p-value = 6.8583-07
 
-lm3 <- lm(pool_value ~ timesincefire, data = litterC2)
+lm3 <- lm(pool_value ~ timesincefire + veg, data = litterC2)
 summary(lm3)
-#timesincefire is sig; overall p-value = 2.93e-05
+#veg and timesincefire are sig; overall p-value < 2.2e-16
 
 lm4 <- lm(pool_value ~ timesincefire + veg, data = orgsoilC2)
 summary(lm4)
-#veg is sig in one case and so is timesincefire; overall p-value = 0.0006847
+#veg is sig and so is timesincefire; overall p-value = 0.000604
 
 lm5 <- lm(pool_value ~ timesincefire + veg, data = totsoilC2)
 summary(lm5)
-#only intercept; overall p-value = 0.1817
+#only intercept; overall p-value = 0.1941
 
 
 
