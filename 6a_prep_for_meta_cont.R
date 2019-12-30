@@ -125,10 +125,10 @@ Witwcheck <- siwf %>%
 
 #bring in paired Study_IDs
 #need to update this
-pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
+#pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
 
-#need to update this
-pairs <- as.data.frame(read_csv("paired_studyIDs2.csv"))
+#updated 12/30/19
+pairs <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 pairs <- pairs %>%
   dplyr::select(-Article_ID, -pool) %>%
   mutate(pairnum = 1:nrow(pairs))
