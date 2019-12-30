@@ -21,6 +21,7 @@ litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
+
 unique(totsoilC2$veg)
 #has sagebrush
 
@@ -34,8 +35,18 @@ orgsoil1020 <- orgsoilC2 %>%
 totsoil010 <- totsoilC2 %>%
   filter(bottomdepth_cm == 10, topdepth_cm == 0)
 
+
 unique(totsoil010$veg)
 #no sagebrush
+
+
+deep1org <- orgsoilC2 %>%
+  filter(bottomdepth_cm > 20 & bottomdepth_cm <= 40) %>%
+  mutate(Cpercm = pool_value/thick)
+
+deep2org <- orgsoilC2 %>%
+  filter(bottomdepth_cm > 40) %>%
+  mutate(Cpercm = pool_value/thick)
 
 ###
 #run ANOVAs
