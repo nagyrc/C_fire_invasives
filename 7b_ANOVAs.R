@@ -41,11 +41,11 @@ unique(totsoil010$veg)
 #run ANOVAs
 fit <- aov(pool_value ~ veg, data = orgsoil010)
 summary(fit)
-#p = 1.07e-05
+#p = 1.67e-07
 
 fit2 <- aov(pool_value ~ veg, data = orgsoil1020)
 summary(fit2)
-#p = 0.14
+#p = 0.06
 
 fit3 <- aov(pool_value ~ veg, data = totsoil010)
 summary(fit3)
@@ -53,15 +53,15 @@ summary(fit3)
 
 fit4 <- aov(pool_value ~ veg, data = litterC2)
 summary(fit4)
-#p = 5.34e-15
+#p = 4.59e-11
 
 fit5 <- aov(pool_value ~ veg, data = AGBC2)
 summary(fit5)
-#p = 0.0002
+#p = 7.76e-08
 
 fit6 <- aov(pool_value ~ veg, data = BGBC2)
 summary(fit6)
-#p = 2.75e-09
+#p = 1.43e-07
 
 
 ###
@@ -76,11 +76,11 @@ plot(fit6)
 #test for normality
 test.lm = lm(pool_value ~ veg, data = orgsoil010)
 shapiro.test(residuals(test.lm))
-#p = 6.45e-11; so not normal
+#p = 3.982e-11; so not normal
 
 test.lm2 = lm(pool_value ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2))
-#p = 9.246e-10; so not normal
+#p = 2.584e-10; so not normal
 
 test.lm3 = lm(pool_value ~ veg, data = totsoil010)
 shapiro.test(residuals(test.lm3))
@@ -88,7 +88,7 @@ shapiro.test(residuals(test.lm3))
 
 test.lm4 = lm(pool_value ~ veg, data = litterC2)
 shapiro.test(residuals(test.lm4))
-#p = 1.462e-11; so not normal
+#p = 1.508e-11; so not normal
 
 test.lm5 = lm(pool_value ~ veg, data = AGBC2)
 shapiro.test(residuals(test.lm5))
@@ -111,7 +111,7 @@ shapiro.test(residuals(test.lm1b))
 
 test.lm2a <- lm(log(pool_value) ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2a))
-#p= 0.16, normal
+#p= 0.0535; just barely normal
 
 test.lm2b <- lm(sqrt(pool_value) ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2b))
@@ -123,8 +123,8 @@ shapiro.test(residuals(test.lm3a))
 
 ###
 #why is this here?
-fit3b <- aov(log(pool_value) ~ veg, data = totsoil010)
-summary(fit3b)
+#fit3b <- aov(log(pool_value) ~ veg, data = totsoil010)
+#summary(fit3b)
 #p = 0.257; compare to non-parametric below
 ###
 
@@ -142,7 +142,7 @@ shapiro.test(residuals(test.lm4b))
 
 test.lm5a <- lm(log(pool_value) ~ veg, data = AGBC2)
 shapiro.test(residuals(test.lm5a))
-#still not normal
+#NAs
 
 test.lm5b <- lm(sqrt(pool_value) ~ veg, data = AGBC2)
 shapiro.test(residuals(test.lm5b))
@@ -160,38 +160,38 @@ shapiro.test(residuals(test.lm6b))
 ###
 #run non-parametrics
 kruskal.test(pool_value ~ veg, data = orgsoil010)
-#p=5.452e-08
+#p=8.817e-10; sig difference
 
 kruskal.test(pool_value ~ veg, data = orgsoil1020)
-#p=0.3021
+#p=0.0247; sig difference
 
 kruskal.test(pool_value ~ veg, data = totsoil010)
 #p=0.4431
 
 kruskal.test(pool_value ~ veg, data = litterC2)
-#p<2.2e-16
+#p=6.861e-08; sig difference
 
 kruskal.test(pool_value ~ veg, data = BGBC2)
-#p=1.843e-12
+#p=1.194e-09; sig difference
 
 kruskal.test(pool_value ~ veg, data = AGBC2)
-#p=2.563e-10
+#p=8.224e-10; sig difference
 
 
 #Dunn test for multiple comparisons
 PT = dunnTest(pool_value ~ veg, data = orgsoil010, method = "none")    
 PT
 #              Comparison          Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush  5.6052772 2.079219e-08 2.079219e-08
-#2 cheatgrass - sagecheat  3.4427176 5.759004e-04 5.759004e-04
-#3  sagebrush - sagecheat -0.6843736 4.937393e-01 4.937393e-01
+#1 cheatgrass - sagebrush  6.2339472 4.548266e-10 4.548266e-10
+#2 cheatgrass - sagecheat  3.9208593 8.823376e-05 8.823376e-05
+#3  sagebrush - sagecheat -0.6683381 5.039178e-01 5.039178e-01
 
 PT2 = dunnTest(pool_value ~ veg, data = orgsoil1020, method = "none")    
 PT2
-#              Comparison         Z   P.unadj     P.adj
-#1 cheatgrass - sagebrush 0.6116447 0.5407729 0.5407729
-#2 cheatgrass - sagecheat 1.2397524 0.2150670 0.2150670
-#3  sagebrush - sagecheat 1.1751932 0.2399174 0.2399174
+#              Comparison        Z     P.unadj       P.adj
+#1 cheatgrass - sagebrush 1.948743 0.051326160 0.051326160
+#2 cheatgrass - sagecheat 2.636474 0.008377254 0.008377254
+#3  sagebrush - sagecheat 1.233375 0.217436071 0.217436071
 
 PT3 = dunnTest(pool_value ~ veg, data = totsoil010, method = "none")    
 PT3
@@ -204,21 +204,21 @@ PT3
 PT4 = dunnTest(pool_value ~ veg, data = litterC2, method = "none")    
 PT4
 #              Comparison        Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush 8.271197 1.326212e-16 1.326212e-16
+#1 cheatgrass - sagebrush 5.394782 6.860685e-08 6.860685e-08
 
 
 PT5 = dunnTest(pool_value ~ veg, data = BGBC2, method = "none")    
 PT5
 #              Comparison         Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush -7.156016 8.305573e-13 8.305573e-13
-#2 cheatgrass - sagecheat -2.569059 1.019751e-02 1.019751e-02
-#3  sagebrush - sagecheat  2.925096 3.443497e-03 3.443497e-03
+#1 cheatgrass - sagebrush -6.269092 3.631595e-10 3.631595e-10
+#2 cheatgrass - sagecheat -2.363445 1.810590e-02 1.810590e-02
+#3  sagebrush - sagecheat  2.429147 1.513438e-02 1.513438e-02
 
 
 PT6 = dunnTest(pool_value ~ veg, data = AGBC2, method = "none")    
 PT6
 #              Comparison          Z      P.unadj        P.adj
-#1 cheatgrass - sagebrush -6.1700722 6.825882e-10 6.825882e-10
-#2 cheatgrass - sagecheat  0.8533113 3.934867e-01 3.934867e-01
-#3  sagebrush - sagecheat  4.9621569 6.971466e-07 6.971466e-07
+#1 cheatgrass - sagebrush -6.1321572 8.669536e-10 8.669536e-10
+#2 cheatgrass - sagecheat  0.4638587 6.427490e-01 6.427490e-01
+#3  sagebrush - sagecheat  4.5765662 4.726702e-06 4.726702e-06
 
