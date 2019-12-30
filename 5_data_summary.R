@@ -199,8 +199,8 @@ joiny2 <- rawsonly %>%
   filter(veg != "salt_desert") 
 #3312 observations
 
-unique(joiny2$study)
-unique(joiny2$Study_ID)
+unique(joiny2$study) #42
+unique(joiny2$Study_ID) #388
 
 ###
 #making an option with salt desert; 3274 observations
