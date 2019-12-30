@@ -255,6 +255,7 @@ rawmeans2b <- joiny2 %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
   ungroup()
+rawmeans2b
 
 st_geometry(rawmeans2) = NULL
 write.csv(rawmeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans2.csv")
@@ -605,6 +606,8 @@ litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
 orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
 totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
+summary(AGBC2$pool_value)
+
 
 orgsoilC2 <- orgsoilC2 %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
@@ -786,7 +789,6 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
   labs(x = "depth (cm)", y = "Soil organic C (gC m-2)", fill = "vegetation") +
   theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18)) +
   scale_fill_manual(values = colours)
-
 
 
 rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
