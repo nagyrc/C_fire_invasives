@@ -159,7 +159,10 @@ StudyIDp <- pairs %>%
 
 
 
-
+####
+#ASK EMILY AND BETHANY IF THESE SHOULD BE ONLY RAW DATA OR SIMULATED RAW DATA TOO?
+#THE CODE BELOW USES ONLY RAW DATA
+####
 
 
 ###
@@ -171,10 +174,7 @@ pcheat2
 
 
 #select only the paired studies
-rawsonlycheat <- rawsonly %>%
-  filter(Study_ID == 226 | Study_ID == 206 | Study_ID == 382 | Study_ID == 392 | Study_ID == 372 | Study_ID == 402 | Study_ID == 384 | Study_ID == 394 | Study_ID == 374 | Study_ID == 404 | Study_ID == 1089 | Study_ID == 1102 | Study_ID == 1103 | Study_ID == 1304 | Study_ID == 1309 | Study_ID == 1314 | Study_ID == 1319 | Study_ID == 1454 | Study_ID == 1459 | Study_ID == 205 | Study_ID == 225 | Study_ID == 505 | Study_ID == 530)
-
-
+rawsonlycheat <- rawsonly[rawsonly$Study_ID %in% pcheat2$Study_ID,]
 
 ###
 psage <- pairssage %>%
