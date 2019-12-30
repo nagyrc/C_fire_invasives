@@ -67,6 +67,11 @@ Mahocheck <- rawsonly %>%
   filter(Article_ID == 'MAHO2018a') %>%
   distinct(Study_ID, veg, pool, site, lat, long, .keep_all = FALSE)
 
+st_geometry(Mahocheck) = NULL
+write.csv(Mahocheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/Mahood_pairs_check.csv")
+
+
+
 Nortcheck <- rawsonly %>% 
   filter(Article_ID == 'NORT2008') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
@@ -79,7 +84,6 @@ Starcheck <- rawsonly %>%
   filter(Article_ID == 'STAR2015') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
-#litter did not come through...why?
 Svejcheck <- rawsonly %>% 
   filter(Article_ID == 'SVEJ2001') %>%
   distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
@@ -91,6 +95,10 @@ Webecheck <- rawsonly %>%
 Banscheck <- rawsonly %>% 
   filter(Article_ID == 'BANS2014') %>%
   distinct(Study_ID, veg, pool, site, keep_all = FALSE)
+
+st_geometry(Banscheck) = NULL
+write.csv(Banscheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/Bansal_pairs_check.csv")
+
 
 Boulcheck <- rawsonly %>% 
   filter(Article_ID == 'BOUL1993') %>%
