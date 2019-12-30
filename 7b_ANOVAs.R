@@ -58,6 +58,14 @@ fit2 <- aov(pool_value ~ veg, data = orgsoil1020)
 summary(fit2)
 #p = 0.06
 
+fit2b <- aov(Cpercm ~ veg, data = deep1org)
+summary(fit2b)
+#p = 0.808
+
+fit2c <- aov(Cpercm ~ veg, data = deep2org)
+summary(fit2c)
+#p = 0.248
+
 fit3 <- aov(pool_value ~ veg, data = totsoil010)
 summary(fit3)
 #p = 0.451
@@ -92,6 +100,14 @@ shapiro.test(residuals(test.lm))
 test.lm2 = lm(pool_value ~ veg, data = orgsoil1020)
 shapiro.test(residuals(test.lm2))
 #p = 2.584e-10; so not normal
+
+test.lm2b = lm(Cpercm ~ veg, data = deep1org)
+shapiro.test(residuals(test.lm2b))
+#p = 0.038; so not normal
+
+test.lm2c = lm(Cpercm ~ veg, data = deep2org)
+shapiro.test(residuals(test.lm2c))
+#p < 2.2e-16; so not normal
 
 test.lm3 = lm(pool_value ~ veg, data = totsoil010)
 shapiro.test(residuals(test.lm3))
@@ -176,6 +192,12 @@ kruskal.test(pool_value ~ veg, data = orgsoil010)
 kruskal.test(pool_value ~ veg, data = orgsoil1020)
 #p=0.0247; sig difference
 
+kruskal.test(Cpercm ~ veg, data = deep1org)
+#p=0.89
+
+kruskal.test(Cpercm ~ veg, data = deep2org)
+#p=3.476e-13
+
 kruskal.test(pool_value ~ veg, data = totsoil010)
 #p=0.4431
 
@@ -203,6 +225,13 @@ PT2
 #1 cheatgrass - sagebrush 1.948743 0.051326160 0.051326160
 #2 cheatgrass - sagecheat 2.636474 0.008377254 0.008377254
 #3  sagebrush - sagecheat 1.233375 0.217436071 0.217436071
+
+PT2deep = dunnTest(Cpercm ~ veg, data = deep2org, method = "none")    
+PT2deep
+#                            Comparison         Z      P.unadj        P.adj
+#1       cheatgrass - invaded sagebrush 0.6504891 5.153763e-01 5.153763e-01
+#2        cheatgrass - native sagebrush 6.6849014 2.310802e-11 2.310802e-11
+#3 invaded sagebrush - native sagebrush 5.8494063 4.933306e-09 4.933306e-09
 
 PT3 = dunnTest(pool_value ~ veg, data = totsoil010, method = "none")    
 PT3
