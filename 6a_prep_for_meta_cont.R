@@ -179,7 +179,7 @@ pcheat2 <- semi_join(pcheat, rawsonly)
 pcheat2
 
 
-#select only the paired studies
+#select only the paired studies from raw data
 rawsonlycheat <- rawsonly[rawsonly$Study_ID %in% pcheat2$Study_ID,]
 
 ###
@@ -189,6 +189,7 @@ psage <- pairssage %>%
 psage2 <- semi_join(psage, rawsonly)
 psage2
 
+#select only the paired studies from raw data
 rawsonlysage <- rawsonly[rawsonly$Study_ID %in% psage2$Study_ID,]
 
 
@@ -200,6 +201,7 @@ psagecheat <- pairssagecheat %>%
 psagecheat2 <- semi_join(psagecheat, rawsonly)
 psagecheat2
 
+#select only the paired studies from raw data
 rawsonlysagecheat <- rawsonly[rawsonly$Study_ID %in% psagecheat2$Study_ID,]
 
 
