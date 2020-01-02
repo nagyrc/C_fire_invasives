@@ -170,9 +170,11 @@ StudyIDp <- pairs %>%
 
 
 ###
+pairscheat$Study_ID <- as.factor(pairscheat$Study_ID)
 pcheat <- pairscheat %>%
   filter(!is.na(Study_ID))
 
+rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
 pcheat2 <- semi_join(pcheat, rawsonly)
 pcheat2
 
@@ -213,13 +215,23 @@ rawsonlysagecheat <- rawsonly[rawsonly$Study_ID %in% psagecheat2$Study_ID,]
 
 
 #####
+#for all cheat studies except Mahood
 cheatpmeans <- rawsonlycheat %>%
+  filter(Article_ID != "MAHO2018a") %>%
   group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
 st_geometry(cheatpmeans) = NULL
 
+#adding code to average across Mahood cheatgrass sites for the pairs
+cheatpmeansMahood <- rawsonlycheat %>%
+  filter(Article_ID == "MAHO2018a") %>%
+  group_by(site, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(cheatpmeans) = NULL
 
 
 sagepmeans <- rawsonlysage %>%
