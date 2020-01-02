@@ -134,7 +134,7 @@ Witwcheck <- joiny2 %>%
 #updated 12/30/19
 pairs <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 pairs <- pairs %>%
-  dplyr::select(-Article_ID, -pool) %>%
+  dplyr::select(-pool, -Article_ID) %>%
   mutate(pairnum = 1:nrow(pairs))
 
 pairscheat <- pairs %>%
@@ -203,9 +203,6 @@ psagecheat2
 rawsonlysagecheat <- rawsonly[rawsonly$Study_ID %in% psagecheat2$Study_ID,]
 
 
-#missing some Study_IDs...is this because they were re-created?
-#rawsonly236 <- siwf %>%
-  #filter(Study_ID == 236)
 
 
 ####
