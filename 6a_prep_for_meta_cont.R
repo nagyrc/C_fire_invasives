@@ -12,7 +12,7 @@ setwd("data/")
 studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
-
+joiny2 = read_csv("joiny2.csv")
 #####
 #rawsonly <- siwf %>%
 #filter(!study %in% smeans) %>%
@@ -38,7 +38,11 @@ ccc <- rawsonly %>%
 ccc$geometry <- NULL
 write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
 
+
+
+###
 #to update pairs of studyids in paired_StudyIDs3
+#NOTE: the studies below marked as summary data can either be included or not; these are simulated raw data
 Blankcheck <- rawsonly %>% 
   filter(study == 'Blank and Norton 2006') %>%
   distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
@@ -53,12 +57,12 @@ Goercheck <- rawsonly %>%
   distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
 
 #this is summary data
-Hookcheck <- siwf %>% 
+Hookcheck <- joiny2 %>% 
   filter(study == 'Hooker et al. 2008') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
 #this is summary data
-Johncheck <- siwf %>% 
+Johncheck <- joiny2 %>% 
   filter(study == 'Johnson et al. 2011') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
@@ -105,17 +109,17 @@ Boulcheck <- rawsonly %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
 #this is summary data
-Ackecheck <- siwf %>% 
+Ackecheck <- joiny2 %>% 
   filter(Article_ID == 'ACKE1992') %>%
   distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
 
 #this is summary data
-Gascchecka <- siwf %>% 
+Gascchecka <- joiny2 %>% 
   filter(Article_ID == 'GASC2013') %>%
   distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
 
 #this is summary data
-Witwcheck <- siwf %>% 
+Witwcheck <- joiny2 %>% 
   filter(Article_ID == 'WITW2013') %>%
   distinct(Study_ID, veg, pool, keep_all = FALSE)
 
@@ -234,6 +238,7 @@ sagecheatpmeans <- rawsonlysagecheat %>%
 
 st_geometry(sagecheatpmeans) = NULL
 
+#this makes Table S3
 write.csv(cheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
 write.csv(sagepmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sagepmeans.csv")
 write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
