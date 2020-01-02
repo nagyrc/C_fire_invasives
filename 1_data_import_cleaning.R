@@ -481,10 +481,12 @@ Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
 #join lat, long data
 Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 
-#Mahood2BDll$topdepth_cm <- c(0)
-#Mahood2BDll$bottomdepth_cm <- c(10)
+#Mahood2BDll$topdepth_cm <- 0
+#Mahood2BDll$bottomdepth_cm <- 10
 #Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
-#Mahood2BDll$soilC_g_m2 <- Mahood2BDll$`soil%C`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100
+
+#the conversion factor below is from the lab that did the testing (converting %OM to %totC)
+#Mahood2BDll$totsoilC_g_m2 <- Mahood2BDll$`soil%OM`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100/1.724
 Mahood2BDll$seeded <- c("no")
 Mahood2BDll$pr_burned <- c("no")
 Mahood2BDll$BD_estimated <- c("no")
