@@ -393,7 +393,7 @@ sub4 <- joiny2 %>%
   filter(Study_ID == 560)
 unique(sub4$bottomdepth_cm) #20
 
-####manually added this categorical variable (depth_cat: shallow, mid, deep) into rawspmeans2.csv for use as a fixed effect in meta-analysis
+####manually added this categorical variable (depth_cat: shallow, mid, deep) into rawspmeans.csv for use as a fixed effect in meta-analysis
 
 #check2a <- check$Study_ID
 
@@ -433,46 +433,73 @@ unique(sub4$bottomdepth_cm) #20
 
 ###
 #create categories of yrs since burn for fixed effect in model
-checkb <- pairs_long %>%
-  filter(!is.na(Study_ID)) 
 
-listy1 <- checkb$Study_ID
+is.numeric(siwf$masterlyb) #TRUE
+is.numeric(siwf$timesincefire) #TRUE
+is.factor(siwf$Study_ID) #TRUE
 
-check2ab <- joiny2 %>%
-  filter(Study_ID %in% listy1) 
+unique(siwf$Study_ID)
 
-check3b <- unique(check2ab[c("Study_ID", "masterlyb", "yr_samp")])
-check3b
+siwfnum <- siwf
+siwfnum$Study_ID <- as.character(siwfnum$Study_ID)
 
-check3b$yrssince <- check3b$yr_samp - check3b$masterlyb
+ggg <- unique(siwfnum[c("Study_ID", "masterlyb", "timesincefire", "site", "study")])
+#660 = 2001
+#675, 680, 685 = 2002
+#522, 524 = 2003
+#620, 625, 630 =  2004
+#635 = 2005
 
-recentfire <- check3b %>%
-  filter(yrssince < 5)
+
+#use recent < 5yrs; mid 5-20 yrs; old > 20 yrs
+
+####manually added this categorical variable (fire_cat: recentfire, midfire, oldfire) into rawspmeans.csv for use as a fixed effect in meta-analysis
+
+
+
+
+
+
+
+
+#checkb <- pairs_long %>%
+  #filter(!is.na(Study_ID)) 
+
+#listy1 <- checkb$Study_ID
+
+#check2ab <- joiny2 %>%
+  #filter(Study_ID %in% listy1) 
+
+#check3b <- unique(check2ab[c("Study_ID", "masterlyb", "yr_samp")])
+#check3b
+
+#check3b$yrssince <- check3b$yr_samp - check3b$masterlyb
+
+#recentfire <- check3b %>%
+  #filter(yrssince < 5)
 #10 study ids
-write.csv(recent, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/recentfireid.csv")
+#write.csv(recent, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/recentfireid.csv")
 
-recentfireid <- recentfire %>%
-  dplyr::select(Study_ID)
+#recentfireid <- recentfire %>%
+  #dplyr::select(Study_ID)
 
 
-midfire <- check3b %>%
-  filter(yrssince >= 5 & yrssince <= 20)
+#midfire <- check3b %>%
+  #filter(yrssince >= 5 & yrssince <= 20)
 #11 study ids
-write.csv(midfire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/midfireid.csv")
+#write.csv(midfire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/midfireid.csv")
 
-midfireid <- midfire %>%
-  dplyr::select(Study_ID)
+#midfireid <- midfire %>%
+  #dplyr::select(Study_ID)
 
 
-oldfire <- check3b %>%
-  filter(yrssince > 20)
+#oldfire <- check3b %>%
+  #filter(yrssince > 20)
 #2 study ids
-write.csv(oldfire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/oldfireid.csv")
+#write.csv(oldfire, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/oldfireid.csv")
 
-oldfireid <- oldfire %>%
-  dplyr::select(Study_ID)
-
-####manually added this categorical variable (fire_cat: recentfire, midfire, oldfire) into rawspmeans2.csv for use as a fixed effect in meta-analysis
+#oldfireid <- oldfire %>%
+  #dplyr::select(Study_ID)
 
 
 
