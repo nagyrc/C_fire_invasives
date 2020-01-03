@@ -108,6 +108,10 @@ Boulcheck <- rawsonly %>%
   filter(Article_ID == 'BOUL1993') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
+#only 4 obs; double checked and this came from ind_points so this makes sense
+Boulcheckpre <- rawsonly %>% 
+  filter(Article_ID == 'BOUL1993')
+
 #this is summary data
 Ackecheck <- joiny2 %>% 
   filter(Article_ID == 'ACKE1992') %>%
