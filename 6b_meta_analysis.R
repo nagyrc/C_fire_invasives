@@ -252,6 +252,8 @@ autocorr.plot(m2_inv[, "(Intercept)"])
 #assess convergence
 #Trace plot. we want all the parameter estimates to be similar and horizontal; up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m2_inv[ , "(Intercept)"]) 
+#Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
+#Insufficient iterations to produce Gelman-Rubin plot
 
 #we want the posteriors to converge on 1; if they dont, up burnin and interations
 gelman.diag(m2_inv[ , "(Intercept)"])
@@ -285,6 +287,8 @@ autocorr.plot(m3_inv[, "(Intercept)"])
 #assess convergence
 #Trace plot. we want all the parameter estimates to be similar and horizontal; up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m3_inv[ , "(Intercept)"]) 
+#Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
+#Insufficient iterations to produce Gelman-Rubin plot
 
 #we want the posteriors to converge on 1; if they dont, up burnin and interations
 gelman.diag(m3_inv[ , "(Intercept)"])
@@ -310,6 +314,8 @@ m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totso
 m4b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
+#Error in MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,  : 
+#Mixed model equations singular: use a (stronger) prior
 
 m4c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
