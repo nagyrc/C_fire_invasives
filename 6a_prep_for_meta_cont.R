@@ -254,9 +254,9 @@ sagecheatpmeans <- rawsonlysagecheat %>%
 st_geometry(sagecheatpmeans) = NULL
 
 #this makes Table S3
-write.csv(cheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
-write.csv(sagepmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sagepmeans.csv")
-write.csv(sagecheatpmeans, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
+write.csv(cheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
+write.csv(sagepmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagepmeans.csv")
+write.csv(sagecheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
 
 ####
 #now it's just a matter of putting these values in the correct order in the table so that the pairs line up
