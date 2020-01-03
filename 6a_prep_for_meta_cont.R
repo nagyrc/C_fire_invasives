@@ -355,17 +355,17 @@ check <- pairspool %>%
 cheatsub <- joiny2 %>%
   filter(Study_ID %in% pcheat2$Study_ID) 
 
-checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm", "masterlyb")])
 
 sagesub <- joiny2 %>%
   filter(Study_ID %in% psage2$Study_ID) 
 
-checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm", "masterlyb")])
 
 sagecheatsub <- joiny2 %>%
   filter(Study_ID %in% psagecheat2$Study_ID) 
 
-checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm","masterlyb")])
 
 checkyy <- rbind (checkzz, checkzx, checkzy)
 
