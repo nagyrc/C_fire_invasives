@@ -451,6 +451,7 @@ ggg <- unique(siwfnum[c("Study_ID", "masterlyb", "timesincefire", "site", "study
 #635 = 2005
 
 
+#put in  as # years since fire instead of fire category; can always change later
 #use recent < 5yrs; mid 5-20 yrs; old > 20 yrs
 
 ####manually added this categorical variable (fire_cat: recentfire, midfire, oldfire) into rawspmeans.csv for use as a fixed effect in meta-analysis
