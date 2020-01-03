@@ -182,9 +182,18 @@ rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
 pcheat2 <- semi_join(pcheat, rawsonly)
 pcheat2
 
+joiny2$Study_ID <- as.factor(joiny2$Study_ID)
+pcheat3 <- semi_join(pcheat, joiny2)
+pcheat3
+
 
 #select only the paired studies from raw data
 rawsonlycheat <- rawsonly[rawsonly$Study_ID %in% pcheat2$Study_ID,]
+
+#select the paired studies from all data
+joiny2cheat <- joiny2[joiny2$Study_ID %in% pcheat3$Study_ID,]
+
+
 
 ###
 psage <- pairssage %>%
@@ -193,8 +202,14 @@ psage <- pairssage %>%
 psage2 <- semi_join(psage, rawsonly)
 psage2
 
+psage3 <- semi_join(psage, joiny2)
+psage3
+
 #select only the paired studies from raw data
 rawsonlysage <- rawsonly[rawsonly$Study_ID %in% psage2$Study_ID,]
+
+#select the paired studies from all data
+joiny2sage <- joiny2[joiny2$Study_ID %in% psage3$Study_ID,]
 
 
 
@@ -205,10 +220,14 @@ psagecheat <- pairssagecheat %>%
 psagecheat2 <- semi_join(psagecheat, rawsonly)
 psagecheat2
 
+psagecheat3 <- semi_join(psagecheat, joiny2)
+psagecheat3
+
 #select only the paired studies from raw data
 rawsonlysagecheat <- rawsonly[rawsonly$Study_ID %in% psagecheat2$Study_ID,]
 
-
+#select the paired studies from all data
+joiny2sagecheat <- joiny2[joiny2$Study_ID %in% psagecheat3$Study_ID,]
 
 
 ####
@@ -227,17 +246,40 @@ cheatpmeans <- rawsonlycheat %>%
 
 st_geometry(cheatpmeans) = NULL
 
-#adding code to average across Mahood cheatgrass sites for the pairs
+#adding code to average across Mahood cheatgrass sites for the pairs and assign new Study_IDs
 cheatpmeansMahood <- rawsonlycheat %>%
   filter(Article_ID == "MAHO2018a") %>%
   group_by(site, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  mutate(Study_ID = c(2001: 2005))
+
+st_geometry(cheatpmeans) = NULL
+
+
+#adding code that includes summary data
+cheatpmeanssum <- joiny2cheat %>%
+  filter(Article_ID != "MAHO2018a") %>%
+  group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
 
 st_geometry(cheatpmeans) = NULL
 
 
+
+
+
+
 sagepmeans <- rawsonlysage %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(sagepmeans) = NULL
+
+
+sagepmeanssum <- joiny2sage %>%
   group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n))
@@ -253,11 +295,24 @@ sagecheatpmeans <- rawsonlysagecheat %>%
 
 st_geometry(sagecheatpmeans) = NULL
 
-#this makes Table S3
+
+sagecheatpmeanssum <- joiny2sagecheat %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(sagecheatpmeans) = NULL
+
+
+
+#this makes Table S3; either with or without simulated raw data
 write.csv(cheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
 write.csv(cheatpmeansMahood, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeansMahood.csv")
+write.csv(cheatpmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeanssum.csv")
 write.csv(sagepmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagepmeans.csv")
+write.csv(sagepmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagepmeanssum.csv")
 write.csv(sagecheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
+write.csv(sagecheatpmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagecheatpmeanssum.csv")
 
 ####
 #now it's just a matter of putting these values in the correct order in the table so that the pairs line up
