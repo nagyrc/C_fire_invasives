@@ -322,6 +322,13 @@ write.csv(sagepmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/resu
 write.csv(sagecheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
 write.csv(sagecheatpmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagecheatpmeanssum.csv")
 
+
+
+
+
+
+
+
 ####
 #now it's just a matter of putting these values in the correct order in the table so that the pairs line up
 #manually pasted in the correct spots in a .csv file
