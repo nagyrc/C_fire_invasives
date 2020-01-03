@@ -13,6 +13,8 @@ studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
 joiny2 = read_csv("joiny2.csv")
+
+unique(joiny2$masterlyb) #crap this field is messed up
 #####
 #rawsonly <- siwf %>%
 #filter(!study %in% smeans) %>%
