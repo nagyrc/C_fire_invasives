@@ -248,7 +248,7 @@ baecv_rep %>%
 
 is.factor(baecv_rep$X1)
 is.factor(last_year_burned$X1)
-
+last_year_burned$X1 <- as.factor(last_year_burned$X1)
 
 
 #replace NAs in fire data with 1900
@@ -286,6 +286,8 @@ is.numeric(siwf$masterlyb)
 siwf$timesincefire <- siwf$yr_samp - siwf$masterlyb
 
 summary(siwf$timesincefire)
+unique(siwf$timesincefire)
+unique(siwf$masterlyb)
 
 #nogood <- subset(siwf, timesincefire < 0)
 
