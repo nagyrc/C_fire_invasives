@@ -16,7 +16,7 @@ citation("metafor")
 dq2 <- read.csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans.csv", header = T)
 head(dq2)
 tail(dq2)
-summary(dq2) # no missing values in n, mean, variance
+summary(dq2) # there are some missing variance values from ind points
 
 
 
