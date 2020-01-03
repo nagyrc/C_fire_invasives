@@ -84,16 +84,16 @@ plot(dq2$Article_ID, dq2$g_cheat_v_sagecheat)
 plot(dq2$Article_ID, dq2$g_sagecheat_v_sage)
 
 summary(dq2$g_cheat_v_sage)
-#   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-#-2.8029 -0.8358  0.5795  0.4308  0.8052  7.0844      27
+#   Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
+#-2.80293 -0.12836  0.57953 -0.06095  0.65436  1.14530       52 
 
 summary(dq2$g_cheat_v_sagecheat)
 #    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
-#-0.91954 -0.39820 -0.01347 -0.03948  0.33284  0.59109       20
+#-0.91954 -0.41516 -0.06286 -0.07287  0.32195  0.59109       40 
 
 summary(dq2$g_sagecheat_v_sage)
 #    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
-#-1.03766 -0.05919  0.16217  0.18132  0.70275  1.03849       23 
+#-1.03766 -0.22098  0.08901  0.15766  0.67002  1.03849       43 
 ###
 
 
@@ -213,7 +213,8 @@ autocorr.plot(m1_inv[, "(Intercept)"])
 #Trace plot. we want all the parameter estimates to be similar and horizontal
 #up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m1_inv[ , "(Intercept)"]) 
-
+#Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
+#Insufficient iterations to produce Gelman-Rubin plot
 
 #we want the posteriors to converge on 1
 #if they dont, up burnin and interations
