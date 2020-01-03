@@ -237,6 +237,10 @@ joiny2sagecheat <- joiny2[joiny2$Study_ID %in% psagecheat3$Study_ID,]
 
 
 #####
+
+###IF USING RAW DATA ONLY
+
+#step 1 for cheat
 #for all cheat studies except Mahood
 cheatpmeans <- rawsonlycheat %>%
   filter(Article_ID != "MAHO2018a") %>%
@@ -246,6 +250,7 @@ cheatpmeans <- rawsonlycheat %>%
 
 st_geometry(cheatpmeans) = NULL
 
+#step 2 for cheat
 #adding code to average across Mahood cheatgrass sites for the pairs and assign new Study_IDs
 cheatpmeansMahood <- rawsonlycheat %>%
   filter(Article_ID == "MAHO2018a") %>%
@@ -257,20 +262,7 @@ cheatpmeansMahood <- rawsonlycheat %>%
 st_geometry(cheatpmeans) = NULL
 
 
-#adding code that includes summary data
-cheatpmeanssum <- joiny2cheat %>%
-  filter(Article_ID != "MAHO2018a") %>%
-  group_by(Study_ID, pool) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
-
-st_geometry(cheatpmeans) = NULL
-
-
-
-
-
-
+#sage
 sagepmeans <- rawsonlysage %>%
   group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
@@ -279,15 +271,7 @@ sagepmeans <- rawsonlysage %>%
 st_geometry(sagepmeans) = NULL
 
 
-sagepmeanssum <- joiny2sage %>%
-  group_by(Study_ID, pool) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
-
-st_geometry(sagepmeans) = NULL
-
-
-
+#sagecheat
 sagecheatpmeans <- rawsonlysagecheat %>%
   group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
@@ -296,6 +280,30 @@ sagecheatpmeans <- rawsonlysagecheat %>%
 st_geometry(sagecheatpmeans) = NULL
 
 
+
+
+###IF USING SUMMARY DATA TOO
+#Run these instead of cheatpmeans, sagepmeans, and sagecheatpmeans
+#adding code that includes summary data
+
+#cheat
+cheatpmeanssum <- joiny2cheat %>%
+  filter(Article_ID != "MAHO2018a") %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(cheatpmeans) = NULL
+
+#sage
+sagepmeanssum <- joiny2sage %>%
+  group_by(Study_ID, pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(sagepmeans) = NULL
+
+#sagecheat
 sagecheatpmeanssum <- joiny2sagecheat %>%
   group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
@@ -304,7 +312,7 @@ sagecheatpmeanssum <- joiny2sagecheat %>%
 st_geometry(sagecheatpmeans) = NULL
 
 
-
+###
 #this makes Table S3; either with or without simulated raw data
 write.csv(cheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
 write.csv(cheatpmeansMahood, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeansMahood.csv")
