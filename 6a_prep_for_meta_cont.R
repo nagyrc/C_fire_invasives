@@ -66,7 +66,7 @@ Johncheck <- joiny2 %>%
   filter(study == 'Johnson et al. 2011') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
-#not sure which of these to pair- check with Emily and Bethany
+
 Mahocheck <- rawsonly %>% 
   filter(Article_ID == 'MAHO2018a') %>%
   distinct(Study_ID, veg, pool, site, lat, long, .keep_all = FALSE)
@@ -327,7 +327,7 @@ write.csv(sagecheatpmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R
 #manually pasted in the correct spots in a .csv file
 
 #bring that file in here
-rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv"))
+rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans.csv"))
 rawspmeanssum <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssum.csv"))
 
 
