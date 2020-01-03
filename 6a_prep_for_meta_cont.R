@@ -338,13 +338,17 @@ rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R
 rawspmeanssum <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssum.csv"))
 
 
-#change this if using summary data too
+#change this if using summary data also
 dq2 <- rawspmeans
+#dq2 <- rawspmeanssum
 
+
+
+
+pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 #check depths on soil pools
-check <- pairs_long %>%
-  filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
-  filter(!is.na(Study_ID)) 
+check <- pairspool %>%
+  filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") 
 
 check2a <- check$Study_ID
 
