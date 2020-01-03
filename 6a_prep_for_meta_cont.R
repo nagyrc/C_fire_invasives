@@ -328,7 +328,10 @@ write.csv(sagecheatpmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R
 
 #bring that file in here
 rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans2.csv"))
+rawspmeanssum <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssum.csv"))
 
+
+#change this if using summary data too
 dq2 <- rawspmeans
 
 #check depths on soil pools
