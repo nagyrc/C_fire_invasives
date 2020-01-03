@@ -12,6 +12,8 @@ setwd("data/")
 studyid <- as.data.frame(read_csv("studyid.csv"))
 siwf <- as.data.frame(read_csv("siwf.csv"))
 
+unique(siwf$masterlyb)
+
 summary(siwf$pool_value)
 
 studymeans <- as.data.frame(read_csv("study_means.csv"))
