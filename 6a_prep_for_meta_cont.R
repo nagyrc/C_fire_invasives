@@ -350,42 +350,84 @@ pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 check <- pairspool %>%
   filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") 
 
-check2a <- check$Study_ID
 
-check2 <- joiny2 %>%
-  filter(Study_ID %in% check2a) 
+#use pcheat2, psage2, psagecheat3 as lists of studyids
+cheatsub <- joiny2 %>%
+  filter(Study_ID %in% pcheat2$Study_ID) 
 
-check3 <- unique(check2[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
-check3
-#all different depth intervals; need to standardize
+checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
-shallow <- check3 %>%
-  filter(bottomdepth_cm < 20)
-#31 study ids
-write.csv(shallow, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/shallowid.csv")
+sagesub <- joiny2 %>%
+  filter(Study_ID %in% psage2$Study_ID) 
 
-shallowid <- shallow %>%
-  dplyr::select(Study_ID)
+checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
+sagecheatsub <- joiny2 %>%
+  filter(Study_ID %in% psagecheat2$Study_ID) 
 
-mid <- check3 %>%
-  filter(bottomdepth_cm == 20)
-#17 study ids
-write.csv(mid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/midid.csv")
+checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
-midid <- mid %>%
-  dplyr::select(Study_ID)
+checkyy <- rbind (checkzz, checkzx, checkzy)
 
+#testonly <- dq2 %>%
+  #semi_join(checkyy) 
 
-deep <- check3 %>%
-  filter(bottomdepth_cm > 20)
-#14 study ids
-write.csv(deep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/deepid.csv")
+#%>% mutate(ifelse(bottomdepth_cm < 20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep')))
 
-deepid <- deep %>%
-  dplyr::select(Study_ID)
+#other checks#
+sub1 <- joiny2 %>%
+  filter(Study_ID == 414)
+unique(sub1$bottomdepth_cm) #5
+
+sub2 <- joiny2 %>%
+  filter(Study_ID == 35 | Study_ID == 47 | Study_ID == 36 | Study_ID == 48 | Study_ID == 37)
+unique(sub2$bottomdepth_cm) #10
+
+sub3 <- joiny2 %>%
+  filter(Study_ID == 549)
+unique(sub3$bottomdepth_cm) #100
+
+sub4 <- joiny2 %>%
+  filter(Study_ID == 560)
+unique(sub4$bottomdepth_cm) #20
 
 ####manually added this categorical variable (depth_cat: shallow, mid, deep) into rawspmeans2.csv for use as a fixed effect in meta-analysis
+
+#check2a <- check$Study_ID
+
+#check2 <- joiny2 %>%
+  #filter(Study_ID %in% check2a) 
+
+#check3 <- unique(check2[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+#check3
+#all different depth intervals; need to standardize
+
+#shallow <- check3 %>%
+  #filter(bottomdepth_cm < 20)
+#31 study ids
+#write.csv(shallow, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/shallowid.csv")
+
+#shallowid <- shallow %>%
+  #dplyr::select(Study_ID)
+
+
+#mid <- check3 %>%
+  #filter(bottomdepth_cm == 20)
+#17 study ids
+#write.csv(mid, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/midid.csv")
+
+#midid <- mid %>%
+  #dplyr::select(Study_ID)
+
+
+#deep <- check3 %>%
+  #filter(bottomdepth_cm > 20)
+#14 study ids
+#write.csv(deep, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/deepid.csv")
+
+#deepid <- deep %>%
+  #dplyr::select(Study_ID)
+
 
 ###
 #create categories of yrs since burn for fixed effect in model
