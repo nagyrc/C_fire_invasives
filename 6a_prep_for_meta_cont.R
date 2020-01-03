@@ -255,6 +255,7 @@ st_geometry(sagecheatpmeans) = NULL
 
 #this makes Table S3
 write.csv(cheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeans.csv")
+write.csv(cheatpmeansMahood, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/cheatpmeansMahood.csv")
 write.csv(sagepmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagepmeans.csv")
 write.csv(sagecheatpmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/sagecheatpmeans.csv")
 
