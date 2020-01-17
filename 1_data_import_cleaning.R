@@ -948,10 +948,9 @@ ind_points <- as.data.frame(read_csv("ind_points.csv"))
 
 #repeat rows n times where n is specified
 
-ind_points$ntimes <- as.numeric(ind_points$n_sampled)
-cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
-
-
+#ind_points$ntimes <- as.numeric(ind_points$n_sampled)
+#cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
+cp <- ind_points
 
 #correct names of %C soils columns
 colnames(cp)[colnames(cp) == 'orgsoil.C'] <- 'orgsoil%C'
