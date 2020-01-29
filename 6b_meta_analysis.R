@@ -176,6 +176,8 @@ m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev 
 m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
+#error message here
+
 
 m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
@@ -275,7 +277,7 @@ m3_inv = mcmc.list(m3a_inv[[1]], m3b_inv[[1]], m3c_inv[[1]])
 #THIS IS HOW WE CHECK THE MODEL#
 # diagnostics to ensure good model behavior
 inv_overall <- MCMCsummary(m3_inv, params = "(Intercept)", n.eff = T)
-
+inv_overall
 #we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m3_inv, params = "(Intercept)", pdf = F, ind = T)
 
@@ -310,6 +312,7 @@ totsoil <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat)
 m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
+#error message here
 
 m4b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
