@@ -778,16 +778,8 @@ head(kpAnderson)
 #make all conversions from aboveground biomass g/m2 to aboveground biomass carbon gC/m2
 
 #make cheatgrass %C an object to use later
-cheat_percC1 <- Mahood1ll$cheatgrass_TC_pct
-cheat_percC2 <- Mahood2$Bromus_TC_pct
-meancheat_percC1 <- mean(cheat_percC1, na.rm = TRUE)
-#42.6007
-meancheat_percC2 <- mean(cheat_percC2, na.rm = TRUE)
-#42.6645
+cheat_percC <- mean(Mahood2$Bromus_TC_pct, na.rm = TRUE)
 
-meancheat_percC <- c(cheat_percC1,cheat_percC2)
-cheat_percC <- mean(meancheat_percC, na.rm = TRUE)
-#42.6447
 ###
 
 sagepercC <- 0.45 #sage AGB % C = 45; from West 1972 Table 8
