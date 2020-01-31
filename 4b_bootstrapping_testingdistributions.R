@@ -18,11 +18,11 @@ unique(checkveg$pool) #5 pools
 
 ###############################
 #bring in raw data
-rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
+rawsonlynofire <- as.data.frame(read_csv("rawsonlynofire.csv"))
 
 
 # Histogram for each pol-veg combo to look at distributions
-ggplot(rawsonly, aes(x = pool_value, fill = Article_ID)) + 
+ggplot(rawsonlynofire, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool ~ veg) + 
   xlab("pool_value") + theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -30,11 +30,11 @@ ggplot(rawsonly, aes(x = pool_value, fill = Article_ID)) +
 
 
 #try with subsets for each pool
-AGBC <- subset.data.frame(rawsonly, pool == "AGBC_g_m2")
-BGBC <- subset.data.frame(rawsonly, pool == "BGBC_g_m2")
-litterC <- subset.data.frame(rawsonly, pool == "litterC_g_m2")
-orgsoilC <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2")
-totsoilC <- subset.data.frame(rawsonly, pool == "totsoilC_g_m2")
+AGBC <- subset.data.frame(rawsonlynofire, pool == "AGBC_g_m2")
+BGBC <- subset.data.frame(rawsonlynofire, pool == "BGBC_g_m2")
+litterC <- subset.data.frame(rawsonlynofire, pool == "litterC_g_m2")
+orgsoilC <- subset.data.frame(rawsonlynofire, pool == "orgsoilC_g_m2")
+totsoilC <- subset.data.frame(rawsonlynofire, pool == "totsoilC_g_m2")
 
 head(AGBC)
 ggplot(AGBC, aes(x = pool_value, fill = Article_ID)) + 
@@ -81,7 +81,7 @@ ggplot(totsoilC, aes(x = pool_value, fill = Article_ID)) +
 ###########################
 #subset data for aboveground sagebrush
 
-ABGCsb <- subset.data.frame(rawsonly, pool == "AGBC_g_m2" & veg == "sagebrush")
+ABGCsb <- subset.data.frame(rawsonlynofire, pool == "AGBC_g_m2" & veg == "sagebrush")
 
 ggplot(ABGCsb, aes(x = veg, y = pool_value, color=study)) + geom_violin()
 
@@ -139,7 +139,7 @@ ggplot(Dists, aes(x = pool_value, fill = Type)) +
 ###########################
 #subset data for cheatgrass soil carbon
 
-OGSCcg <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2" & veg == "cheatgrass")
+OGSCcg <- subset.data.frame(rawsonlynofire, pool == "orgsoilC_g_m2" & veg == "cheatgrass")
 
 
 ggplot(OGSCcg, aes(x = veg, y = pool_value, color = study)) + geom_violin()
