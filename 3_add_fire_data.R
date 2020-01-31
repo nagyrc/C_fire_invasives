@@ -252,17 +252,17 @@ is.factor(last_year_burned$X1)
 last_year_burned$X1 <- as.factor(last_year_burned$X1)
 
 
-#replace NAs in fire data with 1900
+#replace NAs in fire data with 1950
 baecv_rep$MTBS_DISCOVERY_YEAR <- baecv_rep$MTBS_DISCOVERY_YEAR %>%
-  replace_na(1900)
+  replace_na(1950)
 
 summary(baecv_rep$MTBS_DISCOVERY_YEAR)
 
 baecv_rep$baecv_lyb <- baecv_rep$baecv_lyb %>%
-  replace_na(1900)
+  replace_na(1950)
 
 baecv_rep <-baecv_rep %>% 
-  mutate(baecv_lyb = ifelse(baecv_lyb == 0, 1900, baecv_lyb))
+  mutate(baecv_lyb = ifelse(baecv_lyb == 0, 1950, baecv_lyb))
 
 summary(baecv_rep$baecv_lyb)
 
@@ -273,11 +273,11 @@ baecv_rep <- baecv_rep %>%
 
 #need to replace the 6 values here with those in yrbn
 siwf <- baecv_rep %>%
-  mutate(masterlyb = case_when(last_year_burned > 1900 & last_year_burned < yr_samp ~ last_year_burned, maxsat > 1900 ~ maxsat))
+  mutate(masterlyb = case_when(last_year_burned > 1950 & last_year_burned < yr_samp ~ last_year_burned, maxsat > 1950 ~ maxsat))
 
-#replace NAs with 1900
+#replace NAs with 1950
 siwf$masterlyb <- siwf$masterlyb %>%
-  replace_na(1900)
+  replace_na(1950)
 
 write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
