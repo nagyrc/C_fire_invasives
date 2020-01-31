@@ -20,7 +20,7 @@ write.csv(ttt, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ttt.csv",
 
 #Subset the data to only values that have n_sampled and SE
 studymeanssubset1 <- subset(meansonlynvar, !is.na(n_sampled))
-#86 observations; all observations are here
+#84 observations; all observations are here
 unique(studymeanssubset1$study) #West 1972 is here
                           
 sms1 <- subset(studymeanssubset1, !is.na(pool_value_SE) & pool == "AGBC_g_m2")
@@ -33,7 +33,7 @@ smsa <- rbind(sms1, sms2)
 smsb <- rbind(smsa, sms3)
 smsc <- rbind(smsb, sms4)
 sms <- rbind(smsc, sms5)
-#86 observations
+#84 observations
 
 glimpse(sms)
 
