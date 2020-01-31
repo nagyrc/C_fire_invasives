@@ -201,6 +201,7 @@ write.csv(baecv_no_Adamll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/da
 #go to Adams' script for dealing with these points; then come back here
 
 stdids <- unique(baecv_no_Adamll$Study_ID)
+#33 study ids
 
 baecv_add <- mtbs_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
@@ -259,6 +260,9 @@ summary(baecv_rep$MTBS_DISCOVERY_YEAR)
 
 baecv_rep$baecv_lyb <- baecv_rep$baecv_lyb %>%
   replace_na(1900)
+
+baecv_rep <-baecv_rep %>% 
+  mutate(baecv_lyb = ifelse(baecv_lyb == 0, 1900, baecv_lyb))
 
 summary(baecv_rep$baecv_lyb)
 
