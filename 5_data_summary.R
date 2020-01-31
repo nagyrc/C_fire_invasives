@@ -199,7 +199,7 @@ joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
   filter(veg != "salt_desert") 
-#3312 observations
+#2858 observations
 
 unique(joiny2$study) #42
 unique(joiny2$Study_ID) #388
@@ -482,12 +482,24 @@ totsoilmeans010 <- surfacemeans2 %>%
 #raw data only
 head(rawmeans)
 
+
+rawmeans$geometry <- NULL
+rawmeans <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
+rawmeans$veg <- factor(rawmeans$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+rawmeans$pool2 <- ifelse(rawmeans$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans$pool == "BGBC_g_m2", "BGB", "litter"))
+
+rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
+
+
 ggplot(rawmeans, aes(x = veg, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
   facet_wrap(~pool) + 
-  labs(x = "vegetation type", y = "carbon content (gC m-2)")
+  labs(x = "vegetation type", y = "carbon content (gC m-2)")+
+  scale_fill_manual(values = colours)
 
 sm1 <- surfacemeans %>%
   filter(pool == "orgsoilC_g_m2") %>%
@@ -795,13 +807,15 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
   theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18)) +
   scale_fill_manual(values = colours)
 
-
+rawmeans2$geometry <- NULL
 rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
 rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 rawmeans2$pool2 <- ifelse(rawmeans2$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans2$pool == "BGBC_g_m2", "BGB", "litter"))
 
 rawmeans2
 rawmeans2$veg <- plyr::revalue(rawmeans2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
 #Fig. 3a
 ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
