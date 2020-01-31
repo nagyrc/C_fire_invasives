@@ -57,7 +57,8 @@ rawmeans <- rawsonly %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
   mutate(se = sqrt(var)/sqrt(n)) %>%
-  filter(veg != "salt_desert")
+  filter(veg != "salt_desert") %>%
+  ungroup()
 
 st_geometry(rawmeans) = NULL
 write.csv(rawmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans.csv")
@@ -484,7 +485,7 @@ head(rawmeans)
 
 
 rawmeans$geometry <- NULL
-rawmeans <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
+rawmeans <- add_row(rawmeans, pool = "litterC_g_m2", veg = "sagecheat")
 rawmeans$veg <- factor(rawmeans$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 rawmeans$pool2 <- ifelse(rawmeans$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans$pool == "BGBC_g_m2", "BGB", "litter"))
 
@@ -493,12 +494,12 @@ rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
 
-ggplot(rawmeans, aes(x = veg, y = meanpv, fill = veg)) + 
+ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
-  facet_wrap(~pool) + 
-  labs(x = "vegetation type", y = "carbon content (gC m-2)")+
+  labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) + 
   scale_fill_manual(values = colours)
 
 sm1 <- surfacemeans %>%
