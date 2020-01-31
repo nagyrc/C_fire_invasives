@@ -90,7 +90,7 @@ st_crs(mtbs_fire)
 
 #extract discovery year for points in studyid and add a field to show which fires occurred before/after sampling date
 mtbs_int <- sf::st_intersection(studyid_sf, mtbs_fire)
-#723 observations; so some points didn't burn
+#647 observations; so some points didn't burn
 
 unique(mtbs_int$X1)
 
@@ -106,7 +106,7 @@ mtbs_keep <- mtbs_int %>%
   mutate(yr_samp = as.numeric(yr_samp)) %>%
   mutate(mtbs_keep = ifelse(MTBS_DISCOVERY_YEAR <= yr_samp, 1, 0)) %>%
   filter(mtbs_keep != 0) 
-#617 had fires before the sampling date
+#581 had fires before the sampling date
 
 mtbs_keep <- mtbs_keep %>%
   group_by(X1) %>%
@@ -114,7 +114,7 @@ mtbs_keep <- mtbs_keep %>%
   filter(MTBS_DISCOVERY_YEAR == max_yr) %>%
   dplyr::select(-max_yr) %>%
   ungroup
-#583 observations once less recent burns are removed
+#547 observations once less recent burns are removed
 
 #adding MTBS last year burn to studyid_df
 mtbs_add <- studyid_sf %>%
@@ -183,13 +183,13 @@ baecvtest_sfb  <-  st_as_sf(lllb, coords = c('long', 'lat'), crs = 4326) %>%
 #after choosing option #1 or #2, go on here
 baecv_keep <- baecvtest_sfb %>%
   filter(lyb_usa_baecv_1984_2015 <= yr_samp)
-#1961 observations
+#1536 observations
 #these ones are keepers
 
 baecv_no <- baecvtest_sfb  %>%
   filter(lyb_usa_baecv_1984_2015 > yr_samp) %>%
   dplyr::select(-topdepth_cm, -bottomdepth_cm, -thick, -veg, - Article_ID, -pool, -pool_value, -Study_ID, -site, -BD_estimated, -study)
-#151 observations
+#131 observations
 #these are burn date after sample collection
 #these are the ones I need Adam to recalculate (time - 1); give him a shapefile of these
 
