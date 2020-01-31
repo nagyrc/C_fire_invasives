@@ -91,7 +91,7 @@ studyid <- clean_study %>%
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
-#403 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+#408 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 unique(studyid$study)
 
 #cleary <- studyid %>%
