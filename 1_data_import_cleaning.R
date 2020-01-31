@@ -999,6 +999,14 @@ cp$BD_g_cm3 <- ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$bottomdepth_cm 
 #make sure thick is calculated correctly
 cp$thick <- cp$bottomdepth_cm - cp$topdepth_cm
 
+#apply mean BDs from the closest depth to studymeans data (may not be exact depth match)
+BD010 <- 1.422
+BD1020 <- 1.35
+BD020 <- 1.386
+BD60 <- 1.562
+BD90 <- BD60
+
+
 #calculating soil C content
 #total
 cp$totsoilC_g_m2 <- ifelse(cp$study == 'Boulton et al. 1993', cp$totsoilC_g_m2, cp$`totsoil%C` * cp$BD_g_cm3 *cp$thick *100)
@@ -1049,12 +1057,7 @@ studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Witwicki et al. 2013' & s
 #there are no litter mass samples that need to be converted to litter C!!
 
 
-#apply mean BDs from the closest depth to studymeans data (may not be exact depth match)
-BD010 <- 1.422
-BD1020 <- 1.35
-BD020 <- 1.386
-BD60 <- 1.562
-BD90 <- BD60
+
 
 studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick *100, 
                                     ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick *100, 
