@@ -39,3 +39,26 @@ ggplot(means, aes(x = pool2, y = meanpv, fill = veg)) +
   labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) + 
   scale_fill_manual(values = colours)
+
+
+surfacemeansalt <- siwf %>%
+  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(surfacemeansalt) = NULL
+
+write.csv(surfacemeansalt, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeansalt.csv")
+
+
+tensalt <- siwf %>%
+  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n))
+
+st_geometry(tensalt) = NULL
+
+write.csv(tensalt, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tensalt.csv")
+
