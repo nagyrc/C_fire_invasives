@@ -202,6 +202,11 @@ write.csv(baecv_no_Adamll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/da
 
 stdids <- unique(baecv_no_Adamll$Study_ID)
 #33 study ids
+unique(baecv_no_Adamll$lat)
+unique(baecv_no_Adamll$long)
+
+listy <- unique(baecv_no_Adamll[c("Study_ID", "lat", "long")])
+newlisty <- listy[order(listy$lat, listy$long),]
 
 baecv_add <- mtbs_add %>%
   left_join(as.data.frame(baecv_keep) %>% 
@@ -216,19 +221,19 @@ baecv_add_ll <- baecv_add %>%
   left_join(as.data.frame(ll))
 
 write.csv(baecv_add_ll, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid_with_fire_almost.csv")
-
+unique(baecv_add_ll$lat)
 
 #adding in BAECV info (second to last year burned) from Adam's script
 #open data
-baecv_gpkg <- rgdal::readOGR("baecv/lyb_preliminary.gpkg", "lyb_preliminary")
+baecv_gpkg <- rgdal::readOGR("baecv/lyb_forthoseplots.gpkg", "lyb_forthoseplots")
 
 #turn this into a dataframe
 baecv_from_Adam <- as.data.frame(baecv_gpkg)
 
 #add these points from Adam by replacing values
 baecv_rep <- baecv_add_ll %>%
-  mutate(baecvlyb = ifelse(Study_ID == 249, 2001,lyb_usa_baecv_1984_2015)) %>%
-  mutate(baecv_lyb = ifelse(Study_ID == 321, 1986, baecvlyb)) %>%
+  mutate(baecvlyb = ifelse(Study_ID == 249 | Study_ID == 239 | Study_ID == 244 | Study_ID == 254, 2001,lyb_usa_baecv_1984_2015)) %>%
+  mutate(baecv_lyb = ifelse(Study_ID == 321 | Study_ID == 320 | Study_ID == 331 | Study_ID == 330, 1986, baecvlyb)) %>%
   dplyr::select(-lyb_usa_baecv_1984_2015, -baecvlyb)
 
 #write.csv(baecv_rep, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
