@@ -62,7 +62,9 @@ final <- do.call("rbind", results) %>%
   dplyr::filter(burned > 0) %>%
   mutate(Study_ID = as.factor(Study_ID)) %>%
   group_by(Study_ID) %>%
-  summarise(lyb = max(burn_year))
+  summarise(lyb = max(burn_year)) %>%
+  dplyr::select(-Study_ID)%>%
+  st_join(x=dd, y=.) 
 
-st_write(final, "lyb_forthoseplots.gpkg")
+st_write(final, "lyb_forthoseplots.gpkg", delete_dsn = T)
 system("aws s3 cp lyb_forthoseplots.gpkg s3://earthlab-amahood/C_fire_invasives/lyb_forthoseplots.gpkg")
