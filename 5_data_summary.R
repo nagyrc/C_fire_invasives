@@ -848,9 +848,9 @@ str(joiny2)
 unique(joiny2$yr_samp)
 unique(joiny2$masterlyb)
 
-#replace NAs with 1900
+#replace NAs with 1950
 joiny2$masterlyb <- joiny2$masterlyb %>%
-  replace_na(1900)
+  replace_na(1950)
 
 is.numeric(joiny2$yr_samp)
 is.numeric(joiny2$masterlyb)
@@ -870,11 +870,11 @@ sagefire <- joiny2 %>%
 
 unique(cheatfire$timesincefire)
 range(cheatfire$timesincefire, na.rm = TRUE)
-#1, 117
+#1, 67
 range(sagecheatfire$timesincefire, na.rm = TRUE)
-#1, 117
+#1, 67
 range(sagefire$timesincefire, na.rm = TRUE)
-#1, 113
+#1, 63
 
 ggplot(data = joiny2) +
   geom_point(aes(x = timesincefire, y = pool_value)) +
