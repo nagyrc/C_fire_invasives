@@ -190,9 +190,9 @@ summary(totsoilC.model2b)
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2c)
-#depthcatshallow is sig (different from deep)
+#nothing sig
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=totsoilC2)
 summary(totsoilC.model2d)
-#depthcatshallow is sig (different from deep)
+#nothing sig
