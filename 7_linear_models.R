@@ -66,12 +66,29 @@ summary(lm5)
 #########################
 #linear mixed effects models
 
+unique(AGBC2$firecat)
+#old, recent mid, NA
+unique(BGBC2$firecat)
+#old, mid, NA
+unique(litterC2$firecat)
+#old, mid, NA
+unique(orgsoilC2$firecat)
+#old, mid, recent, NA
+unique(totsoilC2$firecat)
+#old, recent, NA, mid
+
+
+unique(orgsoilC2$depthcat)
+#shallow, mid, deep
+unique(totsoilC2$depthcat)
+#shallow, deep, mid
+
+
+
 
 #AGBC
 head(AGBC2)
 
-unique(AGBC2$firecat)
-#mid, old, recent, NA
 
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 AGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=AGBC2)
