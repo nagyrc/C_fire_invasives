@@ -722,35 +722,32 @@ ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) +
 
 #####################################
 
-head(joiny2)
+
 #analysis with fire
-str(joiny2)
+
 
 
 
 
 ###
-unique(joiny2$yr_samp)
-unique(joiny2$masterlyb)
+unique(siwf$yr_samp)
+unique(siwf$masterlyb)
 
 #replace NAs with 1950
-joiny2$masterlyb <- joiny2$masterlyb %>%
-  replace_na(1950)
+#joiny2$masterlyb <- joiny2$masterlyb %>%
+  #replace_na(1950)
 
-is.numeric(joiny2$yr_samp)
-is.numeric(joiny2$masterlyb)
+is.numeric(siwf$yr_samp)
+is.numeric(siwf$masterlyb)
 
 
-unique(joiny2$veg)
-summary(joiny2$veg)
-
-cheatfire <- joiny2 %>%
+cheatfire <- siwf %>%
   filter(veg == "cheatgrass")
 
-sagecheatfire <- joiny2 %>%
+sagecheatfire <- siwf %>%
   filter(veg == "sagecheat")
 
-sagefire <- joiny2 %>%
+sagefire <- siwf %>%
   filter(veg == "sagebrush")
 
 unique(cheatfire$timesincefire)
@@ -759,7 +756,7 @@ range(cheatfire$timesincefire, na.rm = TRUE)
 range(sagecheatfire$timesincefire, na.rm = TRUE)
 #1, 67
 range(sagefire$timesincefire, na.rm = TRUE)
-#1, 63
+#3, 66
 
 ggplot(data = joiny2) +
   geom_point(aes(x = timesincefire, y = pool_value)) +
