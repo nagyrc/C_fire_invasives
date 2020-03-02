@@ -420,15 +420,6 @@ ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
 
 
-#for presentation: new Fig. 3c
-ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
-  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
-  labs(y = "Soil organic C (gC cm-2) per cm depth", x = "bottom depth sampled (cm)", fill = "vegetation") +
-  scale_fill_manual(values = colours) +
-  geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(0.9)) + 
-  theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18))
 
 
 totonly <- deep2summary %>%
@@ -798,15 +789,6 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
   scale_fill_manual(values = colours)
 
 
-#Fig. 3b for presentation
-ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  labs(x = "depth (cm)", y = "Soil organic C (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18)) +
-  scale_fill_manual(values = colours)
 
 rawmeans2$geometry <- NULL
 rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
