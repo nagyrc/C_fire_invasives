@@ -60,79 +60,79 @@ summary(lm5)
 #########################
 #linear mixed effects models
 
-unique(AGBC2$firecat)
-#old, recent mid, NA
-unique(BGBC2$firecat)
-#old, mid, NA
-unique(litterC2$firecat)
-#old, mid, NA
-unique(orgsoilC2$firecat)
-#old, mid, recent, NA
-unique(totsoilC2$firecat)
-#old, recent, NA, mid
+unique(AGBC3$firecat)
+#mid, old, recent
+unique(BGBC3$firecat)
+#mid, old
+unique(litterC3$firecat)
+#mid, old
+unique(orgsoilC3$firecat)
+#old, mid, recent
+unique(totsoilC3$firecat)
+#mid, old, recent
 
 
-unique(orgsoilC2$depthcat)
+unique(orgsoilC3$depthcat)
 #shallow, mid, deep
-unique(totsoilC2$depthcat)
+unique(totsoilC3$depthcat)
 #shallow, deep, mid
 
 
 
 
 #AGBC
-head(AGBC2)
+head(AGBC3)
 
 
 #linear mixed model with veg as fixed effect and Article_ID as random effect
-AGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=AGBC2)
+AGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=AGBC3)
 summary(AGBC.model)
-#veg (cheatgrass) is sig. (different from sagebrush)
+#veg (cheatgrass) is sig. (different from sagecheat)
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
-AGBC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=AGBC2)
+AGBC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=AGBC3)
 summary(AGBC.model2a)
-#nothing sig
+#veg (cheatgrass) is sig. (different from sagecheat)
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
-AGBC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=AGBC2)
+AGBC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=AGBC3)
 summary(AGBC.model2b)
-#nothing sig
+#veg (cheatgrass) is sig. (different from sagecheat)
 
 
 
 #BGBC
 #linear mixed model with veg as fixed effect and Article_ID as random effect
-BGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=BGBC2)
+BGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=BGBC3)
 summary(BGBC.model)
-#veg is marginally sig (p=0.059); cheatgrass vs. sagebrush
+#nothing is sig
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
-BGBC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=BGBC2)
+BGBC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=BGBC3)
 summary(BGBC.model2a)
 #timesincefire is sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
-BGBC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=BGBC2)
+BGBC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=BGBC3)
 summary(BGBC.model2b)
-#fire category is sig. (old) vs. mid
+#fire category is marginally sig. (old) vs. mid
 
 
 
 
 #litterC
 #linear mixed model with veg as fixed effect and Article_ID as random effect
-litterC.model = lmer(pool_value ~ veg + (1|Article_ID), data=litterC2)
+litterC.model = lmer(pool_value ~ veg + (1|Article_ID), data=litterC3)
 summary(litterC.model)
 #nothing sig.
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
-litterC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=litterC2)
+litterC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=litterC3)
 summary(litterC.model2a)
 #timesincefire is sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
-litterC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=litterC2)
+litterC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=litterC3)
 summary(litterC.model2b)
 #firecatold is sig. (old is different from mid)
 
@@ -140,53 +140,53 @@ summary(litterC.model2b)
 
 #org soil
 #linear mixed model with veg as fixed effect and Article_ID as random effect
-orgsoilC.model = lmer(pool_value ~ veg + (1|Article_ID), data=orgsoilC2)
+orgsoilC.model = lmer(pool_value ~ veg + (1|Article_ID), data=orgsoilC3)
 summary(orgsoilC.model)
-#sagecheat is sig., different from sagebrush
+#nothing sig
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
-orgsoilC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=orgsoilC2)
+orgsoilC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=orgsoilC3)
 summary(orgsoilC.model2a)
-#timesincefire is sig and so is sagecheat (differnet from sagebrush)
+#timesincefire is sig 
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
-orgsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=orgsoilC2)
+orgsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=orgsoilC3)
 summary(orgsoilC.model2b)
-#firecatrecent is sig (different from mid); sagecheat is sig (different from sagebrush)
+#firecatrecent is sig (different from mid); sagecheat is marginally sig (different from sagebrush)
 
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
-orgsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=orgsoilC2)
+orgsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=orgsoilC3)
 summary(orgsoilC.model2c)
-#sagecheat is sig (different from sagebrush), firecatrecent is sig (different from mid); depthcatmid is sig (different from deep)
+#firecatrecent is sig (different from mid); depthcatmid is sig (different from deep)
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
-orgsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=orgsoilC2)
+orgsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=orgsoilC3)
 summary(orgsoilC.model2d)
-#timesincefire is sig; depthcatmid is sig (different from deep); sagecheat is different from sagebrush
+#timesincefire is sig; depthcatmid is sig (different from deep)
 
 
 #tot soil
 #linear mixed model with veg as fixed effect and Article_ID as random effect
-totsoilC.model = lmer(pool_value ~ veg + (1|Article_ID), data=totsoilC2)
+totsoilC.model = lmer(pool_value ~ veg + (1|Article_ID), data=totsoilC3)
 summary(totsoilC.model)
-#veg(sagecheat and cheatgrass) are different from sagebrush
+#nothing sig
 
 #linear mixed model with veg and timesincefire as fixed effect and Article_ID as random effect
-totsoilC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=totsoilC2)
+totsoilC.model2a = lmer(pool_value ~ veg + timesincefire + (1|Article_ID), data=totsoilC3)
 summary(totsoilC.model2a)
 #nothing sig
 
 #linear mixed model with veg and firecat as fixed effect and Article_ID as random effect
-totsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=totsoilC2)
+totsoilC.model2b = lmer(pool_value ~ veg + firecat + (1|Article_ID), data=totsoilC3)
 summary(totsoilC.model2b)
 #nothing sig
 
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
-totsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=totsoilC2)
+totsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=totsoilC3)
 summary(totsoilC.model2c)
-#nothing sig
+#depthcatmid is sig (different from deep)
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
-totsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=totsoilC2)
+totsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=totsoilC3)
 summary(totsoilC.model2d)
-#nothing sig
+#depthcatmid is sig (different from deep)
