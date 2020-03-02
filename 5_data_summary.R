@@ -205,7 +205,7 @@ joiny2 <- rawsonly %>%
   full_join(simraw) %>%
   mutate_if(is.character, as.factor) %>%
   filter(veg != "salt_desert") 
-#2858 observations
+#2860 observations
 
 unique(joiny2$study) #42
 unique(joiny2$Study_ID) #388
