@@ -181,6 +181,21 @@ simraw <- simrawdata %>%
   dplyr::select(-simvalue, -explode) %>%
   filter(veg != "salt_desert")
 
+#####checking data values
+look <- simraw %>%
+  group_by(veg, pool) %>%
+  summarise(mean = mean(pool_value), min = min(pool_value), max = max(pool_value))
+
+siwfnogeom <- siwf
+
+siwfnogeom$geometry <- NULL
+
+lookraw <- siwfnogeom %>%
+  filter(veg != "salt_desert") %>%
+  group_by(veg, pool) %>%
+  summarise(mean = mean(pool_value), min = min(pool_value), max = max(pool_value))
+###
+
 simrawsalt <- simrawdata %>%
   left_join(ttt) %>%
   mutate(pool_value = simvalue) %>%
