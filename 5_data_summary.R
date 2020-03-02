@@ -596,8 +596,8 @@ head(orgsoilC2)
 neworder <- c("shallow","mid","deep")
 
 #library(plyr)  ## or dplyr (transform -> mutate)
-orgsoilC2 <- arrange(transform(orgsoilC2,
-                           depth=factor(depth, levels = neworder)),depth)
+orgsoilC2 <- arrange(transform(orgsoilC2, depth=factor(depth, levels = neworder)),depth) %>%
+  filter(veg != 'salt_desert')
 
 orgsoilC2 <- arrange(transform(orgsoilC2,
                                veg=factor(veg, levels = neworder2)),veg)
@@ -617,8 +617,8 @@ ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) +
 
 #+scale_y_sqrt()
 
-totsoilC2 <- arrange(transform(totsoilC2,
-                               depth=factor(depth, levels = neworder)),depth)
+totsoilC2 <- arrange(transform(totsoilC2, depth=factor(depth, levels = neworder)),depth) %>%
+  filter(veg != 'salt_desert')
 
 totsoilC2 <- arrange(transform(totsoilC2,
                                veg=factor(veg, levels = neworder2)),veg)
