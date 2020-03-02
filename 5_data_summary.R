@@ -218,6 +218,10 @@ is.factor(simrawsalt$Study_ID)
 joiny2salt <-rawsonly %>%
   full_join(simrawsalt) %>%
   mutate_if(is.character, as.factor)  
+unique(joiny2salt$Article_ID) # 41
+unique(siwf$Article_ID) #42
+unique()
+unique(joiny2$Article_ID) #40
 
 saltonly <- joiny2salt %>%
   filter(veg == 'salt_desert') 
