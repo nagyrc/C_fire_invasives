@@ -104,7 +104,8 @@ orgsoilCraw010 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2" & topdepth_cm 
 totsoilCraw010 <- subset.data.frame(siwf, pool == "totsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
 orgsoilCraw1020 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
 totsoilCraw1020 <- subset.data.frame(siwf, pool == "totsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
-
+orgsoilCraw <- subset.data.frame(siwf, pool == "orgsoilC_g_m2")
+totsoilCraw <- subset.data.frame(siwf, pool == "totsoilC_g_m2")
 
 #ranges
 range(AGBCraw$pool_value)
@@ -152,7 +153,7 @@ range(totsoilCraw1020$pool_value)
 
 
 
-############################
+##################################################################################
 #summary of raws plus simulated raw data
 
 #bring in simulated raw data
@@ -268,22 +269,7 @@ write.csv(rawmeans2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/
 
 
 
-#now get into more detail in the soils (organic and total)
-unique(joiny2$topdepth_cm)
-unique(joiny2$bottomdepth_cm)
 
-count(joiny2$bottomdepth_cm == 5)
-#229
-
-count(joiny2$bottomdepth_cm == 10)
-#564
-#go with 0-10 for surface soils
-
-count(joiny2$bottomdepth_cm == 10 & joiny2$pool == "orgsoilC_g_m2")
-#399
-
-count(joiny2$bottomdepth_cm == 10 & joiny2$pool == "totsoilC_g_m2")
-#165
 
 
 #for Table 1 (raw + simulated)
@@ -330,20 +316,15 @@ tens2b <- joiny2 %>%
   mutate(se = sqrt(var)/sqrt(n))
 
 
+##################################################################################
 #for deeper subsets
-deep1 <- joiny2 %>%
+deep1 <- siwf %>%
   filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
   filter(bottomdepth_cm > 20 & bottomdepth_cm <= 40) %>%
-  mutate(Cpercm = pool_value/thick)
+  mutate(Cpercm = pool_value/thick) %>%
+  filter(veg != 'salt_desert')
 
 st_geometry(deep1) = NULL
-
-unique(deep1$topdepth_cm)
-#many depths
-unique(deep1$bottomdepth_cm)
-#many depths
-unique(deep1$Article_ID)
-#NORT2004; STAR2015
 
 deep1summary <- deep1 %>%
   group_by(pool, veg) %>%
@@ -364,10 +345,11 @@ deep1summary$veg <- plyr::revalue(deep1summary$veg, c("sagebrush" = "native sage
 ggplot(deep1summary, aes(x = veg, y = meanpvpercm))+
   geom_bar(stat = "identity")
 
-deep2 <- joiny2 %>%
+deep2 <- siwf %>%
   filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
   filter(bottomdepth_cm > 40) %>%
-  mutate(Cpercm = pool_value/thick)
+  mutate(Cpercm = pool_value/thick) %>%
+  filter(veg != 'salt_desert')
 
 st_geometry(deep2) = NULL
 
@@ -454,107 +436,40 @@ ggplot(totonly, aes(x = veg, y = meanpvpercm)) +
 #write.csv(zerostot2, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/results/zerostot2.csv")
 
 #subset soils to appropriate depths
-orgsoilmeans010 <- surfacemeans2 %>%
+orgsoilmeans010 <- surfacemeans %>%
   filter(pool == "orgsoilC_g_m2") %>%
   mutate(depth = "0-10 cm") 
-orgsoilmeans1020 <- tens2 %>%
+orgsoilmeans1020 <- tens %>%
   filter(pool == "orgsoilC_g_m2") %>%
   mutate(depth = "10-20 cm") 
-totsoilmeans010 <- surfacemeans2 %>%
+totsoilmeans010 <- surfacemeans %>%
   filter(pool == "totsoilC_g_m2") %>%
   mutate(depth = "0-10 cm") 
 #totsoilmeans1020 <- tens2 %>%
   #filter(pool == "totsoilC_g_m2")
 
-########################################
-################################
-#plotting
-
-
-#raw data only
-head(rawmeans)
-
-
-rawmeans$geometry <- NULL
-rawmeans <- add_row(rawmeans, pool = "litterC_g_m2", veg = "sagecheat")
-rawmeans$veg <- factor(rawmeans$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
-rawmeans$pool2 <- ifelse(rawmeans$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans$pool == "BGBC_g_m2", "BGB", "litter"))
-
-rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
-
-colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
-
-#Fig 3a
-ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
-  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
-  geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
-                width = .2, position = position_dodge(0.9)) + 
-  labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) + 
-  scale_fill_manual(values = colours)
-
-sm1 <- surfacemeans %>%
-  filter(pool == "orgsoilC_g_m2") %>%
-  mutate(depth = "0-10 cm")
-
-sm2 <- surfacemeans %>%
-  filter(pool == "totsoilC_g_m2")
-
-ggplot(sm1, aes(x=pool, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9))
-
-ggplot(sm2, aes(x=veg, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "total soil carbon content (gC m-2): 0-10 cm")
-
-ggplot(tens, aes(x=pool, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9))
-
-org <- tens %>%
-  mutate(depth = "10-20 cm") %>%
-  rbind(sm1)
-
-ggplot(org, aes(x=depth, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)")
-
-
-
-
 
 ########################################
-#raw plus simulated data
 
-head(joiny2)
-joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+
+
+siwf$pool2 <- ifelse(siwf$pool == "AGBC_g_m2", "AGB", ifelse(siwf$pool == "BGBC_g_m2", "BGB", ifelse(siwf$pool == "litterC_g_m2", "litter", ifelse(siwf$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 
 # Histogram for each pol-veg combo to look at distributions
 #reorder veg for plotting
 neworder2 <- c("sagebrush","sagecheat","cheatgrass")
 
-joiny2 <- arrange(transform(joiny2,
-                           veg=factor(veg, levels = neworder2)),veg)
+siwf2 <- arrange(transform(siwf, veg=factor(veg, levels = neworder2)),veg) %>%
+  filter(veg != 'salt_desert')
 
 #change veg names
-joiny2$veg <- plyr::revalue(joiny2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+siwf2$veg <- plyr::revalue(siwf2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 
 
 #Fig. S1
 ###original, keep
-ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
+ggplot(siwf2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + facet_grid(pool2 ~ veg) + 
   xlab("pool_value") + theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
@@ -575,7 +490,7 @@ DistGammaDF = data.frame(Type = "Gamma", pool_value = DistGamma)
 ###
 #try adding normal and gamma distributions
 #not working
-ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) + 
+ggplot(siwf, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram() + 
   xlab("pool_value") + 
   theme_bw() + 
@@ -598,42 +513,42 @@ ggplot(joiny2, aes(x = pool_value, fill = Article_ID)) +
 
 ###
 #make joiny2 again with original veg types
-joiny2 <- rawsonly %>%
-  full_join(simraw) %>%
-  mutate_if(is.character, as.factor) %>%
-  filter(veg != "salt_desert")
+#joiny2 <- rawsonly %>%
+  #full_join(simraw) %>%
+  #mutate_if(is.character, as.factor) %>%
+  #filter(veg != "salt_desert")
 
 
-joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
-joiny2 <- arrange(transform(joiny2,
-                            veg=factor(veg, levels = neworder2)),veg)
+#joiny2$pool2 <- ifelse(joiny2$pool == "AGBC_g_m2", "AGB", ifelse(joiny2$pool == "BGBC_g_m2", "BGB", ifelse(joiny2$pool == "litterC_g_m2", "litter", ifelse(joiny2$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+#joiny2 <- arrange(transform(joiny2,
+                            #veg=factor(veg, levels = neworder2)),veg)
 
 #try with subsets for each pool
-AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
-BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
-litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
-orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
-totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
+#AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
+#BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
+#litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
+#orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
+#totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
 
-summary(AGBC2$pool_value)
+#summary(AGBC2$pool_value)
 
 
-orgsoilC2 <- orgsoilC2 %>%
+orgsoilC2 <- orgsoilCraw %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
-totsoilC2 <- totsoilC2 %>%
+totsoilC2 <- totsoilCraw %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
 #reorder veg for plotting
 
-AGBC2 <- arrange(transform(AGBC2,
-                               veg=factor(veg, levels = neworder2)),veg)
+AGBC2 <- arrange(transform(AGBCraw, veg=factor(veg, levels = neworder2)),veg) %>%
+  filter(veg != 'salt_desert')
 
-BGBC2 <- arrange(transform(BGBC2,
-                           veg=factor(veg, levels = neworder2)),veg)
+BGBC2 <- arrange(transform(BGBCraw, veg=factor(veg, levels = neworder2)),veg) %>%
+  filter(veg != 'salt_desert')
 
-litterC2 <- arrange(transform(litterC2,
-                           veg=factor(veg, levels = neworder2)),veg)
+litterC2 <- arrange(transform(litterCraw, veg=factor(veg, levels = neworder2)),veg) %>%
+  filter(veg != 'salt_desert')
 
 
 AGBC2$veg <- plyr::revalue(AGBC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
@@ -645,7 +560,7 @@ head(AGBC)
 summary(AGBC2$pool_value)
 summary(rawsonly$pool_value)
 
-#Fig 2 a)
+#Fig 2a)
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
@@ -724,7 +639,7 @@ ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) +
 
 
 
-#plotting means of raw + simulated raw values
+#Plotting for Fig 3
 orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 #ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
@@ -752,15 +667,7 @@ ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   scale_fill_manual(values = colours)
 
-#Fig. 3d for presentation
-ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
-  geom_bar(position=position_dodge(), stat="identity") +
-  geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
-                position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "total soil carbon (gC m-2): 0-10 cm", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18)) +
-  scale_fill_manual(values = colours)
+
 
 
 #ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
@@ -800,7 +707,7 @@ rawmeans2$veg <- plyr::revalue(rawmeans2$veg, c("sagebrush" = "native sagebrush"
 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
-#
+# For Fig 3a
 ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
