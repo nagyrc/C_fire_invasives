@@ -508,7 +508,7 @@ rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", 
 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
-
+#Fig 3a
 ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
@@ -833,7 +833,7 @@ rawmeans2$veg <- plyr::revalue(rawmeans2$veg, c("sagebrush" = "native sagebrush"
 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
-#Fig. 3a
+#
 ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
@@ -842,14 +842,6 @@ ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) + 
   scale_fill_manual(values = colours)
 
-#Fig. 3a for presentation
-ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
-  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
-  geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
-                width = .2, position = position_dodge(0.9)) + 
-  labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 16), axis.text.y = element_text(size = 16), axis.title.x = element_text(size = 18), axis.title.y = element_text(size = 18), legend.text=element_text(size=18), legend.title=element_text(size=18)) + 
-  scale_fill_manual(values = colours)
 #####################################
 
 head(joiny2)
