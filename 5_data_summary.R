@@ -758,15 +758,15 @@ range(sagecheatfire$timesincefire, na.rm = TRUE)
 range(sagefire$timesincefire, na.rm = TRUE)
 #3, 66
 
-ggplot(data = joiny2) +
+ggplot(data = siwf) +
   geom_point(aes(x = timesincefire, y = pool_value)) +
   facet_wrap(~pool)
 
-recentburn <- joiny2 %>%
-  filter(timesincefire < 20)
-#only 692 observations of 3227
-#need to check and make sure fire info came in with simraw data
-unique(recentburn$veg)
+recentburn <- siwf %>%
+  filter(timesincefire < 20) %>%
+  filter(veg != 'salt_desert')
+#only 684 observations of 1667
+#need to check and make sure fire info came in with simraw dataunique(recentburn$veg)
 recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 
