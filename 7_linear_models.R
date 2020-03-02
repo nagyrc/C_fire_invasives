@@ -8,57 +8,51 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-joiny2 <- as.data.frame(read_csv("joiny2.csv"))
+siwf <- as.data.frame(read_csv("siwf.csv"))
 
-#joiny2 <- joiny2 %>%
-  #filter(veg != "salt_desert") 
-
-unique(joiny2$veg)
-
-head(joiny2)
-
-#joiny2$timesincefire <- joiny2$yr_samp - joiny2$masterlyb
+siwf3 <- siwf %>%
+  filter(veg != 'salt_desert')
 
 #create categorical variable of years since fire
 #recent = < 5 years since fire
 #mid = 5 - 20 years since fire
 #old = > 20 years since fire
-joiny2$firecat <- ifelse(joiny2$timesincefire < 5, "recent", ifelse(joiny2$timesincefire >= 5 & joiny2$timesincefire < 20, "mid", ifelse(joiny2$timesincefire >= 20, "old", NA)))
+siwf3$firecat <- ifelse(siwf3$timesincefire < 5, "recent", ifelse(siwf3$timesincefire >= 5 & siwf3$timesincefire < 20, "mid", ifelse(siwf3$timesincefire >= 20, "old", NA)))
 
 
 #create categorical variable of depth
 #shallow = bottomdepth_cm < 20
 #mid = bottomdepth_cm == 20
 #deep = bottomdepth_cm > 20
-joiny2$depthcat <- ifelse(joiny2$bottomdepth_cm < 20, "shallow", ifelse(joiny2$bottomdepth_cm == 20, "mid", ifelse(joiny2$bottomdepth_cm > 20, "deep", NA)))
+siwf3$depthcat <- ifelse(siwf3$bottomdepth_cm < 20, "shallow", ifelse(siwf3$bottomdepth_cm == 20, "mid", ifelse(siwf3$bottomdepth_cm > 20, "deep", NA)))
 
 
 #try with subsets for each pool
-AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
-BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
-litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
-orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
-totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
+AGBC3 <- subset.data.frame(siwf3, pool == "AGBC_g_m2")
+BGBC3 <- subset.data.frame(siwf3, pool == "BGBC_g_m2")
+litterC3 <- subset.data.frame(siwf3, pool == "litterC_g_m2")
+orgsoilC3 <- subset.data.frame(siwf3, pool == "orgsoilC_g_m2")
+totsoilC3 <- subset.data.frame(siwf3, pool == "totsoilC_g_m2")
 
-lm1 <- lm(pool_value ~ timesincefire + veg, data = AGBC2)
+lm1 <- lm(pool_value ~ timesincefire + veg, data = AGBC3)
 summary(lm1)
-#veg is significant in one case and so is timesincefire; overall p-value =2.17e-07
+#veg is significant and so is timesincefire; overall p-value = 3.832e-07
 
-lm2 <- lm(pool_value ~ timesincefire + veg, data = BGBC2)
+lm2 <- lm(pool_value ~ timesincefire + veg, data = BGBC3)
 summary(lm2)
-#nothing sig; overall p-value = 0.5525
+#veg is significant in one case; overall p-value = 0.0657
 
-lm3 <- lm(pool_value ~ timesincefire + veg, data = litterC2)
+lm3 <- lm(pool_value ~ timesincefire + veg, data = litterC3)
 summary(lm3)
-#veg and timesincefire are sig; overall p-value = 5.979e-06
+#veg and timesincefire are sig; overall p-value = 8.634e-06
 
-lm4 <- lm(pool_value ~ timesincefire + veg, data = orgsoilC2)
+lm4 <- lm(pool_value ~ timesincefire + veg, data = orgsoilC3)
 summary(lm4)
-#veg is sig and so is timesincefire; overall p-value = 5.968E-05
+#veg is sig and so is timesincefire; overall p-value = 6.536e-05
 
-lm5 <- lm(pool_value ~ timesincefire + veg, data = totsoilC2)
+lm5 <- lm(pool_value ~ timesincefire + veg, data = totsoilC3)
 summary(lm5)
-#only intercept; overall p-value = 0.2531
+#only intercept; overall p-value = 0.4433
 
 
 
