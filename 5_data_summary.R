@@ -76,7 +76,9 @@ surfacemeans <- siwf %>%
   filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  filter(veg != "salt_desert") %>%
+  ungroup()
 
 st_geometry(surfacemeans) = NULL
 
@@ -88,7 +90,9 @@ tens <- siwf %>%
   filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n))
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  filter(veg != "salt_desert") %>%
+  ungroup()
 #97 for org soil; 0 for total soil
 
 st_geometry(tens) = NULL
@@ -697,18 +701,18 @@ ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) +
 
 
 
-rawmeans2$geometry <- NULL
-rawmeans2 <- add_row(rawmeans2, pool = "litterC_g_m2", veg = "sagecheat")
-rawmeans2$veg <- factor(rawmeans2$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
-rawmeans2$pool2 <- ifelse(rawmeans2$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans2$pool == "BGBC_g_m2", "BGB", "litter"))
+rawmeans$geometry <- NULL
+rawmeans <- add_row(rawmeans, pool = "litterC_g_m2", veg = "sagecheat")
+rawmeans$veg <- factor(rawmeans$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+rawmeans$pool2 <- ifelse(rawmeans$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans$pool == "BGBC_g_m2", "BGB", "litter"))
 
-rawmeans2
-rawmeans2$veg <- plyr::revalue(rawmeans2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+rawmeans
+rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
 # For Fig 3a
-ggplot(rawmeans2, aes(x = pool2, y = meanpv, fill = veg)) + 
+ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
