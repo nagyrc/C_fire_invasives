@@ -91,7 +91,7 @@ studyid <- clean_study %>%
 
 unique(studyid$pool)
 unique(studyid$Study_ID)
-#408 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
+#414 studies based on dataset, lat/long, veg, site, soil depth (if applicable), pool, and year sampled
 unique(studyid$study)
 
 #cleary <- studyid %>%
@@ -245,9 +245,6 @@ step1 <- unique(meansonlynvar$Study_ID)
 step2 <- studyidSE %>%
   filter(!Study_ID %in% step1) 
 
-#make sure raws + means = total
-1941 + 84 
-#looks good
 
 rawsonlynofire <- step2
 summary(rawsonlynofire$pool_value)
