@@ -67,27 +67,12 @@ write.csv(rawmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/r
   #filter(pool == "litterC_g_m2" & veg == 'sagebrush')
 #only 1 value, repeated 72 times
 
-#now get into more detail in the soils (organic and total)
-unique(rawsonly$topdepth_cm)
-unique(rawsonly$bottomdepth_cm)
 
-count(rawsonly$bottomdepth_cm == 5)
-#125
-
-count(rawsonly$bottomdepth_cm == 10)
-#583
-#go with 0-10 for surface soils
-
-count(rawsonly$bottomdepth_cm == 10 & rawsonly$pool == "orgsoilC_g_m2")
-#399
-
-count(rawsonly$bottomdepth_cm == 10 & rawsonly$pool == "totsoilC_g_m2")
-#184
 
 
 
 #for 0-10 cm only
-surfacemeans <- rawsonly %>%
+surfacemeans <- siwf %>%
   filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
@@ -99,7 +84,7 @@ write.csv(surfacemeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/resul
 
 
 #for 10-20 cm only
-tens <- rawsonly %>%
+tens <- siwf %>%
   filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
   group_by(pool, veg) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
@@ -112,13 +97,13 @@ write.csv(tens, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/tens.
 
 
 ###
-AGBCraw <- subset.data.frame(rawsonly, pool == "AGBC_g_m2")
-BGBCraw <- subset.data.frame(rawsonly, pool == "BGBC_g_m2")
-litterCraw <- subset.data.frame(rawsonly, pool == "litterC_g_m2")
-orgsoilCraw010 <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
-totsoilCraw010 <- subset.data.frame(rawsonly, pool == "totsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
-orgsoilCraw1020 <- subset.data.frame(rawsonly, pool == "orgsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
-totsoilCraw1020 <- subset.data.frame(rawsonly, pool == "totsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
+AGBCraw <- subset.data.frame(siwf, pool == "AGBC_g_m2")
+BGBCraw <- subset.data.frame(siwf, pool == "BGBC_g_m2")
+litterCraw <- subset.data.frame(siwf, pool == "litterC_g_m2")
+orgsoilCraw010 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
+totsoilCraw010 <- subset.data.frame(siwf, pool == "totsoilC_g_m2" & topdepth_cm == 0 & bottomdepth_cm == 10)
+orgsoilCraw1020 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
+totsoilCraw1020 <- subset.data.frame(siwf, pool == "totsoilC_g_m2" & topdepth_cm == 10 & bottomdepth_cm == 20)
 
 
 #ranges
