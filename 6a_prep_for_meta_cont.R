@@ -172,8 +172,15 @@ Banscheck <- siwf5 %>%
 st_geometry(Banscheck) = NULL
 write.csv(Banscheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/Bansal_pairs_check.csv")
 
+#not sure how to pair these yet
+Norton2004check <- siwf5 %>% 
+  filter(Article_ID == 'NORT2004') %>%
+  distinct(Study_ID, veg, pool, site, topdepth_cm, bottomdepth_cm, lat, long, keep_all = FALSE)
 
-
+#not sure how to pair these yet
+Raucheck <- siwf5 %>% 
+  filter(Article_ID == 'RAU2011') %>%
+  distinct(Study_ID, veg, pool, site, lat, long, keep_all = FALSE)
 
 
 
