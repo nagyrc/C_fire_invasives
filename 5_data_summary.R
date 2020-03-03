@@ -578,7 +578,7 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
         legend.key.size =  unit(0.1, "in")) 
 
-#Fig 2 b)
+#Fig 2b)
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
@@ -589,7 +589,7 @@ ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) +
         legend.key.size =  unit(0.1, "in")) 
 
 
-#Fig 2 c)
+#Fig 2c)
 ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 50) + 
   facet_wrap(~veg, drop = FALSE) + 
@@ -613,7 +613,7 @@ orgsoilC2 <- arrange(transform(orgsoilC2,
 orgsoilC2$veg <- plyr::revalue(orgsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 
-#Figure 2 d)
+#Figure 2d)
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
@@ -633,7 +633,7 @@ totsoilC2 <- arrange(transform(totsoilC2,
 
 totsoilC2$veg <- plyr::revalue(totsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
-#Figure 2 e)
+#Figure 2e)
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
@@ -812,7 +812,9 @@ st_geometry(saltytab) = NULL
 
 write.csv(saltytab, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/saltdesert.csv")
 
-
+unique(salty$study)
+#Bradley et al. 2006; Driese and Reiners 1997; Bjerregaard et al. 1984; 
+#West 1972; Gill and Burke 1999
 ########################
 #Fig. 4 alternative with subsets for each pool
 rbAGB <- subset.data.frame(recentburn, pool2 == "AGB")
