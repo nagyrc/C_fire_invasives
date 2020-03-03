@@ -794,6 +794,26 @@ ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, color = veg)) +
   scale_color_manual(values = colours) +
   xlim(0,20)
 
+
+
+#######################
+#salt desert only
+salty <- siwf %>%
+  filter(veg == 'salt_desert') 
+  
+
+saltytab <- salty %>%
+  group_by(pool, veg) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup ()
+
+st_geometry(saltytab) = NULL
+
+write.csv(saltytab, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/saltdesert.csv")
+
+
+########################
 #Fig. 4 alternative with subsets for each pool
 rbAGB <- subset.data.frame(recentburn, pool2 == "AGB")
 rbBGB <- subset.data.frame(recentburn, pool2 == "BGB")
