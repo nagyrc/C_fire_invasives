@@ -816,6 +816,42 @@ unique(salty$study)
 #Bradley et al. 2006; Driese and Reiners 1997; Bjerregaard et al. 1984; 
 #West 1972; Gill and Burke 1999
 ########################
+
+#GROUP MEANS  
+mean1 <- siwf %>%
+  filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
+  filter(veg != "salt_desert") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
+mean1$geometry <- NULL
+
+surfmean1 <- siwf %>%
+  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
+  filter(veg != "salt_desert") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
+surfmean1$geometry <- NULL
+
+tenmean1 <- siwf %>%
+  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
+  filter(veg != "salt_desert") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
+tenmean1$geometry <- NULL
+
+
+
+#########################
+#BELOW NOT USED
 #Fig. 4 alternative with subsets for each pool
 rbAGB <- subset.data.frame(recentburn, pool2 == "AGB")
 rbBGB <- subset.data.frame(recentburn, pool2 == "BGB")
