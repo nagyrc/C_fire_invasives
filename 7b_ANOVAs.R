@@ -8,18 +8,15 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-#raw plus simulated raw data
-joiny2 <- as.data.frame(read_csv("joiny2.csv"))
-head(joiny2)
-
-summary(AGBC2$pool_value)
+#raw data
+siwf <- as.data.frame(read_csv("siwf.csv"))
 
 #subset by pool
-AGBC2 <- subset.data.frame(joiny2, pool == "AGBC_g_m2")
-BGBC2 <- subset.data.frame(joiny2, pool == "BGBC_g_m2")
-litterC2 <- subset.data.frame(joiny2, pool == "litterC_g_m2")
-orgsoilC2 <- subset.data.frame(joiny2, pool == "orgsoilC_g_m2")
-totsoilC2 <- subset.data.frame(joiny2, pool == "totsoilC_g_m2")
+AGBC2 <- subset.data.frame(siwf, pool == "AGBC_g_m2")
+BGBC2 <- subset.data.frame(siwf, pool == "BGBC_g_m2")
+litterC2 <- subset.data.frame(siwf, pool == "litterC_g_m2")
+orgsoilC2 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2")
+totsoilC2 <- subset.data.frame(siwf, pool == "totsoilC_g_m2")
 
 
 unique(totsoilC2$veg)
