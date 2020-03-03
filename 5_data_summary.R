@@ -221,7 +221,7 @@ joiny2salt <-rawsonly %>%
 unique(joiny2salt$Article_ID) # 41
 unique(siwf$Article_ID) #42
 unique()
-unique(joiny2$Article_ID) #40
+unique(joiny2$Article_ID) #41; does not include BJER1984- salt desert only
 
 saltonly <- joiny2salt %>%
   filter(veg == 'salt_desert') 
