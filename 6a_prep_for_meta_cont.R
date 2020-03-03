@@ -9,12 +9,12 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 setwd("data/")
 
 #bring in studyid dataframe
-studyid = read_csv("studyid.csv")
+#studyid = read_csv("studyid.csv")
 siwf = read_csv("siwf.csv")
 
-joiny2 = read_csv("joiny2.csv")
+#joiny2 = read_csv("joiny2.csv")
 
-unique(joiny2$masterlyb) #crap this field is messed up
+#unique(joiny2$masterlyb) #crap this field is messed up
 #####
 #rawsonly <- siwf %>%
 #filter(!study %in% smeans) %>%
@@ -22,19 +22,51 @@ unique(joiny2$masterlyb) #crap this field is messed up
 
 #write.csv(rawsonly, file = "/Users/rana7082-su/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
-rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
+#rawsonly <- as.data.frame(read_csv("rawsonly.csv"))
 
-unique(rawsonly$Study_ID)
-rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
-is.numeric(rawsonly$Study_ID)
+#unique(rawsonly$Study_ID)
+#rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
+#is.numeric(rawsonly$Study_ID)
 
-unique(rawsonly$veg)
-unique(rawsonly$study)
-unique(rawsonly$pool)
+#unique(rawsonly$veg)
+#unique(rawsonly$study)
+#unique(rawsonly$pool)
 
 #ccc <- unique(rawsonly[c("Study_ID", "veg", "study", "pool")])
 
-ccc <- rawsonly %>% 
+siwf4 <- siwf %>%
+  filter(veg != 'salt_desert')
+
+#which studies are paired?
+ccz <- siwf4 %>%
+  group_by(study) %>%
+  summarise(numveg = n_distinct(veg,  na.rm = TRUE))
+
+ccz$geometry <- NULL
+write.csv(ccz, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/pairedunpaired.csv", row.names = FALSE)
+
+#ccx <- siwf4 %>%
+  #group_by(study, pool) %>%
+  #summarise(numveg = n_distinct(veg,  na.rm = TRUE))
+#ccx$geometry <- NULL
+###############
+#test a few
+test1 <- siwf4 %>%
+  filter(study == 'Witwicki et al. 2013')
+unique(test1$veg) #2
+
+test2 <- siwf4 %>%
+  filter(study == 'Stark et al. 2015')
+unique(test2$veg) #3
+
+test3 <- siwf4 %>%
+  filter(study == 'Peschel et al. 2015')
+unique(test3$veg) #1
+#these look good
+###############
+
+#to start matching up studyids
+ccc <- siwf4 %>% 
   distinct(Study_ID, veg, study, pool, .keep_all = FALSE)
 
 ccc$geometry <- NULL
