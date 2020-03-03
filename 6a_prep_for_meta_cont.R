@@ -112,7 +112,7 @@ Johncheck <- siwf5 %>%
   filter(study == 'Johnson et al. 2011') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
-
+#need to average across some cheatgrass sites; see code below
 Mahocheck <- siwf5 %>% 
   filter(Article_ID == 'MAHO2018a') %>%
   distinct(Study_ID, veg, pool, site, lat, long, .keep_all = FALSE)
@@ -142,14 +142,6 @@ Webecheck <- siwf5 %>%
   filter(Article_ID == 'WEBE2015') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
-Banscheck <- siwf5 %>% 
-  filter(Article_ID == 'BANS2014') %>%
-  distinct(Study_ID, veg, pool, site, keep_all = FALSE)
-
-st_geometry(Banscheck) = NULL
-write.csv(Banscheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/Bansal_pairs_check.csv")
-
-
 Boulcheck <- siwf5 %>% 
   filter(Article_ID == 'BOUL1993') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
@@ -159,19 +151,30 @@ Boulcheckpre <- siwf5 %>%
   filter(Article_ID == 'BOUL1993')
 
 #this is summary data
-Ackecheck <- siwf5 %>% 
-  filter(Article_ID == 'ACKE1992') %>%
-  distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
-
-#this is summary data
-Gascchecka <- siwf5 %>% 
-  filter(Article_ID == 'GASC2013') %>%
-  distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
+#Gascchecka <- siwf5 %>% 
+  #filter(Article_ID == 'GASC2013') %>%
+  #distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
 
 #this is summary data
 Witwcheck <- siwf5 %>% 
   filter(Article_ID == 'WITW2013') %>%
   distinct(Study_ID, veg, pool, keep_all = FALSE)
+
+#this is summary data
+Ackecheck <- siwf5 %>% 
+  filter(Article_ID == 'ACKE1992') %>%
+  distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
+
+Banscheck <- siwf5 %>% 
+  filter(Article_ID == 'BANS2014') %>%
+  distinct(Study_ID, veg, pool, site, keep_all = FALSE)
+
+st_geometry(Banscheck) = NULL
+write.csv(Banscheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/Bansal_pairs_check.csv")
+
+
+
+
 
 
 
