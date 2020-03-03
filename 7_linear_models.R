@@ -34,6 +34,8 @@ litterC3 <- subset.data.frame(siwf3, pool == "litterC_g_m2")
 orgsoilC3 <- subset.data.frame(siwf3, pool == "orgsoilC_g_m2")
 totsoilC3 <- subset.data.frame(siwf3, pool == "totsoilC_g_m2")
 
+
+#for Table 2a
 lm1 <- lm(pool_value ~ timesincefire + veg, data = AGBC3)
 summary(lm1)
 #veg is significant and so is timesincefire; overall p-value = 3.832e-07
@@ -84,6 +86,7 @@ unique(totsoilC3$depthcat)
 head(AGBC3)
 
 
+#for Table 2b
 #linear mixed model with veg as fixed effect and Article_ID as random effect
 AGBC.model = lmer(pool_value ~ veg + (1|Article_ID), data=AGBC3)
 summary(AGBC.model)
