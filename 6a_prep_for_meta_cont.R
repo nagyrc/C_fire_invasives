@@ -81,36 +81,39 @@ ccc <- siwf4 %>%
 ccc$geometry <- NULL
 write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv", row.names = FALSE)
 
-
+siwf5 <- siwf %>%
+  filter(veg != 'salt_desert') %>%
+  filter(study %in% studies) 
+  
 
 ###
 #to update pairs of studyids in paired_StudyIDs3
 #NOTE: the studies below marked as summary data can either be included or not; these are simulated raw data
-Blankcheck <- rawsonly %>% 
+Blankcheck <- siwf5 %>% 
   filter(study == 'Blank and Norton 2006') %>%
   distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
 
-Bradleycheck <- rawsonly %>% 
+Bradleycheck <- siwf5 %>% 
   filter(study == 'Bradley et al. 2006') %>%
   distinct(Study_ID, veg, pool, site, .keep_all = FALSE)
 #get rid of 280, 281, 290, 291 if not using salt desert
 
-Goercheck <- rawsonly %>% 
+Goercheck <- siwf5 %>% 
   filter(study == 'Goergen et al. 2011') %>%
   distinct(Study_ID, veg, pool, site, bottomdepth_cm, .keep_all = FALSE)
 
 #this is summary data
-Hookcheck <- joiny2 %>% 
+Hookcheck <- siwf5 %>% 
   filter(study == 'Hooker et al. 2008') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
 #this is summary data
-Johncheck <- joiny2 %>% 
+Johncheck <- siwf5 %>% 
   filter(study == 'Johnson et al. 2011') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
 
-Mahocheck <- rawsonly %>% 
+Mahocheck <- siwf5 %>% 
   filter(Article_ID == 'MAHO2018a') %>%
   distinct(Study_ID, veg, pool, site, lat, long, .keep_all = FALSE)
 
@@ -119,27 +122,27 @@ write.csv(Mahocheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/
 
 
 
-Nortcheck <- rawsonly %>% 
+Nortcheck <- siwf5 %>% 
   filter(Article_ID == 'NORT2008') %>%
   distinct(Study_ID, veg, pool, .keep_all = FALSE)
 
-Nortcheck2012 <- rawsonly %>% 
+Nortcheck2012 <- siwf5 %>% 
   filter(Article_ID == 'NORT2012') %>%
   distinct(Study_ID, veg, pool, yr_samp, .keep_all = FALSE)
 
-Starcheck <- rawsonly %>% 
+Starcheck <- siwf5 %>% 
   filter(Article_ID == 'STAR2015') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
-Svejcheck <- rawsonly %>% 
+Svejcheck <- siwf5 %>% 
   filter(Article_ID == 'SVEJ2001') %>%
   distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
 
-Webecheck <- rawsonly %>% 
+Webecheck <- siwf5 %>% 
   filter(Article_ID == 'WEBE2015') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
-Banscheck <- rawsonly %>% 
+Banscheck <- siwf5 %>% 
   filter(Article_ID == 'BANS2014') %>%
   distinct(Study_ID, veg, pool, site, keep_all = FALSE)
 
@@ -147,26 +150,26 @@ st_geometry(Banscheck) = NULL
 write.csv(Banscheck, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/Bansal_pairs_check.csv")
 
 
-Boulcheck <- rawsonly %>% 
+Boulcheck <- siwf5 %>% 
   filter(Article_ID == 'BOUL1993') %>%
   distinct(Study_ID, veg, pool, bottomdepth_cm, keep_all = FALSE)
 
 #only 4 obs; double checked and this came from ind_points so this makes sense
-Boulcheckpre <- rawsonly %>% 
+Boulcheckpre <- siwf5 %>% 
   filter(Article_ID == 'BOUL1993')
 
 #this is summary data
-Ackecheck <- joiny2 %>% 
+Ackecheck <- siwf5 %>% 
   filter(Article_ID == 'ACKE1992') %>%
   distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
 
 #this is summary data
-Gascchecka <- joiny2 %>% 
+Gascchecka <- siwf5 %>% 
   filter(Article_ID == 'GASC2013') %>%
   distinct(Study_ID, veg, pool, site, yr_samp, keep_all = FALSE)
 
 #this is summary data
-Witwcheck <- joiny2 %>% 
+Witwcheck <- siwf5 %>% 
   filter(Article_ID == 'WITW2013') %>%
   distinct(Study_ID, veg, pool, keep_all = FALSE)
 
