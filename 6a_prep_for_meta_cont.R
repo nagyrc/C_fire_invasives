@@ -64,9 +64,18 @@ test3 <- siwf4 %>%
 unique(test3$veg) #1
 #these look good
 ###############
+cct <- siwf4 %>%
+  group_by(study) %>%
+  summarise(numveg = n_distinct(veg,  na.rm = TRUE)) %>%
+  filter(numveg > 1)
+cct$geometry <- NULL
 
-#to start matching up studyids
+studies <- cct$study
+studies
+
+#to start matching up studyids...then look below for more clues on which ones to match
 ccc <- siwf4 %>% 
+  filter(study %in% studies) %>%
   distinct(Study_ID, veg, study, pool, .keep_all = FALSE)
 
 ccc$geometry <- NULL
