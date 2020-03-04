@@ -84,7 +84,10 @@ write.csv(ccc, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/ccc.csv",
 siwf5 <- siwf %>%
   filter(veg != 'salt_desert') %>%
   filter(study %in% studies) 
-  
+
+checky <- siwf5 %>%
+  filter(study == "Mahood et al. unpub1") %>%
+  distinct(Study_ID)
 
 ###
 #to update pairs of studyids in paired_StudyIDs3
@@ -191,6 +194,53 @@ Raucheck <- siwf5 %>%
 #need to update this
 #pairs_long <- as.data.frame(read_csv("paired_studyIDs_long.csv"))
 
+###########################
+#replace studyIDs in studies that need to be averaged across (Mahood, Rau, Norton et al. 2004)
+is.factor(siwf5$Study_ID) #TRUE
+
+#creating new levels for Mahood
+levels(siwf5$Study_ID) <- c(levels(siwf5$Study_ID), "6002", "6003", "6004") 
+#replacing study ids in Mahood
+siwf5$Study_ID[siwf5$Study_ID == '665'|siwf5$Study_ID == '670'|siwf5$Study_ID == '675'] <- '6002'
+siwf5$Study_ID[siwf5$Study_ID == '640'|siwf5$Study_ID == '645'] <- '6003'
+siwf5$Study_ID[siwf5$Study_ID == '610'|siwf5$Study_ID == '615'|siwf5$Study_ID == '620'] <- '6004'
+
+#creating new levels for Rau
+levels(siwf5$Study_ID) <- c(levels(siwf5$Study_ID), "3000", "3001", "3002", "3003") 
+#replacing study ids in Rau
+siwf5$Study_ID[siwf5$Study_ID == '1332'|siwf5$Study_ID == '1337'] <- '3000'
+siwf5$Study_ID[siwf5$Study_ID == '1334'|siwf5$Study_ID == '1339'] <- '3001'
+siwf5$Study_ID[siwf5$Study_ID == '1322'|siwf5$Study_ID == '1317'] <- '3002'
+siwf5$Study_ID[siwf5$Study_ID == '1324'|siwf5$Study_ID == '1319'] <- '3003'
+
+
+
+#creating new levels for Norton et al. 2004
+levels(siwf5$Study_ID) <- c(levels(siwf5$Study_ID), "4000", "4001", "4002", "4003", "4004", "4005", "4006", "4007") 
+levels(siwf5$Study_ID) <- c(levels(siwf5$Study_ID), "5000", "5001", "5002", "5003", "5004", "5005", "5006", "5007") 
+
+#replacing study ids in Norton et al. 2004
+siwf5$Study_ID[siwf5$Study_ID == '999'|siwf5$Study_ID == '1094'|siwf5$Study_ID == '789'|siwf5$Study_ID == '1159'|siwf5$Study_ID == '894'|siwf5$Study_ID == '964'|siwf5$Study_ID == '844'] <- '4000'
+siwf5$Study_ID[siwf5$Study_ID == '1014'|siwf5$Study_ID == '1099'|siwf5$Study_ID == '794'|siwf5$Study_ID == '1164'|siwf5$Study_ID == '899'|siwf5$Study_ID == '969'|siwf5$Study_ID == '849'] <- '4001'
+siwf5$Study_ID[siwf5$Study_ID == '1019'|siwf5$Study_ID == '1104'|siwf5$Study_ID == '799'|siwf5$Study_ID == '1169'|siwf5$Study_ID == '904'|siwf5$Study_ID == '974'|siwf5$Study_ID == '844'] <- '4002'
+siwf5$Study_ID[siwf5$Study_ID == '1024'|siwf5$Study_ID == '1109'|siwf5$Study_ID == '804'|siwf5$Study_ID == '1174'|siwf5$Study_ID == '909'|siwf5$Study_ID == '979'|siwf5$Study_ID == '854'] <- '4003'
+siwf5$Study_ID[siwf5$Study_ID == '1029'|siwf5$Study_ID == '1114'|siwf5$Study_ID == '809'|siwf5$Study_ID == '1179'|siwf5$Study_ID == '914'|siwf5$Study_ID == '859'] <- '4004'
+siwf5$Study_ID[siwf5$Study_ID == '1034'|siwf5$Study_ID == '1119'|siwf5$Study_ID == '1184'|siwf5$Study_ID == '919'] <- '4005'
+siwf5$Study_ID[siwf5$Study_ID == '1039'|siwf5$Study_ID == '1124'|siwf5$Study_ID == '924'|siwf5$Study_ID == '864'] <- '4006'
+siwf5$Study_ID[siwf5$Study_ID == '1044'|siwf5$Study_ID == '929'] <- '4007'
+siwf5$Study_ID[siwf5$Study_ID == '1054'|siwf5$Study_ID == '1129'|siwf5$Study_ID == '814'|siwf5$Study_ID == '1189'|siwf5$Study_ID == '934'|siwf5$Study_ID == '984'|siwf5$Study_ID == '869'] <- '5000'
+siwf5$Study_ID[siwf5$Study_ID == '1059'|siwf5$Study_ID == '1134'|siwf5$Study_ID == '819'|siwf5$Study_ID == '1194'|siwf5$Study_ID == '939'|siwf5$Study_ID == '989'|siwf5$Study_ID == '874'] <- '5001'
+siwf5$Study_ID[siwf5$Study_ID == '1064'|siwf5$Study_ID == '1139'|siwf5$Study_ID == '824'|siwf5$Study_ID == '1199'|siwf5$Study_ID == '944'|siwf5$Study_ID == '994'|siwf5$Study_ID == '879'] <- '5002'
+siwf5$Study_ID[siwf5$Study_ID == '1069'|siwf5$Study_ID == '1144'|siwf5$Study_ID == '829'|siwf5$Study_ID == '1204'|siwf5$Study_ID == '949'|siwf5$Study_ID == '884'] <- '5003'
+siwf5$Study_ID[siwf5$Study_ID == '1074'|siwf5$Study_ID == '1149'|siwf5$Study_ID == '834'|siwf5$Study_ID == '954'|siwf5$Study_ID == '889'] <- '5004'
+siwf5$Study_ID[siwf5$Study_ID == '1079'|siwf5$Study_ID == '1154'|siwf5$Study_ID == '839'|siwf5$Study_ID == '959'] <- '5005'
+siwf5$Study_ID[siwf5$Study_ID == '1084'] <- '5006'
+siwf5$Study_ID[siwf5$Study_ID == '1089'] <- '5007'
+#checky <- siwf5 %>%
+  #filter(study == "Mahood et al. unpub1") %>%
+  #distinct(Study_ID)
+
+
 #updated 12/30/19
 pairs <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 pairs <- pairs %>%
@@ -234,20 +284,20 @@ pairscheat$Study_ID <- as.factor(pairscheat$Study_ID)
 pcheat <- pairscheat %>%
   filter(!is.na(Study_ID))
 
-rawsonly$Study_ID <- as.factor(rawsonly$Study_ID)
-pcheat2 <- semi_join(pcheat, rawsonly)
+siwf5$Study_ID <- as.factor(siwf5$Study_ID)
+pcheat2 <- semi_join(pcheat, siwf5)
 pcheat2
 
-joiny2$Study_ID <- as.factor(joiny2$Study_ID)
-pcheat3 <- semi_join(pcheat, joiny2)
-pcheat3
+#joiny2$Study_ID <- as.factor(joiny2$Study_ID)
+#pcheat3 <- semi_join(pcheat, joiny2)
+#pcheat3
 
 
 #select only the paired studies from raw data
-rawsonlycheat <- rawsonly[rawsonly$Study_ID %in% pcheat2$Study_ID,]
+siwf5cheat <- siwf5[siwf5$Study_ID %in% pcheat2$Study_ID,]
 
 #select the paired studies from all data
-joiny2cheat <- joiny2[joiny2$Study_ID %in% pcheat3$Study_ID,]
+#joiny2cheat <- joiny2[joiny2$Study_ID %in% pcheat3$Study_ID,]
 
 
 
@@ -255,17 +305,17 @@ joiny2cheat <- joiny2[joiny2$Study_ID %in% pcheat3$Study_ID,]
 psage <- pairssage %>%
   filter(!is.na(Study_ID))
 
-psage2 <- semi_join(psage, rawsonly)
+psage2 <- semi_join(psage, siwf5)
 psage2
 
-psage3 <- semi_join(psage, joiny2)
-psage3
+#psage3 <- semi_join(psage, joiny2)
+#psage3
 
 #select only the paired studies from raw data
-rawsonlysage <- rawsonly[rawsonly$Study_ID %in% psage2$Study_ID,]
+siwf5sage <- siwf5[siwf5$Study_ID %in% psage2$Study_ID,]
 
 #select the paired studies from all data
-joiny2sage <- joiny2[joiny2$Study_ID %in% psage3$Study_ID,]
+#joiny2sage <- joiny2[joiny2$Study_ID %in% psage3$Study_ID,]
 
 
 
@@ -273,23 +323,23 @@ joiny2sage <- joiny2[joiny2$Study_ID %in% psage3$Study_ID,]
 psagecheat <- pairssagecheat %>%
   filter(!is.na(Study_ID))
 
-psagecheat2 <- semi_join(psagecheat, rawsonly)
+psagecheat2 <- semi_join(psagecheat, siwf5)
 psagecheat2
 
-psagecheat3 <- semi_join(psagecheat, joiny2)
-psagecheat3
+#psagecheat3 <- semi_join(psagecheat, joiny2)
+#psagecheat3
 
 #select only the paired studies from raw data
-rawsonlysagecheat <- rawsonly[rawsonly$Study_ID %in% psagecheat2$Study_ID,]
+siwf5sagecheat <- siwf5[siwf5$Study_ID %in% psagecheat2$Study_ID,]
 
 #select the paired studies from all data
-joiny2sagecheat <- joiny2[joiny2$Study_ID %in% psagecheat3$Study_ID,]
+#joiny2sagecheat <- joiny2[joiny2$Study_ID %in% psagecheat3$Study_ID,]
 
 
 ####
-#total of rawsonlycheat + rawsonlysage + rawsonlysagecheat = 281 + 230 + 166 = 677 != 1176 rawsonly
+#total of siwf5cheat + siwf5sage + siwf5sagecheat = 281 + 230 + 166 = 677 != 1176 siwf5
 #this is because I'm subsetting for just the paired raw data
-#use these three (rawsonlycheat, rawsonlysage, rawsonlysagecheat) to calculate wide dataframe for meta-analysis
+#use these three (siwf5cheat, siwf5sage, siwf5sagecheat) to calculate wide dataframe for meta-analysis
 
 
 #####
@@ -298,7 +348,7 @@ joiny2sagecheat <- joiny2[joiny2$Study_ID %in% psagecheat3$Study_ID,]
 
 #step 1 for cheat
 #for all cheat studies except Mahood
-cheatpmeans <- rawsonlycheat %>%
+cheatpmeans <- siwf5cheat %>%
   filter(Article_ID != "MAHO2018a") %>%
   group_by(Study_ID, pool) %>%
   dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
