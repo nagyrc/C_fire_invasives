@@ -451,6 +451,7 @@ stepzz1$geometry <- NULL
 #need cheatfires only per pair; diff veg could have burned in diff years
 #also check last year burned; should = maxsat, but looks like some don't
 stepzz2 <- stepzz1 %>%
+  filter(veg == 'cheatgrass') %>%
   distinct(Study_ID, depth_cat, timesincefire, .keep_all = T)
 
 ###################################################
