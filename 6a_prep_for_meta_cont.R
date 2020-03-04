@@ -85,6 +85,9 @@ siwf5 <- siwf %>%
   filter(veg != 'salt_desert') %>%
   filter(study %in% studies) 
 
+unique(siwf5$masterlyb)
+is.factor(siwf5$masterlyb)
+unique(siwf$timesincefire)
 #checky <- siwf5 %>%
   #filter(study == "Mahood et al. unpub1") %>%
   #distinct(Study_ID)
@@ -440,7 +443,13 @@ rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R
 dq2 <- rawspmeans
 #dq2 <- rawspmeanssum
 
+#need a table of studyid, depth_cat, and timesincefire
+stepzz1 <- siwf5 %>%
+  mutate(depth_cat = ifelse(bottomdepth_cm <20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep'))) 
+stepzz1$geometry <- NULL
 
+stepzz2 <- stepzz1 %>%
+  distinct(Study_ID, depth_cat, timesincefire, .keep_all = T)
 ###################################################
 #TO CREATE SOIL DEPTH CATEGORY
 pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
@@ -452,20 +461,29 @@ check <- pairspool %>%
 #use pcheat2, psage2, psagecheat3 as lists of studyids
 cheatsub <- siwf5 %>%
   filter(Study_ID %in% pcheat2$Study_ID) 
+is.factor(pcheat2$Study_ID) #TRUE
+is.factor(siwf5$Study_ID) #TRUE
 
-checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm", "masterlyb")])
+cheatsub$Study_ID <- as.numeric(cheatsub$Study_ID) 
+#cheatsub$masterlyb <- as.numeric(cheatsub$masterlyb) 
+checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
-sagesub <- joiny2 %>%
+sagesub <- siwf5 %>%
   filter(Study_ID %in% psage2$Study_ID) 
 
-checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm", "masterlyb")])
+sagesub$Study_ID <- as.numeric(sagesub$Study_ID) 
+#sagesub$masterlyb <- as.numeric(sagesub$masterlyb)
+checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
 sagecheatsub <- siwf5 %>%
   filter(Study_ID %in% psagecheat2$Study_ID) 
 
-checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm","masterlyb")])
+sagecheatsub$Study_ID <- as.numeric(sagecheatsub$Study_ID) 
+#sagecheatsub$masterlyb <- as.numeric(sagecheatsub$masterlyb)
+checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
 checkyy <- rbind (checkzz, checkzx, checkzy)
+checkyy$geometry <- NULL
 
 #testonly <- dq2 %>%
   #semi_join(checkyy) 
@@ -531,15 +549,18 @@ unique(sub4$bottomdepth_cm) #20
 #TO CREATE FIRE CATEGORY
 #create categories of yrs since burn for fixed effect in model
 
-is.numeric(siwf$masterlyb) #TRUE
-is.numeric(siwf$timesincefire) #TRUE
-is.factor(siwf$Study_ID) #TRUE
+#is.numeric(siwf$masterlyb) #TRUE
+#is.numeric(siwf$timesincefire) #TRUE
+#is.factor(siwf$Study_ID) #TRUE
 
-unique(siwf$Study_ID)
+#unique(siwf$Study_ID)
 
-siwfnum <- siwf
-siwfnum$Study_ID <- as.character(siwfnum$Study_ID)
-
+siwfnum <- siwf5
+siwfnum$Study_ID <- as.numeric(siwfnum$Study_ID)
+siwfnum$masterlyb <- as.numeric(siwfnum$masterlyb)
+is.numeric(siwfnum$timesincefire) #TRUE
+is.numeric(siwfnum$masterlyb) #TRUE
+is.numeric(siwfnum$Study_ID) #TRUE
 ggg <- unique(siwfnum[c("Study_ID", "masterlyb", "timesincefire", "site", "study")])
 #660 = 2001
 #675, 680, 685 = 2002
