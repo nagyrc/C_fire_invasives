@@ -280,6 +280,8 @@ baecv_rep <- baecv_rep %>%
 siwf <- baecv_rep %>%
   mutate(masterlyb = case_when(last_year_burned > 1950 & last_year_burned < yr_samp ~ last_year_burned, maxsat > 1950 ~ maxsat))
 
+
+
 #replace NAs with 1950
 siwf$masterlyb <- siwf$masterlyb %>%
   replace_na(1950)
