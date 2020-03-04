@@ -445,15 +445,19 @@ dq2 <- rawspmeans
 
 #need a table of studyid, depth_cat, and timesincefire
 stepzz1 <- siwf5 %>%
-  mutate(depth_cat = ifelse(bottomdepth_cm <20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep'))) 
+  filter(pool == 'totsoilC_g_m2'|pool == 'orgsoilC_g_m2') %>%
+  mutate(depth_cat = ifelse(bottomdepth_cm <20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep'))) %>%
+  distinct(Study_ID, depth_cat, .keep_all = T)
 stepzz1$geometry <- NULL
+#paste in these 195 observations (note, some of these are old studyIDs)
 
 #need cheatfires only per pair; diff veg could have burned in diff years
 #also check last year burned; should = maxsat, but looks like some don't
-stepzz2 <- stepzz1 %>%
+stepzz2 <- siwf5 %>%
   filter(veg == 'cheatgrass') %>%
   distinct(Study_ID, depth_cat, timesincefire, .keep_all = T)
-
+stepzz2$geometry <- NULL
+#paste in these 118 observations (note some of these are old studyIDs)
 ###################################################
 #TO CREATE SOIL DEPTH CATEGORY
 pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
