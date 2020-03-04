@@ -448,8 +448,11 @@ stepzz1 <- siwf5 %>%
   mutate(depth_cat = ifelse(bottomdepth_cm <20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep'))) 
 stepzz1$geometry <- NULL
 
+#need cheatfires only per pair; diff veg could have burned in diff years
+#also check last year burned; should = maxsat, but looks like some don't
 stepzz2 <- stepzz1 %>%
   distinct(Study_ID, depth_cat, timesincefire, .keep_all = T)
+
 ###################################################
 #TO CREATE SOIL DEPTH CATEGORY
 pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
