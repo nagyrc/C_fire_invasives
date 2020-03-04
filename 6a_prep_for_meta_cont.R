@@ -433,7 +433,7 @@ write.csv(sagecheatpmeanssum, file = "/Users/rana7082/Dropbox/C_fire_invasives_R
 
 #bring that file in here
 rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans.csv"))
-rawspmeanssum <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssum.csv"))
+#rawspmeanssum <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssum.csv"))
 
 
 #change this if using summary data also
@@ -441,8 +441,8 @@ dq2 <- rawspmeans
 #dq2 <- rawspmeanssum
 
 
-
-
+###################################################
+#TO CREATE SOIL DEPTH CATEGORY
 pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 #check depths on soil pools
 check <- pairspool %>%
@@ -450,7 +450,7 @@ check <- pairspool %>%
 
 
 #use pcheat2, psage2, psagecheat3 as lists of studyids
-cheatsub <- joiny2 %>%
+cheatsub <- siwf5 %>%
   filter(Study_ID %in% pcheat2$Study_ID) 
 
 checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm", "masterlyb")])
@@ -460,7 +460,7 @@ sagesub <- joiny2 %>%
 
 checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm", "masterlyb")])
 
-sagecheatsub <- joiny2 %>%
+sagecheatsub <- siwf5 %>%
   filter(Study_ID %in% psagecheat2$Study_ID) 
 
 checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm","masterlyb")])
@@ -473,19 +473,19 @@ checkyy <- rbind (checkzz, checkzx, checkzy)
 #%>% mutate(ifelse(bottomdepth_cm < 20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep')))
 
 #other checks#
-sub1 <- joiny2 %>%
+sub1 <- siwf5 %>%
   filter(Study_ID == 414)
 unique(sub1$bottomdepth_cm) #5
 
-sub2 <- joiny2 %>%
+sub2 <- siwf5 %>%
   filter(Study_ID == 35 | Study_ID == 47 | Study_ID == 36 | Study_ID == 48 | Study_ID == 37)
 unique(sub2$bottomdepth_cm) #10
 
-sub3 <- joiny2 %>%
+sub3 <- siwf5 %>%
   filter(Study_ID == 549)
 unique(sub3$bottomdepth_cm) #100
 
-sub4 <- joiny2 %>%
+sub4 <- siwf5 %>%
   filter(Study_ID == 560)
 unique(sub4$bottomdepth_cm) #20
 
@@ -527,7 +527,8 @@ unique(sub4$bottomdepth_cm) #20
   #dplyr::select(Study_ID)
 
 
-###
+###################################################
+#TO CREATE FIRE CATEGORY
 #create categories of yrs since burn for fixed effect in model
 
 is.numeric(siwf$masterlyb) #TRUE
