@@ -198,8 +198,8 @@ m1_inv
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
-inv_overall <- MCMCsummary(m1_inv, params = "(Intercept)", n.eff = T)
-inv_overall
+m1inv_overall <- MCMCsummary(m1_inv, params = "(Intercept)", n.eff = T)
+m1inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
@@ -240,7 +240,8 @@ m2_inv = mcmc.list(m2a_inv[[1]], m2b_inv[[1]], m2c_inv[[1]])
 
 #THIS IS HOW WE CHECK THE MODEL#
 # diagnostics to ensure good model behavior
-inv_overall <- MCMCsummary(m2_inv, params = "(Intercept)", n.eff = T)
+m2inv_overall <- MCMCsummary(m2_inv, params = "(Intercept)", n.eff = T)
+m2inv_overall
 
 #we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m2_inv, params = "(Intercept)", pdf = F, ind = T)
@@ -275,8 +276,9 @@ m3_inv = mcmc.list(m3a_inv[[1]], m3b_inv[[1]], m3c_inv[[1]])
 
 #THIS IS HOW WE CHECK THE MODEL#
 # diagnostics to ensure good model behavior
-inv_overall <- MCMCsummary(m3_inv, params = "(Intercept)", n.eff = T)
-inv_overall
+m3inv_overall <- MCMCsummary(m3_inv, params = "(Intercept)", n.eff = T)
+m3inv_overall
+
 #we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m3_inv, params = "(Intercept)", pdf = F, ind = T)
 
@@ -331,7 +333,8 @@ m4_inv = mcmc.list(m4a_inv[[1]], m4b_inv[[1]], m4c_inv[[1]])
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
-inv_overall <- MCMCsummary(m4_inv, params = "(Intercept)", n.eff = T)
+m4inv_overall <- MCMCsummary(m4_inv, params = "(Intercept)", n.eff = T)
+m4inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
@@ -388,7 +391,8 @@ m5_inv = mcmc.list(m5a_inv[[1]], m5b_inv[[1]], m5c_inv[[1]])
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
-inv_overall <- MCMCsummary(m5_inv, params = "(Intercept)", n.eff = T)
+m5inv_overall <- MCMCsummary(m5_inv, params = "(Intercept)", n.eff = T)
+m5inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
@@ -450,7 +454,8 @@ m6_inv = mcmc.list(m6a_inv[[1]], m6b_inv[[1]], m6c_inv[[1]])
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
-inv_overall <- MCMCsummary(m6_inv, params = "(Intercept)", n.eff = T)
+m6inv_overall <- MCMCsummary(m6_inv, params = "(Intercept)", n.eff = T)
+m6inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
