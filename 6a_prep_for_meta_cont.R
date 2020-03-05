@@ -439,10 +439,6 @@ rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R
 #rawspmeanssum <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssum.csv"))
 
 
-#change this if using summary data also
-dq2 <- rawspmeans
-#dq2 <- rawspmeanssum
-
 #need a table of studyid and depth_cat
 stepzz1 <- siwf5 %>%
   filter(pool == 'totsoilC_g_m2'|pool == 'orgsoilC_g_m2') %>%
@@ -511,22 +507,36 @@ stepzz2$Study_ID[stepzz2$Study_ID == '1079'|stepzz2$Study_ID == '1154'|stepzz2$S
 stepzz2$Study_ID[stepzz2$Study_ID == '1084'] <- '5006'
 stepzz2$Study_ID[stepzz2$Study_ID == '1089'] <- '5007'
 
+stepzz1brief <- stepzz1 %>%
+  dplyr::select(Study_ID, depth_cat)
 
-stepzz1cheat <- stepzz1[stepzz1$Study_ID %in% dq2$cheatgrass_studyID,]
-stepzz1sage <- stepzz1[stepzz1$Study_ID %in% dq2$sagebrush_studyID,]
-stepzz1sagecheat <- stepzz1[stepzz1$Study_ID %in% dq2$sagecheat_studyID,]
-#77 + 31 + 70 = 178; only need to do the 77 cheatgrass ones
+stepzz2brief <- stepzz2 %>%
+  dplyr::select(Study_ID, timesincefire)
 
-stepzz2cheat <- stepzz2[stepzz2$Study_ID %in% dq2$cheatgrass_studyID,]
-#only need to do the 107 cheatgrass ones
+
 
 #IS THERE ANY WAY TO DO THIS OTHER THAN MANUALLY?
 
 
 
+#bring in file that has 2 categories pasted in manually
+rawspmeanscat <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanscat.csv"))
+#rawspmeanssumcat <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanssumcat.csv"))
+
+
+#change this if using summary data also
+dq2 <- rawspmeanscat
+#dq2 <- rawspmeanssum
 
 
 
+
+
+
+
+
+###################################################################
+#I DONT THINK I NEED ANY OF THE CODE BELOW
 #TO CREATE SOIL DEPTH CATEGORY
 #pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 #check depths on soil pools
