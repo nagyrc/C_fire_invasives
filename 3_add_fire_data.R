@@ -238,23 +238,14 @@ baecv_rep <- baecv_add_ll %>%
 
 #write.csv(baecv_rep, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/studyid_with_fire.csv")
 
-yrbn <- read_csv("last_year_burn_overwrite.csv")
 
-#the Mahood ones are using satellite data, so I removed those
-yrbn <- yrbn %>%
-  filter(!study == "Mahood et al. unpub1") 
 
-last_year_burned <- yrbn %>%
-  dplyr::select(X1, last_year_burned)
+#baecv_rep %>%
+  #mutate(as.factor(baecv_rep$X1))
 
-summary(last_year_burned)
-
-baecv_rep %>%
-  mutate(as.factor(baecv_rep$X1))
-
-is.factor(baecv_rep$X1)
-is.factor(last_year_burned$X1)
-last_year_burned$X1 <- as.factor(last_year_burned$X1)
+#is.factor(baecv_rep$X1)
+#is.factor(last_year_burned$X1)
+#last_year_burned$X1 <- as.factor(last_year_burned$X1)
 
 
 #replace NAs in fire data with 1950
@@ -276,7 +267,13 @@ baecv_rep <- baecv_rep %>%
   mutate(maxsat = ifelse(MTBS_DISCOVERY_YEAR > baecv_lyb, MTBS_DISCOVERY_YEAR, baecv_lyb)) %>%
   left_join(last_year_burned)
 
+#baecv_fire_check <- baecv_rep %>%
+  #distinct(study, site, last_year_burned, .keep_all = T)
 #need to replace the 6 values here with those in yrbn
+#yrbn <- read_csv("last_year_burn_overwrite.csv")
+#baecv_rep$last_year_burned[baecv_rep$study == 'Thacker et al. 2009' & baecv_rep$site == 'Nephi'] <- 1996
+
+
 siwf <- baecv_rep %>%
   mutate(masterlyb = case_when(last_year_burned > 1950 & last_year_burned < yr_samp ~ last_year_burned, maxsat > 1950 ~ maxsat))
 
