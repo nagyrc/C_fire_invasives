@@ -106,12 +106,12 @@ dq2$var_d_sagecheat_v_sage = ((dq2$nsage + dq2$nsagecheat/dq2$nsage * dq2$nsagec
 
 ####################################################################
 ## Meta-Analysis
-###################################################################
+####################################################################
 
-#subset data by carbon pool
-orgsoil <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage))
-orgsoil2 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage))
-orgsoil3 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat))
+#subset data by carbon pool; first organic soil
+orgsoil <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sage)) #8
+orgsoil2 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #16
+orgsoil3 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #15
 
 # set priors
 #non informative uniform priors
@@ -149,18 +149,18 @@ summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
 
-#need to run this without Article_ID as random effect; random effect removed here
-m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
+#these are having trouble running with the Article ID in there
+m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 
-m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 
-m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
@@ -176,8 +176,6 @@ m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev 
 m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
-#error message here
-
 
 m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
@@ -196,11 +194,12 @@ summary(m3c_inv)
 
 # combine 3 chains into 1 mcmc object
 m1_inv = mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
-
+m1_inv
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
 inv_overall <- MCMCsummary(m1_inv, params = "(Intercept)", n.eff = T)
+inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
@@ -302,23 +301,20 @@ geweke.diag(m3_inv[ , "(Intercept)"])
 
 
 
-###
-###
-###
+####################################################################
 #total soil; effect of cheat vs. sagecheat
-#only 2 studies and both are 0 - 10 cm; so don't need depth_cat
-totsoil <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat))
+totsoil <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #4
+#totsoil2 <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
+#totsoil3 <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #0
 
-m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
+#only 1 level of depth_cat factor; so don't use depth_cat here
+m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
-#error message here
 
 m4b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
-#Error in MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,  : 
-#Mixed model equations singular: use a (stronger) prior
 
 m4c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
@@ -362,3 +358,128 @@ geweke.diag(m4_inv[ , "(Intercept)"])
 
 #If everything looks good here, then the intercept value is the effect
 
+####################################################################
+#AGB
+agb <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #3
+#agb2 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
+agb3 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
+
+#use cheatfire here instead of depth_cat since AGB
+m5a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = agb, pr = T, saveX = T, saveZ = T)
+
+m5b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = agb, pr = T, saveX = T, saveZ = T)
+
+m5c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = agb, pr = T, saveX = T, saveZ = T)
+
+summary(m5a_inv)
+summary(m5b_inv)
+summary(m5c_inv)
+
+#effect of cheat vs. sagecheat
+# combine 3 chains into 1 mcmc object
+m5_inv = mcmc.list(m5a_inv[[1]], m5b_inv[[1]], m5c_inv[[1]])
+
+#THIS IS HOW WE CHECK THE MODEL#
+
+# diagnostics to ensure good model behavior
+inv_overall <- MCMCsummary(m5_inv, params = "(Intercept)", n.eff = T)
+
+#we want this density plot to look relatively smooth
+#if not smooth, increase burnin and increase number of iterations
+MCMCtrace(m5_inv, params = "(Intercept)", pdf = F, ind = T)
+
+#autocorr.plot(m1_inv) #all
+#this will tell us whether our thinning variable is okay
+#if many tall bars, increase thinning
+autocorr.plot(m5_inv[, "(Intercept)"]) 
+
+#assess convergence
+#Trace plot. we want all the parameter estimates to be similar and horizontal
+#up the burnin and iterations if they are headed in an up or down direction
+gelman.plot(m5_inv[ , "(Intercept)"]) 
+
+
+#we want the posteriors to converge on 1
+#if they dont, up burnin and interations
+gelman.diag(m5_inv[ , "(Intercept)"])
+
+#dont worry about this one for now if gelman diagram looks good
+geweke.diag(m5_inv[ , "(Intercept)"])
+
+
+#If everything looks good here, then the intercept value is the effect
+
+
+####################################################################
+#BGB
+
+bgb <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #4
+#bgb2 <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
+#bgb3 <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
+
+
+#use cheatfire here instead of depth_cat since AGB
+m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, random = ~ Article_ID, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = bgb, pr = T, saveX = T, saveZ = T)
+#Error in MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, random = ~Article_ID,  : 
+#G-structure 1 is ill-conditioned: use proper priors if you haven't or rescale data if you have
+
+m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = bgb, pr = T, saveX = T, saveZ = T)
+
+m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = bgb, pr = T, saveX = T, saveZ = T)
+
+summary(m6a_inv)
+summary(m6b_inv)
+summary(m6c_inv)
+
+#effect of cheat vs. sagecheat
+# combine 3 chains into 1 mcmc object
+m6_inv = mcmc.list(m6a_inv[[1]], m6b_inv[[1]], m6c_inv[[1]])
+
+#THIS IS HOW WE CHECK THE MODEL#
+
+# diagnostics to ensure good model behavior
+inv_overall <- MCMCsummary(m6_inv, params = "(Intercept)", n.eff = T)
+
+#we want this density plot to look relatively smooth
+#if not smooth, increase burnin and increase number of iterations
+MCMCtrace(m6_inv, params = "(Intercept)", pdf = F, ind = T)
+
+#autocorr.plot(m1_inv) #all
+#this will tell us whether our thinning variable is okay
+#if many tall bars, increase thinning
+autocorr.plot(m6_inv[, "(Intercept)"]) 
+
+#assess convergence
+#Trace plot. we want all the parameter estimates to be similar and horizontal
+#up the burnin and iterations if they are headed in an up or down direction
+gelman.plot(m6_inv[ , "(Intercept)"]) 
+
+
+#we want the posteriors to converge on 1
+#if they dont, up burnin and interations
+gelman.diag(m6_inv[ , "(Intercept)"])
+
+#dont worry about this one for now if gelman diagram looks good
+geweke.diag(m6_inv[ , "(Intercept)"])
+
+
+#If everything looks good here, then the intercept value is the effect
+
+####################################################################
+#litter
+
+#litter <- subset(dq2, pool == "litterC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #0
+#litter2 <- subset(dq2, pool == "litterC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
+#litter3 <- subset(dq2, pool == "litterC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #0
