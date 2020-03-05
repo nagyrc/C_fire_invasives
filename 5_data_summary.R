@@ -19,6 +19,10 @@ summary(siwf$pool_value)
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 smeans <- unique(studymeans$study)
 
+numstudies <- siwf %>%
+  filter(veg != 'salt_desert')
+
+unique(numstudies$Study_ID)
 ############################
 #to get a count of mean values vs. raw data
 #checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
