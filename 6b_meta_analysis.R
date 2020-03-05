@@ -13,7 +13,7 @@ citation("metafor")
 
 ## get full dataset from github (includes all cases and studies)
 #dq2 <- read.csv("Meta_analysis_sheet_manual.csv", header = T)
-dq2 <- read.csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeans.csv", header = T)
+dq2 <- read.csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanscat.csv", header = T)
 head(dq2)
 tail(dq2)
 summary(dq2) # there are some missing variance values from ind points
@@ -85,15 +85,15 @@ plot(dq2$Article_ID, dq2$g_sagecheat_v_sage)
 
 summary(dq2$g_cheat_v_sage)
 #   Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
-#-2.80293 -0.12836  0.57953 -0.06095  0.65436  1.14530       52 
+#-2.80293 -0.12836  0.57953 -0.06095  0.65436  1.14530       76 
 
 summary(dq2$g_cheat_v_sagecheat)
-#    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
-#-0.91954 -0.41516 -0.06286 -0.07287  0.32195  0.59109       40 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+#-1.2521 -0.4486 -0.1834 -0.1798  0.2414  0.5911      58 
 
 summary(dq2$g_sagecheat_v_sage)
 #    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.     NA's 
-#-1.03766 -0.22098  0.08901  0.15766  0.67002  1.03849       43 
+#-1.03766 -0.22098  0.08901  0.15766  0.67002  1.03849       67
 ###
 
 
