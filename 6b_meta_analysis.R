@@ -150,17 +150,17 @@ summary(m1b_inv)
 summary(m1c_inv)
 
 #these are having trouble running with the Article ID in there
-m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 
-m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 
-m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
@@ -428,18 +428,16 @@ bgb <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #4
 #bgb3 <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
 
 
-#use cheatfire here instead of depth_cat since AGB
-m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, random = ~ Article_ID, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
-                    data = bgb, pr = T, saveX = T, saveZ = T)
-#Error in MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, random = ~Article_ID,  : 
-#G-structure 1 is ill-conditioned: use proper priors if you haven't or rescale data if you have
-
-m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = bgb$var_d_cheat_v_sagecheat,
+#use cheatfire here instead of depth_cat since AGB; won't run with Article ID in there
+m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, mev = bgb$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = bgb, pr = T, saveX = T, saveZ = T)
 
-m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = bgb$var_d_cheat_v_sagecheat,
+m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    data = bgb, pr = T, saveX = T, saveZ = T)
+
+m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, mev = bgb$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = bgb, pr = T, saveX = T, saveZ = T)
 
