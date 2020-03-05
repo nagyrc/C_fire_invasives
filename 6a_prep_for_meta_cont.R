@@ -267,8 +267,8 @@ pairssagecheat <- pairs %>%
 
 #############
 #not quite right; need to remove NAs from the names
-StudyIDp <- pairs %>%
-  mutate(Study_IDp = paste(cheatgrass_studyID, sagecheat_studyID, sagebrush_studyID, sep = '_'))
+#StudyIDp <- pairs %>%
+  #mutate(Study_IDp = paste(cheatgrass_studyID, sagecheat_studyID, sagebrush_studyID, sep = '_'))
 
 
 
@@ -443,7 +443,7 @@ rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R
 dq2 <- rawspmeans
 #dq2 <- rawspmeanssum
 
-#need a table of studyid, depth_cat, and timesincefire
+#need a table of studyid and depth_cat
 stepzz1 <- siwf5 %>%
   filter(pool == 'totsoilC_g_m2'|pool == 'orgsoilC_g_m2') %>%
   mutate(depth_cat = ifelse(bottomdepth_cm <20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep'))) %>%
@@ -452,46 +452,114 @@ stepzz1$geometry <- NULL
 #paste in these 195 observations (note, some of these are old studyIDs)
 
 #need cheatfires only per pair; diff veg could have burned in diff years
-#also check last year burned; should = maxsat, but looks like some don't
 stepzz2 <- siwf5 %>%
   filter(veg == 'cheatgrass') %>%
-  distinct(Study_ID, depth_cat, timesincefire, .keep_all = T)
+  distinct(Study_ID, timesincefire, .keep_all = T)
 stepzz2$geometry <- NULL
-#paste in these 118 observations (note some of these are old studyIDs)
+#paste in these 114 observations (note some of these are old studyIDs)
 ###################################################
+#need to replace studyIDs in stepzz1 and stepzz2 for Rau, Mahood and Norton 2004
+stepzz1$Study_ID[stepzz1$Study_ID == '665'|stepzz1$Study_ID == '670'|stepzz1$Study_ID == '675'] <- '6002'
+stepzz1$Study_ID[stepzz1$Study_ID == '640'|stepzz1$Study_ID == '645'] <- '6003'
+stepzz1$Study_ID[stepzz1$Study_ID == '610'|stepzz1$Study_ID == '615'|stepzz1$Study_ID == '620'] <- '6004'
+
+stepzz1$Study_ID[stepzz1$Study_ID == '1332'|stepzz1$Study_ID == '1337'] <- '3000'
+stepzz1$Study_ID[stepzz1$Study_ID == '1334'|stepzz1$Study_ID == '1339'] <- '3001'
+stepzz1$Study_ID[stepzz1$Study_ID == '1322'|stepzz1$Study_ID == '1317'] <- '3002'
+stepzz1$Study_ID[stepzz1$Study_ID == '1324'|stepzz1$Study_ID == '1319'] <- '3003'
+
+stepzz1$Study_ID[stepzz1$Study_ID == '999'|stepzz1$Study_ID == '1094'|stepzz1$Study_ID == '789'|stepzz1$Study_ID == '1159'|stepzz1$Study_ID == '894'|stepzz1$Study_ID == '964'|stepzz1$Study_ID == '844'] <- '4000'
+stepzz1$Study_ID[stepzz1$Study_ID == '1014'|stepzz1$Study_ID == '1099'|stepzz1$Study_ID == '794'|stepzz1$Study_ID == '1164'|stepzz1$Study_ID == '899'|stepzz1$Study_ID == '969'|stepzz1$Study_ID == '849'] <- '4001'
+stepzz1$Study_ID[stepzz1$Study_ID == '1019'|stepzz1$Study_ID == '1104'|stepzz1$Study_ID == '799'|stepzz1$Study_ID == '1169'|stepzz1$Study_ID == '904'|stepzz1$Study_ID == '974'|stepzz1$Study_ID == '844'] <- '4002'
+stepzz1$Study_ID[stepzz1$Study_ID == '1024'|stepzz1$Study_ID == '1109'|stepzz1$Study_ID == '804'|stepzz1$Study_ID == '1174'|stepzz1$Study_ID == '909'|stepzz1$Study_ID == '979'|stepzz1$Study_ID == '854'] <- '4003'
+stepzz1$Study_ID[stepzz1$Study_ID == '1029'|stepzz1$Study_ID == '1114'|stepzz1$Study_ID == '809'|stepzz1$Study_ID == '1179'|stepzz1$Study_ID == '914'|stepzz1$Study_ID == '859'] <- '4004'
+stepzz1$Study_ID[stepzz1$Study_ID == '1034'|stepzz1$Study_ID == '1119'|stepzz1$Study_ID == '1184'|stepzz1$Study_ID == '919'] <- '4005'
+stepzz1$Study_ID[stepzz1$Study_ID == '1039'|stepzz1$Study_ID == '1124'|stepzz1$Study_ID == '924'|stepzz1$Study_ID == '864'] <- '4006'
+stepzz1$Study_ID[stepzz1$Study_ID == '1044'|stepzz1$Study_ID == '929'] <- '4007'
+stepzz1$Study_ID[stepzz1$Study_ID == '1054'|stepzz1$Study_ID == '1129'|stepzz1$Study_ID == '814'|stepzz1$Study_ID == '1189'|stepzz1$Study_ID == '934'|stepzz1$Study_ID == '984'|stepzz1$Study_ID == '869'] <- '5000'
+stepzz1$Study_ID[stepzz1$Study_ID == '1059'|stepzz1$Study_ID == '1134'|stepzz1$Study_ID == '819'|stepzz1$Study_ID == '1194'|stepzz1$Study_ID == '939'|stepzz1$Study_ID == '989'|stepzz1$Study_ID == '874'] <- '5001'
+stepzz1$Study_ID[stepzz1$Study_ID == '1064'|stepzz1$Study_ID == '1139'|stepzz1$Study_ID == '824'|stepzz1$Study_ID == '1199'|stepzz1$Study_ID == '944'|stepzz1$Study_ID == '994'|stepzz1$Study_ID == '879'] <- '5002'
+stepzz1$Study_ID[stepzz1$Study_ID == '1069'|stepzz1$Study_ID == '1144'|stepzz1$Study_ID == '829'|stepzz1$Study_ID == '1204'|stepzz1$Study_ID == '949'|stepzz1$Study_ID == '884'] <- '5003'
+stepzz1$Study_ID[stepzz1$Study_ID == '1074'|stepzz1$Study_ID == '1149'|stepzz1$Study_ID == '834'|stepzz1$Study_ID == '954'|stepzz1$Study_ID == '889'] <- '5004'
+stepzz1$Study_ID[stepzz1$Study_ID == '1079'|stepzz1$Study_ID == '1154'|stepzz1$Study_ID == '839'|stepzz1$Study_ID == '959'] <- '5005'
+stepzz1$Study_ID[stepzz1$Study_ID == '1084'] <- '5006'
+stepzz1$Study_ID[stepzz1$Study_ID == '1089'] <- '5007'
+
+stepzz2$Study_ID[stepzz2$Study_ID == '665'|stepzz2$Study_ID == '670'|stepzz2$Study_ID == '675'] <- '6002'
+stepzz2$Study_ID[stepzz2$Study_ID == '640'|stepzz2$Study_ID == '645'] <- '6003'
+stepzz2$Study_ID[stepzz2$Study_ID == '610'|stepzz2$Study_ID == '615'|stepzz2$Study_ID == '620'] <- '6004'
+
+stepzz2$Study_ID[stepzz2$Study_ID == '1332'|stepzz2$Study_ID == '1337'] <- '3000'
+stepzz2$Study_ID[stepzz2$Study_ID == '1334'|stepzz2$Study_ID == '1339'] <- '3001'
+stepzz2$Study_ID[stepzz2$Study_ID == '1322'|stepzz2$Study_ID == '1317'] <- '3002'
+stepzz2$Study_ID[stepzz2$Study_ID == '1324'|stepzz2$Study_ID == '1319'] <- '3003'
+
+stepzz2$Study_ID[stepzz2$Study_ID == '999'|stepzz2$Study_ID == '1094'|stepzz2$Study_ID == '789'|stepzz2$Study_ID == '1159'|stepzz2$Study_ID == '894'|stepzz2$Study_ID == '964'|stepzz2$Study_ID == '844'] <- '4000'
+stepzz2$Study_ID[stepzz2$Study_ID == '1014'|stepzz2$Study_ID == '1099'|stepzz2$Study_ID == '794'|stepzz2$Study_ID == '1164'|stepzz2$Study_ID == '899'|stepzz2$Study_ID == '969'|stepzz2$Study_ID == '849'] <- '4001'
+stepzz2$Study_ID[stepzz2$Study_ID == '1019'|stepzz2$Study_ID == '1104'|stepzz2$Study_ID == '799'|stepzz2$Study_ID == '1169'|stepzz2$Study_ID == '904'|stepzz2$Study_ID == '974'|stepzz2$Study_ID == '844'] <- '4002'
+stepzz2$Study_ID[stepzz2$Study_ID == '1024'|stepzz2$Study_ID == '1109'|stepzz2$Study_ID == '804'|stepzz2$Study_ID == '1174'|stepzz2$Study_ID == '909'|stepzz2$Study_ID == '979'|stepzz2$Study_ID == '854'] <- '4003'
+stepzz2$Study_ID[stepzz2$Study_ID == '1029'|stepzz2$Study_ID == '1114'|stepzz2$Study_ID == '809'|stepzz2$Study_ID == '1179'|stepzz2$Study_ID == '914'|stepzz2$Study_ID == '859'] <- '4004'
+stepzz2$Study_ID[stepzz2$Study_ID == '1034'|stepzz2$Study_ID == '1119'|stepzz2$Study_ID == '1184'|stepzz2$Study_ID == '919'] <- '4005'
+stepzz2$Study_ID[stepzz2$Study_ID == '1039'|stepzz2$Study_ID == '1124'|stepzz2$Study_ID == '924'|stepzz2$Study_ID == '864'] <- '4006'
+stepzz2$Study_ID[stepzz2$Study_ID == '1044'|stepzz2$Study_ID == '929'] <- '4007'
+stepzz2$Study_ID[stepzz2$Study_ID == '1054'|stepzz2$Study_ID == '1129'|stepzz2$Study_ID == '814'|stepzz2$Study_ID == '1189'|stepzz2$Study_ID == '934'|stepzz2$Study_ID == '984'|stepzz2$Study_ID == '869'] <- '5000'
+stepzz2$Study_ID[stepzz2$Study_ID == '1059'|stepzz2$Study_ID == '1134'|stepzz2$Study_ID == '819'|stepzz2$Study_ID == '1194'|stepzz2$Study_ID == '939'|stepzz2$Study_ID == '989'|stepzz2$Study_ID == '874'] <- '5001'
+stepzz2$Study_ID[stepzz2$Study_ID == '1064'|stepzz2$Study_ID == '1139'|stepzz2$Study_ID == '824'|stepzz2$Study_ID == '1199'|stepzz2$Study_ID == '944'|stepzz2$Study_ID == '994'|stepzz2$Study_ID == '879'] <- '5002'
+stepzz2$Study_ID[stepzz2$Study_ID == '1069'|stepzz2$Study_ID == '1144'|stepzz2$Study_ID == '829'|stepzz2$Study_ID == '1204'|stepzz2$Study_ID == '949'|stepzz2$Study_ID == '884'] <- '5003'
+stepzz2$Study_ID[stepzz2$Study_ID == '1074'|stepzz2$Study_ID == '1149'|stepzz2$Study_ID == '834'|stepzz2$Study_ID == '954'|stepzz2$Study_ID == '889'] <- '5004'
+stepzz2$Study_ID[stepzz2$Study_ID == '1079'|stepzz2$Study_ID == '1154'|stepzz2$Study_ID == '839'|stepzz2$Study_ID == '959'] <- '5005'
+stepzz2$Study_ID[stepzz2$Study_ID == '1084'] <- '5006'
+stepzz2$Study_ID[stepzz2$Study_ID == '1089'] <- '5007'
+
+
+stepzz1cheat <- stepzz1[stepzz1$Study_ID %in% dq2$cheatgrass_studyID,]
+stepzz1sage <- stepzz1[stepzz1$Study_ID %in% dq2$sagebrush_studyID,]
+stepzz1sagecheat <- stepzz1[stepzz1$Study_ID %in% dq2$sagecheat_studyID,]
+#77 + 31 + 70 = 178; only need to do the 77 cheatgrass ones
+
+stepzz2cheat <- stepzz2[stepzz2$Study_ID %in% dq2$cheatgrass_studyID,]
+#only need to do the 107 cheatgrass ones
+
+#IS THERE ANY WAY TO DO THIS OTHER THAN MANUALLY?
+
+
+
+
+
+
 #TO CREATE SOIL DEPTH CATEGORY
-pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
+#pairspool <- as.data.frame(read_csv("paired_studyIDs3.csv"))
 #check depths on soil pools
-check <- pairspool %>%
-  filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") 
+#check <- pairspool %>%
+  #filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") 
 
 
 #use pcheat2, psage2, psagecheat3 as lists of studyids
-cheatsub <- siwf5 %>%
-  filter(Study_ID %in% pcheat2$Study_ID) 
-is.factor(pcheat2$Study_ID) #TRUE
-is.factor(siwf5$Study_ID) #TRUE
+#cheatsub <- siwf5 %>%
+  #filter(Study_ID %in% pcheat2$Study_ID) 
+#is.factor(pcheat2$Study_ID) #TRUE
+#is.factor(siwf5$Study_ID) #TRUE
 
-cheatsub$Study_ID <- as.numeric(cheatsub$Study_ID) 
+#cheatsub$Study_ID <- as.numeric(cheatsub$Study_ID) 
 #cheatsub$masterlyb <- as.numeric(cheatsub$masterlyb) 
-checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+#checkzz <- unique(cheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
-sagesub <- siwf5 %>%
-  filter(Study_ID %in% psage2$Study_ID) 
+#sagesub <- siwf5 %>%
+  #filter(Study_ID %in% psage2$Study_ID) 
 
-sagesub$Study_ID <- as.numeric(sagesub$Study_ID) 
+#sagesub$Study_ID <- as.numeric(sagesub$Study_ID) 
 #sagesub$masterlyb <- as.numeric(sagesub$masterlyb)
-checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+#checkzx <- unique(sagesub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
-sagecheatsub <- siwf5 %>%
-  filter(Study_ID %in% psagecheat2$Study_ID) 
+#sagecheatsub <- siwf5 %>%
+  #filter(Study_ID %in% psagecheat2$Study_ID) 
 
-sagecheatsub$Study_ID <- as.numeric(sagecheatsub$Study_ID) 
+#sagecheatsub$Study_ID <- as.numeric(sagecheatsub$Study_ID) 
 #sagecheatsub$masterlyb <- as.numeric(sagecheatsub$masterlyb)
-checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
+#checkzy <- unique(sagecheatsub[c("Study_ID", "topdepth_cm", "bottomdepth_cm")])
 
-checkyy <- rbind (checkzz, checkzx, checkzy)
-checkyy$geometry <- NULL
+#checkyy <- rbind (checkzz, checkzx, checkzy)
+#checkyy$geometry <- NULL
 
 #testonly <- dq2 %>%
   #semi_join(checkyy) 
@@ -499,21 +567,21 @@ checkyy$geometry <- NULL
 #%>% mutate(ifelse(bottomdepth_cm < 20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep')))
 
 #other checks#
-sub1 <- siwf5 %>%
-  filter(Study_ID == 414)
-unique(sub1$bottomdepth_cm) #5
+#sub1 <- siwf5 %>%
+  #filter(Study_ID == 414)
+#unique(sub1$bottomdepth_cm) #5
 
-sub2 <- siwf5 %>%
-  filter(Study_ID == 35 | Study_ID == 47 | Study_ID == 36 | Study_ID == 48 | Study_ID == 37)
-unique(sub2$bottomdepth_cm) #10
+#sub2 <- siwf5 %>%
+  #filter(Study_ID == 35 | Study_ID == 47 | Study_ID == 36 | Study_ID == 48 | Study_ID == 37)
+#unique(sub2$bottomdepth_cm) #10
 
-sub3 <- siwf5 %>%
-  filter(Study_ID == 549)
-unique(sub3$bottomdepth_cm) #100
+#sub3 <- siwf5 %>%
+  #filter(Study_ID == 549)
+#unique(sub3$bottomdepth_cm) #100
 
-sub4 <- siwf5 %>%
-  filter(Study_ID == 560)
-unique(sub4$bottomdepth_cm) #20
+#sub4 <- siwf5 %>%
+  #filter(Study_ID == 560)
+#unique(sub4$bottomdepth_cm) #20
 
 ####manually added this categorical variable (depth_cat: shallow, mid, deep) into rawspmeans.csv for use as a fixed effect in meta-analysis
 
@@ -563,13 +631,13 @@ unique(sub4$bottomdepth_cm) #20
 
 #unique(siwf$Study_ID)
 
-siwfnum <- siwf5
-siwfnum$Study_ID <- as.numeric(siwfnum$Study_ID)
-siwfnum$masterlyb <- as.numeric(siwfnum$masterlyb)
-is.numeric(siwfnum$timesincefire) #TRUE
-is.numeric(siwfnum$masterlyb) #TRUE
-is.numeric(siwfnum$Study_ID) #TRUE
-ggg <- unique(siwfnum[c("Study_ID", "masterlyb", "timesincefire", "site", "study")])
+#siwfnum <- siwf5
+#siwfnum$Study_ID <- as.numeric(siwfnum$Study_ID)
+#siwfnum$masterlyb <- as.numeric(siwfnum$masterlyb)
+#is.numeric(siwfnum$timesincefire) #TRUE
+#is.numeric(siwfnum$masterlyb) #TRUE
+#is.numeric(siwfnum$Study_ID) #TRUE
+#ggg <- unique(siwfnum[c("Study_ID", "masterlyb", "timesincefire", "site", "study")])
 #660 = 2001
 #675, 680, 685 = 2002
 #522, 524 = 2003
@@ -634,6 +702,7 @@ ggg <- unique(siwfnum[c("Study_ID", "masterlyb", "timesincefire", "site", "study
 
 ###
 ####################################################
+#I DON'T THINK I NEED THE CODE BELOW
 joiny <- unique(rawsonly[c("Study_ID", "veg")])
 st_geometry(joiny) = NULL
 
