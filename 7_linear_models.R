@@ -38,23 +38,23 @@ totsoilC3 <- subset.data.frame(siwf3, pool == "totsoilC_g_m2")
 #for Table 2a
 lm1 <- lm(pool_value ~ timesincefire + veg, data = AGBC3)
 summary(lm1)
-#veg is significant and so is timesincefire; overall p-value = 3.832e-07
+#veg is significant and so is timesincefire; overall p-value = 6.521e-07
 
 lm2 <- lm(pool_value ~ timesincefire + veg, data = BGBC3)
 summary(lm2)
-#veg is significant in one case; overall p-value = 0.0657
+#veg is significant in one case; overall p-value = 0.05047
 
 lm3 <- lm(pool_value ~ timesincefire + veg, data = litterC3)
 summary(lm3)
-#veg and timesincefire are sig; overall p-value = 8.634e-06
+#veg and timesincefire are sig; overall p-value = 1.264e-05
 
 lm4 <- lm(pool_value ~ timesincefire + veg, data = orgsoilC3)
 summary(lm4)
-#veg is sig and so is timesincefire; overall p-value = 6.536e-05
+#veg is sig and so is timesincefire; overall p-value = 0.0005616
 
 lm5 <- lm(pool_value ~ timesincefire + veg, data = totsoilC3)
 summary(lm5)
-#only intercept; overall p-value = 0.4433
+#only intercept; overall p-value = 0.3753
 
 
 
@@ -187,7 +187,7 @@ summary(totsoilC.model2b)
 #linear mixed model with veg, firecat, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2c = lmer(pool_value ~ veg + firecat + depthcat + (1|Article_ID), data=totsoilC3)
 summary(totsoilC.model2c)
-#depthcatmid is sig (different from deep)
+#depthcatmid is sig (different from deep); depthcatshallow is sig (different from deep)
 
 #linear mixed model with veg, timesincefire, and depthcat as fixed effect and Article_ID as random effect
 totsoilC.model2d = lmer(pool_value ~ veg + timesincefire + depthcat + (1|Article_ID), data=totsoilC3)
