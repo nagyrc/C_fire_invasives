@@ -411,8 +411,8 @@ ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   labs(y = "Soil organic C (gC cm-2) per cm thickness", x = "bottom depth sampled (cm)", fill = "vegetation") +
   scale_fill_manual(values = colours) +
   geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se), width=.2, position=position_dodge(.9))   +                 # Width of the error bars 
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14))
-
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) 
+  
 
 
 
@@ -693,7 +693,9 @@ ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) +
                 position=position_dodge(.9)) +
   labs(x = "vegetation type", y = "total soil carbon (gC m-2): 0-10 cm", fill = "vegetation") +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
-  scale_fill_manual(values = colours)
+  scale_fill_manual(values = colours) +
+  scale_x_discrete(breaks = c('native sagebrush', 'invaded sagebrush', 'cheatgrass'), 
+                     labels = c('native\nsagebrush', 'invaded\nsagebrush', 'cheatgrass'))
 
 
 
@@ -741,7 +743,7 @@ ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
   labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) + 
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   scale_fill_manual(values = colours)
 
 #####################################
