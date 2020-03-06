@@ -6,6 +6,9 @@
 x <- c("tidyverse", "sf", "ggplot2", "doBy", "lme4", "lmerTest")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
+citation("lme4")
+citation("lmerTest")
+
 setwd("data/")
 
 siwf <- as.data.frame(read_csv("siwf.csv"))
