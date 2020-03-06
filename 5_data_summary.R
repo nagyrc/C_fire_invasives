@@ -580,7 +580,10 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
-        legend.key.size =  unit(0.1, "in")) 
+        legend.key.size =  unit(0.1, "in")) +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(strip.text.x = element_text(size = 12))
+  
 
 #Fig 2b)
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
@@ -590,7 +593,9 @@ ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        legend.key.size =  unit(0.1, "in")) 
+        legend.key.size =  unit(0.1, "in")) +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(strip.text.x = element_text(size = 12))
 
 
 #Fig 2c)
@@ -601,7 +606,11 @@ ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        legend.key.size =  unit(0.1, "in"))
+        legend.key.size =  unit(0.1, "in")) +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(strip.text.x = element_text(size = 12)) + 
+  scale_x_continuous(breaks=c(0,250,500)) +
+  theme(panel.spacing = unit(0.8, "lines"))
 
 head(orgsoilC2)
 
@@ -625,7 +634,10 @@ ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
-        legend.key.size =  unit(0.1, "in")) 
+        legend.key.size =  unit(0.1, "in")) +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(strip.text.x = element_text(size = 12)) + 
+  scale_x_continuous(breaks=c(0,4500,9000))
 
 #+scale_y_sqrt()
 
@@ -645,7 +657,11 @@ ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) +
   theme_bw() + 
   theme(panel.border = element_blank(), panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
-        legend.key.size =  unit(0.1, "in")) 
+        legend.key.size =  unit(0.1, "in")) +
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(strip.text.x = element_text(size = 11.5)) + 
+  scale_x_continuous(breaks=c(0,3000,6000)) +
+  theme(panel.spacing = unit(0.6, "lines"))
 
 #+scale_y_sqrt()
 
