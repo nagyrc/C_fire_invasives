@@ -405,7 +405,7 @@ colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgree
 orgzzo <- orgzz %>%
   filter(pool == "orgsoilC_g_m2")
 
-#add this plot to manuscript# new Fig. 3c
+#Fig. 3c
 ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   labs(y = "Soil organic C (gC cm-2) per cm thickness", x = "bottom depth sampled (cm)", fill = "vegetation") +
@@ -572,7 +572,7 @@ head(AGBC)
 summary(AGBC2$pool_value)
 summary(rawsonly$pool_value)
 
-#Fig 2a)
+#Fig. 2a
 ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
@@ -585,7 +585,7 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
   theme(strip.text.x = element_text(size = 12))
   
 
-#Fig 2b)
+#Fig. 2b
 ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
@@ -598,7 +598,7 @@ ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) +
   theme(strip.text.x = element_text(size = 12))
 
 
-#Fig 2c)
+#Fig. 2c
 ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 50) + 
   facet_wrap(~veg, drop = FALSE) + 
@@ -626,7 +626,7 @@ orgsoilC2 <- arrange(transform(orgsoilC2,
 orgsoilC2$veg <- plyr::revalue(orgsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 
-#Figure 2d)
+#Fig. 2d
 ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
@@ -649,7 +649,7 @@ totsoilC2 <- arrange(transform(totsoilC2,
 
 totsoilC2$veg <- plyr::revalue(totsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
-#Figure 2e)
+#Fig. 2e
 ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg+depth, drop = FALSE) + 
@@ -737,7 +737,7 @@ rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", 
 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
-# For Fig 3a
+# For Fig. 3a
 ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
