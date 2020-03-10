@@ -283,7 +283,6 @@ siwf <- baecv_rep %>%
 siwf$masterlyb <- siwf$masterlyb %>%
   replace_na(1950)
 
-write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 ###
 
 siwf$Study_ID <- as.factor(siwf$Study_ID)
@@ -299,7 +298,8 @@ unique(siwf$masterlyb)
 
 #nogood <- subset(siwf, timesincefire < 0)
 
-
+siwf$geometry <- NULL
+write.csv(siwf, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/siwf.csv", row.names = FALSE)
 
 
 ###
