@@ -2,8 +2,10 @@
 #Dr. R. Chelsea Nagy
 #created February 28, 2019
 
+# preprocessing ================================================================
+
 #load multiple libraries 
-x <- c("tidyverse", "sf", "ggplot2", "doBy")
+x <- c("tidyverse", "sf", "ggplot2", "doBy", "ggpubr")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
@@ -405,14 +407,7 @@ colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgree
 orgzzo <- orgzz %>%
   filter(pool == "orgsoilC_g_m2")
 
-#Fig. 3c
-ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
-  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
-  labs(y = "Soil organic C (gC cm-2) per cm thickness", x = "bottom depth sampled (cm)", fill = "vegetation") +
-  scale_fill_manual(values = colours) +
-  geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se), width=.2, position=position_dodge(.9))   +                 # Width of the error bars 
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) 
-  
+ 
 
 
 
@@ -572,13 +567,14 @@ head(AGBC)
 summary(AGBC2$pool_value)
 summary(rawsonly$pool_value)
 
+# figure 2 individual plots================================================================
 #Fig. 2a
-ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) + 
+f2a<- ggplot(AGBC2, aes(x = pool_value)) + 
   geom_histogram(bins = 40) + 
   facet_wrap(~veg) + 
   xlab("AGB C (gC m-2)") + 
   theme_bw() + 
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
         legend.key.size =  unit(0.1, "in")) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
@@ -586,28 +582,32 @@ ggplot(AGBC2, aes(x = pool_value, fill = Article_ID)) +
   
 
 #Fig. 2b
-ggplot(BGBC2, aes(x = pool_value, fill = Article_ID)) + 
+f2b<-ggplot(BGBC2, aes(x = pool_value)) + 
   geom_histogram(bins = 30) + 
   facet_wrap(~veg) + 
   xlab("BGB C (gC m-2)") + 
   theme_bw() + 
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),axis.title.y=element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in")) +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(axis.text.x = element_text(size = 14), 
+        axis.title.x = element_text(size = 14), 
+        legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   theme(strip.text.x = element_text(size = 12))
 
 
 #Fig. 2c
-ggplot(litterC2, aes(x = pool_value, fill = Article_ID)) + 
+f2c<-ggplot(litterC2, aes(x = pool_value)) + 
   geom_histogram(bins = 50) + 
   facet_wrap(~veg, drop = FALSE) + 
   xlab("litter C (gC m-2)") + 
   theme_bw() + 
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+  theme( panel.grid.major = element_blank(),
+        axis.title.y=element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in")) +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(axis.text.x = element_text(size = 14), 
+        axis.title.x = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   theme(strip.text.x = element_text(size = 12)) + 
   scale_x_continuous(breaks=c(0,250,500)) +
   theme(panel.spacing = unit(0.8, "lines"))
@@ -627,15 +627,22 @@ orgsoilC2$veg <- plyr::revalue(orgsoilC2$veg, c("sagebrush" = "native sagebrush"
 
 
 #Fig. 2d
-ggplot(orgsoilC2, aes(x = pool_value, fill = Article_ID)) + 
+f2d<-ggplot(orgsoilC2, aes(x = pool_value)) + 
   geom_histogram(bins = 30) + 
-  facet_wrap(~veg+depth, drop = FALSE) + 
+  facet_grid(vars(veg), vars(depth), drop = FALSE) + 
   xlab("organic soil C (gC m-2)") + 
   theme_bw() + 
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+  theme(#panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+        axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in")) +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
+  theme(axis.text.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 14),
+        axis.title.x = element_text(size = 14), 
+        axis.title.y = element_text(size = 14),
+        legend.text=element_text(size=14), 
+        legend.title=element_text(size=14)) +
   theme(strip.text.x = element_text(size = 12)) + 
   scale_x_continuous(breaks=c(0,4500,9000))
 
@@ -650,25 +657,34 @@ totsoilC2 <- arrange(transform(totsoilC2,
 totsoilC2$veg <- plyr::revalue(totsoilC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 #Fig. 2e
-ggplot(totsoilC2, aes(x = pool_value, fill = Article_ID)) + 
+f2e<-ggplot(totsoilC2, aes(x = pool_value)) + 
   geom_histogram(bins = 40) + 
-  facet_wrap(~veg+depth, drop = FALSE) + 
+  facet_grid(vars(veg),vars(depth), drop = FALSE) + 
   xlab("total soil C (gC m-2)") + 
   theme_bw() + 
-  theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"), 
-        legend.key.size =  unit(0.1, "in")) +
-  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
-  theme(strip.text.x = element_text(size = 11.5)) + 
+  theme(axis.title.y = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"), 
+        legend.key.size =  unit(0.1, "in"),
+        axis.text.x = element_text(size = 14), 
+        axis.title.x = element_text(size = 14), 
+        strip.text.x = element_text(size = 11.5)) + 
   scale_x_continuous(breaks=c(0,3000,6000)) +
   theme(panel.spacing = unit(0.6, "lines"))
 
 #+scale_y_sqrt()
 
+# figure 2 all together ========================================================
 
+ggarrange(f2a,f2b,f2c,f2d,f2e, ncol=3, nrow=2,legend = "none", labels = "auto") +
+  ggsave("figure_2.png", height=10, width=15.5)
 
-#Plotting for Fig 3
-orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
+# colors same as figure 3, switch axes for d,e
+
+# Plotting for Fig 3 ===========================================================
+orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,
+                              levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 #ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
   #geom_bar(position=position_dodge(), stat="identity") +
@@ -679,32 +695,47 @@ orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,levels = c("sagebrush", "sagec
 totsoilmeans010 <- add_row(totsoilmeans010, pool = "totsoilC_g_m2", veg = "sagebrush")
 totsoilmeans010$veg <- factor(totsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
-totsoilmeans010$veg <- plyr::revalue(totsoilmeans010$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+totsoilmeans010$veg <- plyr::revalue(totsoilmeans010$veg, 
+                                     c("sagebrush" = "native sagebrush", 
+                                       "sagecheat" = "invaded sagebrush"))
 
 
-colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
+colours <- c("native sagebrush" = "seagreen4", 
+             "invaded sagebrush" = "yellowgreen",
+             "cheatgrass" = "gold")
 
 
 #Fig. 3d
-ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
+f3d<-ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
-                width=.2,                    # Width of the error bars
+                width=.2,                    
                 position=position_dodge(.9)) +
-  labs(x = "vegetation type", y = "total soil carbon (gC m-2): 0-10 cm", fill = "vegetation") +
+  labs(x = "vegetation type", 
+       y = "total soil carbon (gC m-2): 0-10 cm", 
+       fill = "vegetation") +
+  theme_classic() +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   scale_fill_manual(values = colours) +
   scale_x_discrete(breaks = c('native sagebrush', 'invaded sagebrush', 'cheatgrass'), 
-                     labels = c('native\nsagebrush', 'invaded\nsagebrush', 'cheatgrass'))
-
-
-
+                   labels = c('native\nsagebrush', 'invaded\nsagebrush', 'cheatgrass'))
 
 #ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
   #geom_bar(position=position_dodge(), stat="identity") +
   #geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se), width=.2, position=position_dodge(.9)) +
   #labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm", fill = "vegetation") +
   #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
+
+#Fig. 3c
+f3c<-ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
+  geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
+  labs(y = "Soil organic C (gC cm-2) per cm thickness", x = "bottom depth sampled (cm)", fill = "vegetation") +
+  scale_fill_manual(values = colours) +
+  geom_errorbar(aes(ymin=meanpvpercm-se, ymax=meanpvpercm+se),
+                width=.2, position=position_dodge(.9))   +    
+  theme_classic()+# Width of the error bars 
+  theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) 
+
 
 orgsoilmeans1020$veg <- factor(orgsoilmeans1020$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 org2 <- rbind(as.data.frame(orgsoilmeans010), as.data.frame(orgsoilmeans1020))
@@ -716,12 +747,13 @@ org2$veg <- plyr::revalue(org2$veg, c("sagebrush" = "native sagebrush", "sageche
 
 #plot SOC by depth and veg
 #Fig. 3b
-ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
+f3b<- ggplot(org2, aes(x=depth, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
   geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se),
                 width=.2,                    # Width of the error bars
                 position=position_dodge(.9)) +
   labs(x = "depth (cm)", y = "soil organic carbon content (gC m-2)", fill = "vegetation") +
+  theme_classic()+
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   scale_fill_manual(values = colours)
 
@@ -738,24 +770,23 @@ rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", 
 colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
 
 # For Fig. 3a
-ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
+f3a<- ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
   geom_bar(position = position_dodge(preserve = "single"), stat = "identity") +
   geom_errorbar(aes(ymin = meanpv - se, ymax = meanpv + se),
                 width = .2, position = position_dodge(0.9)) + 
   labs(x = "carbon pool", y = "carbon content (gC m-2)", fill = "vegetation") +
+  theme_classic()+
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   scale_fill_manual(values = colours)
 
-#####################################
+# fig 3 all together============================================================
 
+ggarrange(f3a, f3b, f3c, f3d, nrow = 2, ncol=2, common.legend = TRUE, 
+          labels ="auto",label.x =0.9) +
+  ggsave("figure_3.png", width = 8, height = 8)
 
-#analysis with fire
+#analysis with fire=============================================================
 
-
-
-
-
-###
 unique(siwf$yr_samp)
 unique(siwf$masterlyb)
 
@@ -804,17 +835,27 @@ colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgree
 recentburn$pool2 <- ifelse(recentburn$pool == "AGBC_g_m2", "AGB", ifelse(recentburn$pool == "BGBC_g_m2", "BGB", ifelse(recentburn$pool == "litterC_g_m2", "litter", ifelse(recentburn$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
 
 
-#Fig. 4
-ggplot(data = recentburn, aes(x = timesincefire, y = pool_value, color = veg)) +
+#Fig. 4 ========================================================================
+f4<- ggplot(data = recentburn, aes(x = timesincefire, y = log(pool_value+1), color = veg)) +
   geom_point() + 
-  facet_wrap(~pool2) +
+  facet_wrap(~pool2, scales = "free_y") +
   xlab("Time since fire (years)") +
   ylab("Carbon content (gC m-2)") +
-  theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12), strip.text.x = element_text(size = 12)) +
-  geom_smooth(method = "lm", se=TRUE) + 
-  theme(legend.position="bottom") +
-  scale_color_manual(values = colours) +
-  xlim(0,20)
+  theme_bw()+
+  theme(axis.text.x = element_text(size = 12), 
+        axis.text.y = element_text(size = 12), 
+        axis.title.x = element_text(size = 12),
+        axis.title.y = element_text(size = 12), 
+        legend.text=element_text(size=12), 
+        legend.title=element_text(size=12), 
+        strip.text.x = element_text(size = 12)) +
+  geom_smooth(method = "lm", se=TRUE, show.legend = F) + 
+  theme(legend.position=c(1,0),
+        legend.justification = c(1,0)) +
+  scale_color_manual(values = colours,
+                     name = "Vegetation Type") +
+  xlim(0,20) +
+  ggsave("figure_4.png", width = 10, height = 6)
 
 
 

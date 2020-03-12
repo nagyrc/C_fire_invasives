@@ -1,0 +1,59 @@
+---
+output: pdf_document
+classoption: landscape
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r data_prep, include=FALSE}
+#Linear models to explain C storage ============================================
+#Dr. R. Chelsea Nagy
+#created March 15, 2019
+
+#load multiple libraries 
+x <- c("tidyverse", "sf", "ggplot2", "doBy", "lme4", "lmerTest", "stargazer")
+lapply(x, library, character.only = TRUE, verbose = FALSE)
+
+siwf <- as.data.frame(read_csv("siwf.csv"))%>%
+  filter(veg != 'salt_desert') %>%
+  mutate(firecat = ifelse(timesincefire < 5,
+                          "recent", ifelse(timesincefire >= 5 &
+                                             timesincefire < 20, "mid", 
+                                           ifelse(timesincefire >= 20, "old", NA))))%>%
+  mutate(depthcat = ifelse(bottomdepth_cm < 20, "shallow", 
+                           ifelse(bottomdepth_cm == 20, "mid", 
+                                  ifelse(bottomdepth_cm > 20, "deep", NA))))
+
+#try with subsets for each pool
+AGBC3 <- subset.data.frame(siwf, pool == "AGBC_g_m2") %>%
+  mutate("log(AGBC+1)" = log(pool_value+1))
+BGBC3 <- subset.data.frame(siwf, pool == "BGBC_g_m2") %>%
+  mutate("log(BGBC+1)" = log(pool_value+1))
+litterC3 <- subset.data.frame(siwf, pool == "litterC_g_m2")%>%
+  mutate("Litter C" = pool_value)
+orgsoilC3 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2")%>%
+  mutate("log(Soil Organic C)" = pool_value)
+totsoilC3 <- subset.data.frame(siwf, pool == "totsoilC_g_m2")%>%
+  mutate("Soil Total C" = pool_value)
+
+final_mods <- list()
+
+final_mods$ABG <- lmer(`log(AGBC+1)` ~ veg * firecat + (1|Article_ID), 
+                   data=AGBC3, REML = TRUE)
+final_mods$BGB <- lmer(`log(BGBC+1)` ~ veg + timesincefire + (1|Article_ID), 
+                    data=BGBC3, REML = TRUE)
+final_mods$litter <- lmer(`Litter C` ~ timesincefire + (1|Article_ID), 
+                       data=litterC3, REML = TRUE)
+final_mods$org_s <- lmer(`log(Soil Organic C)` ~ veg + firecat + depthcat + (1|Article_ID), 
+                        data=orgsoilC3, REML=TRUE)
+final_mods$tot <- lmer(`Soil Total C` ~ veg + timesincefire + depthcat + (1|Article_ID), 
+                        data=totsoilC3, REML=TRUE)
+```
+
+```{r results='asis'}
+for(i in 1:length(final_mods)) class(final_mods[[i]]) <- "lmerMod"
+stargazer(final_mods, header=F,column.sep.width = "1pt", single.row = T, 
+          title = "Linear mixed model results.")
+```
