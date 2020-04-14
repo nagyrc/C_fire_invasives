@@ -234,7 +234,7 @@ modobj3<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 modobj <- mcmc.list(modobj1, modobj2, modobj3)
 modobj
 
-#this has the numbers for the table
+#this has the numbers for Table 3
 summary(modobj)
 
 #THIS IS HOW WE CHECK THE MODEL#
