@@ -124,7 +124,7 @@ prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -
 
 #this is with depth category in the model (could be factor or numeric) as a fixed effect
 m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 #got this message when I added in just cheatfire, in addition to depth_cat
@@ -138,11 +138,11 @@ m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = or
                     #data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 m1b_inv <- MCMCglmm(g_cheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 m1c_inv <- MCMCglmm(g_cheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 summary(m1a_inv)
@@ -150,7 +150,7 @@ summary(m1b_inv)
 summary(m1c_inv)
 
 #these are having trouble running with the Article ID in there
-m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
+m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
@@ -192,37 +192,82 @@ summary(m3c_inv)
 #effect of cheat vs. sage
 #NOTE that if we want to include a fixed effect then gInv~ would have a variable listed
 
+
+#nitro_inv <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"gc_factornitrogen"][[1]]
+#drought_inv <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"gc_factordrought"][[1]]
+#temp_inv <- m2_inv[,"(Intercept)"][[1]] ###similar to my deep
+
+#deepSOC <-m1a_inv[,"(Intercept)"][[1]] 
+#catshallowSOC <- m1a_inv[,"(Intercept)"][[1]] + m1a_inv[,"depth_catshallow"][[1]]
+#catmidSOC <- m1a_inv[,"(Intercept)"][[1]] + m1a_inv[,"depth_catmid"][[1]]
+
+#deepSOC <-m1b_inv[,"(Intercept)"][[1]] 
+#catshallowSOC <- m1b_inv[,"(Intercept)"][[1]] + m1b_inv[,"depth_catshallow"][[1]]
+#catmidSOC <- m1b_inv[,"(Intercept)"][[1]] + m1b_inv[,"depth_catmid"][[1]]
+
+#deepSOC <-m1c_inv[,"(Intercept)"][[1]] 
+#catshallowSOC <- m1c_inv[,"(Intercept)"][[1]] + m1c_inv[,"depth_catshallow"][[1]]
+#catmidSOC <- m1c_inv[,"(Intercept)"][[1]] + m1c_inv[,"depth_catmid"][[1]]
+
 # combine 3 chains into 1 mcmc object
 m1_inv = mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
 m1_inv
+
+deepSOC <-m1_inv[,"(Intercept)"][[1]] 
+catshallowSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catshallow"][[1]]
+catmidSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catmid"][[1]]
+
+modobj1<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+deepSOC <-m1_inv[,"(Intercept)"][[2]] 
+catshallowSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catshallow"][[2]]
+catmidSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catmid"][[2]]
+
+modobj2<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+deepSOC <-m1_inv[,"(Intercept)"][[3]] 
+catshallowSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catshallow"][[3]]
+catmidSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catmid"][[3]]
+
+modobj3<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+modobj <- mcmc.list(modobj1, modobj2, modobj3)
+modobj
+
+#this has the numbers for the table
+summary(modobj)
+
 #THIS IS HOW WE CHECK THE MODEL#
 
+#new1_inv <- mcmc(cbind(temp_inv, nitro_inv, drought_inv))
+summary(m1_inv)
+
 # diagnostics to ensure good model behavior
-m1inv_overall <- MCMCsummary(m1_inv, params = "(Intercept)", n.eff = T)
+m1inv_overall <- MCMCsummary(m1_inv, params = c("(Intercept)", "depth_catshallow", "depth_catmid"), n.eff = T)
 m1inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
-MCMCtrace(m1_inv, params = "(Intercept)", pdf = F, ind = T)
+MCMCtrace(m1_inv, params = c("(Intercept)", "depth_catshallow", "depth_catmid"), pdf = F, ind = T)
 
 #autocorr.plot(m1_inv) #all
 #this will tell us whether our thinning variable is okay
 #if many tall bars, increase thinning
-autocorr.plot(m1_inv[, "(Intercept)"]) 
+autocorr.plot(m1_inv[, c("(Intercept)", "depth_catshallow", "depth_catmid")]) 
 
 #assess convergence
 #Trace plot. we want all the parameter estimates to be similar and horizontal
 #up the burnin and iterations if they are headed in an up or down direction
-gelman.plot(m1_inv[ , "(Intercept)"]) 
+gelman.plot(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")]) 
 #Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
 #Insufficient iterations to produce Gelman-Rubin plot
 
 #we want the posteriors to converge on 1
 #if they dont, up burnin and interations
-gelman.diag(m1_inv[ , "(Intercept)"])
+gelman.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
 
 #dont worry about this one for now if gelman diagram looks good
-geweke.diag(m1_inv[ , "(Intercept)"])
+geweke.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
 
 
 #If everything looks good here, then the intercept value is the effect
