@@ -27,7 +27,7 @@ siwf3$firecat <- ifelse(siwf3$timesincefire < 5, "recent", ifelse(siwf3$timesinc
 #shallow = bottomdepth_cm < 20
 #mid = bottomdepth_cm == 20
 #deep = bottomdepth_cm > 20
-siwf3$depthcat <- ifelse(siwf3$bottomdepth_cm < 20, "shallow", ifelse(siwf3$bottomdepth_cm == 20, "mid", ifelse(siwf3$bottomdepth_cm > 20, "deep", NA)))
+siwf3$depthcat <- ifelse(siwf3$bottomdepth_cm <= 10, "shallow", ifelse(siwf3$bottomdepth_cm <= 20, "mid", ifelse(siwf3$bottomdepth_cm > 20, "deep", NA)))
 
 
 #try with subsets for each pool
