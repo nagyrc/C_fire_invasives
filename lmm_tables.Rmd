@@ -5,6 +5,7 @@ classoption: landscape
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(ggpubr)
 ```
 
 ```{r data_prep, include=FALSE}
@@ -19,37 +20,98 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 siwf <- as.data.frame(read_csv("siwf.csv"))%>%
   filter(veg != 'salt_desert') %>%
   mutate(firecat = ifelse(timesincefire < 5,
-                          "recent", ifelse(timesincefire >= 5 &
-                                             timesincefire < 20, "mid", 
-                                           ifelse(timesincefire >= 20, "old", NA))))%>%
-  mutate(depthcat = ifelse(bottomdepth_cm < 20, "shallow", 
-                           ifelse(bottomdepth_cm == 20, "mid", 
-                                  ifelse(bottomdepth_cm > 20, "deep", NA))))
+                          "< 5", ifelse(timesincefire >= 5 &
+                                             timesincefire < 20, "5-20", 
+                                           ifelse(timesincefire >= 20, "> 20", NA))),
+         firecat = factor(firecat, levels = c("< 5", "5-20", "> 20")),
+         veg = factor(veg, levels = c("sagebrush", "sagecheat", "cheatgrass")))%>%
+  mutate(soil_depth = ifelse(bottomdepth_cm <= 10, "0-10", 
+                           ifelse(bottomdepth_cm > 10 & bottomdepth_cm <=20, "10-20", 
+                                  ifelse(bottomdepth_cm > 20, "20-160", NA))))
 
 #try with subsets for each pool
 AGBC3 <- subset.data.frame(siwf, pool == "AGBC_g_m2") %>%
-  mutate("log(AGBC+1)" = log(pool_value+1))
+  mutate("log(AGBC+1)" = log(pool_value+1)) 
 BGBC3 <- subset.data.frame(siwf, pool == "BGBC_g_m2") %>%
   mutate("log(BGBC+1)" = log(pool_value+1))
 litterC3 <- subset.data.frame(siwf, pool == "litterC_g_m2")%>%
   mutate("Litter C" = pool_value)
 orgsoilC3 <- subset.data.frame(siwf, pool == "orgsoilC_g_m2")%>%
-  mutate("log(Soil Organic C)" = pool_value)
+  mutate("log(Soil Organic C)" = log(pool_value))
 totsoilC3 <- subset.data.frame(siwf, pool == "totsoilC_g_m2")%>%
-  mutate("Soil Total C" = pool_value)
+  mutate("Soil Total C" = pool_value) 
 
 final_mods <- list()
 
 final_mods$ABG <- lmer(`log(AGBC+1)` ~ veg * firecat + (1|Article_ID), 
                    data=AGBC3, REML = TRUE)
-final_mods$BGB <- lmer(`log(BGBC+1)` ~ veg + timesincefire + (1|Article_ID), 
+final_mods$BGB <- lmer(`log(BGBC+1)` ~ timesincefire +(timesincefire|Article_ID), 
                     data=BGBC3, REML = TRUE)
 final_mods$litter <- lmer(`Litter C` ~ timesincefire + (1|Article_ID), 
                        data=litterC3, REML = TRUE)
-final_mods$org_s <- lmer(`log(Soil Organic C)` ~ veg + firecat + depthcat + (1|Article_ID), 
+final_mods$org_s <- lmer(`log(Soil Organic C)` ~ firecat * veg* soil_depth + (1|Article_ID),
                         data=orgsoilC3, REML=TRUE)
-final_mods$tot <- lmer(`Soil Total C` ~ veg + timesincefire + depthcat + (1|Article_ID), 
+# final_mods$org_s1 <- lmer(`log(Soil Organic C)` ~ veg*soil_depth + veg*firecat +(1|Article_ID),
+#                         data=orgsoilC3, REML=FALSE)
+# AIC(final_mods$org_s, final_mods$org_s1)
+# summary(final_mods$org_s)
+final_mods$tot <- lmer(log(`Soil Total C`) ~ timesincefire * veg* bottomdepth_cm + (1|Article_ID), 
                         data=totsoilC3, REML=TRUE)
+summary(final_mods$tot)
+```
+
+```{r}
+p4a<-ggplot(AGBC3, aes(y=`log(AGBC+1)`, fill=veg, x=firecat)) + 
+  geom_boxplot() +
+  xlab("Time Since Fire (years)")+
+  ggtitle("figure 4a: boxplots might work better for categorized TSF")
+```
+
+```{r}
+p4b<-ggplot(BGBC3, aes(y=`log(BGBC+1)`, x=timesincefire)) + 
+  geom_point(aes(color = veg)) +
+  geom_smooth(method="lm") +
+geom_smooth(method="lm")+
+    xlab("Time Since Fire (years)")+
+  ggtitle("no interaction with veg")
+
+```
+
+```{r}
+p4c<-ggplot(litterC3, aes(y=`Litter C`, x=timesincefire)) + 
+  geom_point(aes(color = veg)) +
+  geom_smooth(method="lm") +
+geom_smooth(method="lm")+
+    xlab("Time Since Fire (years)")+
+  ggtitle("no interaction with veg")
+```
+
+```{r fig.width=9}
+p4d<-orgsoilC3 %>%
+   mutate(soil_depth = paste("Depth:", soil_depth, "cm")) %>%
+ggplot(aes(y=`log(Soil Organic C)`, x =firecat, fill = veg)) + 
+  geom_boxplot() +
+  # geom_jitter() +
+  # geom_smooth(method="lm") +
+  facet_wrap(~soil_depth)+
+  xlab("Time Since Fire (Years)")+
+  ggtitle("lots of variables")
+```
+
+```{r}
+p4e<-totsoilC3 %>%
+  ggplot(aes(y=log(`Soil Total C`), x = timesincefire, color=veg)) +
+  geom_point() +
+  geom_smooth(method="lm") +
+  #facet_wrap(~veg)+
+  ggtitle("")
+
+```
+
+```{r fig.width = 10, fig.height=7.5}
+row1<-ggarrange(p4a, p4b, p4c, nrow=1, legend="none")
+row2<-ggarrange(p4d, p4e, nrow=1, widths=c(2,1), legend="none")
+ggarrange(row1, row2, nrow=2)
 ```
 
 ```{r results='asis'}
