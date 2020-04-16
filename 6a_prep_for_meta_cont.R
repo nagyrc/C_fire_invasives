@@ -200,7 +200,7 @@ Raucheck <- siwf5 %>%
 ###########################
 #replace studyIDs in studies that need to be averaged across (Mahood, Rau, Norton et al. 2004)
 is.factor(siwf5$Study_ID) #TRUE
-
+siwf5$Study_ID <- as.factor(siwf5$Study_ID)
 #creating new levels for Mahood
 levels(siwf5$Study_ID) <- c(levels(siwf5$Study_ID), "6002", "6003", "6004") 
 #replacing study ids in Mahood
