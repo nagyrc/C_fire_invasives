@@ -213,29 +213,33 @@ summary(m3c_inv)
 m1_inv <- mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
 m1_inv
 
-deepSOC <- m1_inv[,"(Intercept)"][[1]] 
-catshallowSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catshallow"][[1]]
-catmidSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catmid"][[1]]
+summary(m1_inv)
 
-modobj1 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+#deepSOC <- m1_inv[,"(Intercept)"][[1]] 
+#catshallowSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catshallow"][[1]]
+#catmidSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catmid"][[1]]
 
-deepSOC <- m1_inv[,"(Intercept)"][[2]] 
-catshallowSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catshallow"][[2]]
-catmidSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catmid"][[2]]
+#modobj1 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 
-modobj2<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+#deepSOC <- m1_inv[,"(Intercept)"][[2]] 
+#catshallowSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catshallow"][[2]]
+#catmidSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catmid"][[2]]
 
-deepSOC <-m1_inv[,"(Intercept)"][[3]] 
-catshallowSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catshallow"][[3]]
-catmidSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catmid"][[3]]
+#modobj2<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 
-modobj3<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+#deepSOC <-m1_inv[,"(Intercept)"][[3]] 
+#catshallowSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catshallow"][[3]]
+#catmidSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catmid"][[3]]
 
-modobj <- mcmc.list(modobj1, modobj2, modobj3)
-modobj
+#modobj3<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+#modobj <- mcmc.list(modobj1, modobj2, modobj3)
+#modobj
 
 #this has the numbers for Table 3
-summary(modobj)
+#summary(modobj)
+
+
 
 #THIS IS HOW WE CHECK THE MODEL#
 
@@ -281,31 +285,31 @@ geweke.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
 #effect of sagecheat vs. sage
 # combine 3 chains into 1 mcmc object
 m2_inv = mcmc.list(m2a_inv[[1]], m2b_inv[[1]], m2c_inv[[1]])
+summary(m2_inv)
 
+#deepSOC <- m2_inv[,"(Intercept)"][[1]] 
+#catshallowSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catshallow"][[1]]
+#catmidSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catmid"][[1]]
 
-deepSOC <- m2_inv[,"(Intercept)"][[1]] 
-catshallowSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catshallow"][[1]]
-catmidSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catmid"][[1]]
+#modobj4 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 
-modobj4 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+#deepSOC <- m2_inv[,"(Intercept)"][[2]] 
+#catshallowSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catshallow"][[2]]
+#catmidSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catmid"][[2]]
 
-deepSOC <- m2_inv[,"(Intercept)"][[2]] 
-catshallowSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catshallow"][[2]]
-catmidSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catmid"][[2]]
+#modobj5<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 
-modobj5<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+#deepSOC <-m2_inv[,"(Intercept)"][[3]] 
+#catshallowSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catshallow"][[3]]
+#catmidSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catmid"][[3]]
 
-deepSOC <-m2_inv[,"(Intercept)"][[3]] 
-catshallowSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catshallow"][[3]]
-catmidSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catmid"][[3]]
+#modobj6<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 
-modobj6<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-modobjj <- mcmc.list(modobj4, modobj5, modobj6)
-modobjj
+#modobjj <- mcmc.list(modobj4, modobj5, modobj6)
+#modobjj
 
 #this has the numbers for Table 3
-summary(modobjj)
+#summary(modobjj)
 
 
 
