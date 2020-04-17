@@ -602,7 +602,7 @@ f2c<-ggplot(litterC2, aes(x = pool_value)) +
   facet_wrap(~veg, drop = FALSE) + 
   xlab("litter C (gC m-2)") + 
   theme_bw() + 
-  theme( panel.grid.major = element_blank(),
+  theme(panel.grid.major = element_blank(),
         axis.title.y=element_blank(),
         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
         legend.key.size =  unit(0.1, "in")) +

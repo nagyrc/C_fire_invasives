@@ -117,7 +117,7 @@ anova(AGBC.model,AGBC.model2a, AGBC.model2b, test = "LR")
 
 final_mods$ABG <- lmer(log(pool_value+1) ~ veg * firecat + (1|Article_ID), 
                    data=AGBC3, REML = TRUE)
-summary(AGBC_final)
+summary(final_mods$ABG)
 
 ggplot(AGBC3, aes(y = log(pool_value+1), x= firecat, fill=veg)) +
   geom_boxplot()
