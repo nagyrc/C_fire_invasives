@@ -37,9 +37,13 @@ joiny2 = read_csv("joiny2.csv")
 siwf4 <- siwf %>%
   filter(veg != 'salt_desert')
 
+summary(siwf4$study)
+unique(siwf4$study)
+unique(siwf4$veg)
+
 #which studies are paired?
 ccz <- siwf4 %>%
-  dplyr::group_by(study) %>%
+  group_by(study) %>%
   summarise(numveg = n_distinct(veg,  na.rm = TRUE))
 
 ccz$geometry <- NULL
@@ -66,7 +70,7 @@ unique(test3$veg) #1
 ###############
 cct <- siwf4 %>%
   group_by(study) %>%
-  summarise(numveg = n_distinct(veg,  na.rm = TRUE)) %>%
+  dplyr::summarise(numveg = n_distinct(veg,  na.rm = TRUE)) %>%
   filter(numveg > 1) 
 cct$geometry <- NULL
 
@@ -442,7 +446,7 @@ rawspmeans <- as.data.frame(read_csv("/Users/rana7082/Dropbox/C_fire_invasives_R
 #need a table of studyid and depth_cat
 stepzz1 <- siwf5 %>%
   filter(pool == 'totsoilC_g_m2'|pool == 'orgsoilC_g_m2') %>%
-  mutate(depth_cat = ifelse(bottomdepth_cm <20, 'shallow', ifelse(bottomdepth_cm == 20, 'mid', 'deep'))) %>%
+  mutate(depth_cat = ifelse(bottomdepth_cm <=10, 'shallow', ifelse(bottomdepth_cm <= 20, 'mid', 'deep'))) %>%
   distinct(Study_ID, depth_cat, .keep_all = T)
 stepzz1$geometry <- NULL
 #paste in these 195 observations (note, some of these are old studyIDs)
