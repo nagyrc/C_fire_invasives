@@ -122,8 +122,8 @@ prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -
 #make nitt smaller- 10,000 when we start to help run faster
 #fit= dq2
 
-#this is with depth category in the model (could be factor or numeric) as a fixed effect
-m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+#removed depth_cat; not equal representation across depths
+m1a_inv <- MCMCglmm(g_cheat_v_sage ~  1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
@@ -137,11 +137,11 @@ m1a_inv <- MCMCglmm(g_cheat_v_sage ~  depth_cat, random = ~ Article_ID, mev = or
                     #prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     #data = orgsoil, pr = T, saveX = T, saveZ = T)
 
-m1b_inv <- MCMCglmm(g_cheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
-m1c_inv <- MCMCglmm(g_cheat_v_sage ~ depth_cat, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
+m1c_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
 
@@ -149,19 +149,19 @@ summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
 
-#these are having trouble running with the Article ID in there
+#these are having trouble running; tried removing depth_cat; still won't run
 m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 
-m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+m2b_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 
-m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ depth_cat, mev = orgsoil2$var_d_sagecheat_v_sage,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+m2c_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
 
 summary(m2a_inv)
@@ -170,15 +170,15 @@ summary(m2c_inv)
 
 #ok to leave Article_ID in here as random effect
 m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
 m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
 m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
 summary(m3a_inv)
@@ -209,17 +209,17 @@ summary(m3c_inv)
 #catshallowSOC <- m1c_inv[,"(Intercept)"][[1]] + m1c_inv[,"depth_catshallow"][[1]]
 #catmidSOC <- m1c_inv[,"(Intercept)"][[1]] + m1c_inv[,"depth_catmid"][[1]]
 
-# combine 3 chains into 1 mcmc object
-m1_inv = mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
+# combine 3 chains into 1 mcmc object; cheat_v_sage
+m1_inv <- mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
 m1_inv
 
-deepSOC <-m1_inv[,"(Intercept)"][[1]] 
+deepSOC <- m1_inv[,"(Intercept)"][[1]] 
 catshallowSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catshallow"][[1]]
 catmidSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catmid"][[1]]
 
-modobj1<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+modobj1 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
 
-deepSOC <-m1_inv[,"(Intercept)"][[2]] 
+deepSOC <- m1_inv[,"(Intercept)"][[2]] 
 catshallowSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catshallow"][[2]]
 catmidSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catmid"][[2]]
 
@@ -283,6 +283,32 @@ geweke.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
 m2_inv = mcmc.list(m2a_inv[[1]], m2b_inv[[1]], m2c_inv[[1]])
 
 
+deepSOC <- m2_inv[,"(Intercept)"][[1]] 
+catshallowSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catshallow"][[1]]
+catmidSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catmid"][[1]]
+
+modobj4 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+deepSOC <- m2_inv[,"(Intercept)"][[2]] 
+catshallowSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catshallow"][[2]]
+catmidSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catmid"][[2]]
+
+modobj5<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+deepSOC <-m2_inv[,"(Intercept)"][[3]] 
+catshallowSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catshallow"][[3]]
+catmidSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catmid"][[3]]
+
+modobj6<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+modobjj <- mcmc.list(modobj4, modobj5, modobj6)
+modobjj
+
+#this has the numbers for Table 3
+summary(modobjj)
+
+
+
 #THIS IS HOW WE CHECK THE MODEL#
 # diagnostics to ensure good model behavior
 m2inv_overall <- MCMCsummary(m2_inv, params = "(Intercept)", n.eff = T)
@@ -317,6 +343,32 @@ geweke.diag(m2_inv[ , "(Intercept)"])
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m3_inv = mcmc.list(m3a_inv[[1]], m3b_inv[[1]], m3c_inv[[1]])
+
+
+deepSOC <- m3_inv[,"(Intercept)"][[1]] 
+catshallowSOC <- m3_inv[,"(Intercept)"][[1]] + m3_inv[,"depth_catshallow"][[1]]
+catmidSOC <- m3_inv[,"(Intercept)"][[1]] + m3_inv[,"depth_catmid"][[1]]
+
+modobj7 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+deepSOC <- m3_inv[,"(Intercept)"][[2]] 
+catshallowSOC <- m3_inv[,"(Intercept)"][[2]] + m3_inv[,"depth_catshallow"][[2]]
+catmidSOC <- m3_inv[,"(Intercept)"][[2]] + m3_inv[,"depth_catmid"][[2]]
+
+modobj8<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+deepSOC <-m3_inv[,"(Intercept)"][[3]] 
+catshallowSOC <- m3_inv[,"(Intercept)"][[3]] + m3_inv[,"depth_catshallow"][[3]]
+catmidSOC <- m3_inv[,"(Intercept)"][[3]] + m3_inv[,"depth_catmid"][[3]]
+
+modobj9<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
+
+modobjjj <- mcmc.list(modobj7, modobj8, modobj9)
+modobjjj
+
+#this has the numbers for Table 3
+summary(modobjjj)
+
 
 
 #THIS IS HOW WE CHECK THE MODEL#
