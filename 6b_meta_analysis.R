@@ -168,16 +168,16 @@ summary(m2a_inv)
 summary(m2b_inv)
 summary(m2c_inv)
 
-#ok to leave Article_ID in here as random effect
-m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+#ok to leave Article_ID in here as random effect; removed depth_cat
+m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
@@ -347,8 +347,9 @@ geweke.diag(m2_inv[ , "(Intercept)"])
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m3_inv = mcmc.list(m3a_inv[[1]], m3b_inv[[1]], m3c_inv[[1]])
+summary(m3_inv)
 
-
+#if using depth categories, do this instead
 deepSOC <- m3_inv[,"(Intercept)"][[1]] 
 catshallowSOC <- m3_inv[,"(Intercept)"][[1]] + m3_inv[,"depth_catshallow"][[1]]
 catmidSOC <- m3_inv[,"(Intercept)"][[1]] + m3_inv[,"depth_catmid"][[1]]
