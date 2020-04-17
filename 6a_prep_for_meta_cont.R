@@ -66,10 +66,8 @@ unique(test3$veg) #1
 ###############
 cct <- siwf4 %>%
   group_by(study) %>%
-  summarise(numveg = n_distinct(veg,  na.rm = TRUE)) 
-rm(cct)
-#%>%
-  #filter(numveg > 1) 
+  summarise(numveg = n_distinct(veg,  na.rm = TRUE)) %>%
+  filter(numveg > 1) 
 cct$geometry <- NULL
 
 studies <- cct$study
