@@ -413,15 +413,15 @@ totsoil <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat)
 
 #only 1 level of depth_cat factor; so don't use depth_cat here
 m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
 
 m4b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
 
 m4c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
 
 summary(m4a_inv)
@@ -431,6 +431,7 @@ summary(m4c_inv)
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m4_inv = mcmc.list(m4a_inv[[1]], m4b_inv[[1]], m4c_inv[[1]])
+summary(m4_inv)
 
 #THIS IS HOW WE CHECK THE MODEL#
 
@@ -467,18 +468,18 @@ geweke.diag(m4_inv[ , "(Intercept)"])
 #AGB
 agb <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #3
 #agb2 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
-agb3 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
+#agb3 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
 
-#use cheatfire here instead of depth_cat since AGB
-m5a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
+#use cheatfire here instead of depth_cat since AGB; get rid of cheatfire
+m5a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = agb, pr = T, saveX = T, saveZ = T)
 
-m5b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
+m5b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = agb, pr = T, saveX = T, saveZ = T)
 
-m5c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
+m5c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = agb, pr = T, saveX = T, saveZ = T)
 
@@ -489,12 +490,14 @@ summary(m5c_inv)
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m5_inv = mcmc.list(m5a_inv[[1]], m5b_inv[[1]], m5c_inv[[1]])
+summary(m5_inv)
 
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
 m5inv_overall <- MCMCsummary(m5_inv, params = "(Intercept)", n.eff = T)
 m5inv_overall
+
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
@@ -531,16 +534,17 @@ bgb <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #4
 
 
 #use cheatfire here instead of depth_cat since AGB; won't run with Article ID in there
-m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ cheatfire, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+#removing cheatfire since not significant
+m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = bgb, pr = T, saveX = T, saveZ = T)
 
-m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = bgb, pr = T, saveX = T, saveZ = T)
 
-m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  cheatfire, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
+m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
+                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = bgb, pr = T, saveX = T, saveZ = T)
 
 summary(m6a_inv)
@@ -550,6 +554,7 @@ summary(m6c_inv)
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m6_inv = mcmc.list(m6a_inv[[1]], m6b_inv[[1]], m6c_inv[[1]])
+summary(m6_inv)
 
 #THIS IS HOW WE CHECK THE MODEL#
 
