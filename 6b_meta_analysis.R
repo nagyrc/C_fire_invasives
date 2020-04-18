@@ -169,15 +169,15 @@ summary(m2b_inv)
 summary(m2c_inv)
 
 #ok to leave Article_ID in here as random effect; removed depth_cat
-m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3b_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
-m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
+m3c_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
 
