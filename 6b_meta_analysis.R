@@ -528,61 +528,63 @@ geweke.diag(m5_inv[ , "(Intercept)"])
 ####################################################################
 #BGB
 
-bgb <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #4
+#bgb <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #4
+#all from same study, so did not run
+
 #bgb2 <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
 #bgb3 <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
 
 
 #use cheatfire here instead of depth_cat since AGB; won't run with Article ID in there
 #removing cheatfire since not significant
-m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
-                    data = bgb, pr = T, saveX = T, saveZ = T)
+#m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, mev = bgb$var_d_cheat_v_sagecheat,
+                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
+                    #data = bgb, pr = T, saveX = T, saveZ = T)
 
-m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
-                    data = bgb, pr = T, saveX = T, saveZ = T)
+#m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
+                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
+                    #data = bgb, pr = T, saveX = T, saveZ = T)
 
-m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
-                    prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
-                    data = bgb, pr = T, saveX = T, saveZ = T)
+#m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
+                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
+                    #data = bgb, pr = T, saveX = T, saveZ = T)
 
-summary(m6a_inv)
-summary(m6b_inv)
-summary(m6c_inv)
+#summary(m6a_inv)
+#summary(m6b_inv)
+#summary(m6c_inv)
 
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
-m6_inv = mcmc.list(m6a_inv[[1]], m6b_inv[[1]], m6c_inv[[1]])
-summary(m6_inv)
+#m6_inv = mcmc.list(m6a_inv[[1]], m6b_inv[[1]], m6c_inv[[1]])
+#summary(m6_inv)
 
 #THIS IS HOW WE CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
-m6inv_overall <- MCMCsummary(m6_inv, params = "(Intercept)", n.eff = T)
-m6inv_overall
+#m6inv_overall <- MCMCsummary(m6_inv, params = "(Intercept)", n.eff = T)
+#m6inv_overall
 
 #we want this density plot to look relatively smooth
 #if not smooth, increase burnin and increase number of iterations
-MCMCtrace(m6_inv, params = "(Intercept)", pdf = F, ind = T)
+#MCMCtrace(m6_inv, params = "(Intercept)", pdf = F, ind = T)
 
 #autocorr.plot(m1_inv) #all
 #this will tell us whether our thinning variable is okay
 #if many tall bars, increase thinning
-autocorr.plot(m6_inv[, "(Intercept)"]) 
+#autocorr.plot(m6_inv[, "(Intercept)"]) 
 
 #assess convergence
 #Trace plot. we want all the parameter estimates to be similar and horizontal
 #up the burnin and iterations if they are headed in an up or down direction
-gelman.plot(m6_inv[ , "(Intercept)"]) 
+#gelman.plot(m6_inv[ , "(Intercept)"]) 
 
 
 #we want the posteriors to converge on 1
 #if they dont, up burnin and interations
-gelman.diag(m6_inv[ , "(Intercept)"])
+#gelman.diag(m6_inv[ , "(Intercept)"])
 
 #dont worry about this one for now if gelman diagram looks good
-geweke.diag(m6_inv[ , "(Intercept)"])
+#geweke.diag(m6_inv[ , "(Intercept)"])
 
 
 #If everything looks good here, then the intercept value is the effect
