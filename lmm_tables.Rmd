@@ -133,10 +133,10 @@ rbind(MuMIn::r.squaredGLMM(final_mods$ABG) %>% as.data.frame,
       MuMIn::r.squaredGLMM(final_mods$litter)%>% as.data.frame,
       MuMIn::r.squaredGLMM(final_mods$org_s)%>% as.data.frame,
       MuMIn::r.squaredGLMM(final_mods$tot)%>% as.data.frame) %>%
-  cbind(.,data.frame(model = c("Above-ground biomass Carbon",
-                                "Below-ground biomass Carbon",
-                                "Litter Carbon", "Soil organic Carbon",
-                                "Soil total Carbon"))) %>%
+  cbind(.,data.frame(model = c("Above-ground biomass C",
+                                "Below-ground biomass C",
+                                "Litter Carbon", "Soil organic C",
+                                "Soil total C"))) %>%
   dplyr::select(model, R2m, R2c) %>%
   stargazer(summary=F, header=F, 
             title = "Marginal and Conditional pseudo R2 values for linear mixed models",
@@ -144,8 +144,8 @@ rbind(MuMIn::r.squaredGLMM(final_mods$ABG) %>% as.data.frame,
 ```
 
 ```{r fig.width = 10, fig.height=7.5}
-row1<-ggarrange(p4a, p4b, p4c, nrow=1)
-row2<-ggarrange(p4d, p4e, nrow=1, widths=c(2,1))
+row1<-ggarrange(p4a, p4b, p4c, nrow=1, labels = "auto")
+row2<-ggarrange(p4d, p4e, nrow=1, widths=c(2,1), labels = c("d","e"))
 ggarrange(row1, row2, nrow=2)
 ```
 

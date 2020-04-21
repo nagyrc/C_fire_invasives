@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2020.1.16)  21 APR 2020 10:51
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2019/dev/Debian) (preloaded format=pdflatex 2020.1.16)  21 APR 2020 13:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -638,14 +638,14 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-<lmm_tables_files/figure-latex/unnamed-chunk-7-1.pdf, id=4, 712.6625pt x 532.99
-126pt>
+<lmm_tables_files/figure-latex/unnamed-chunk-7-1.pdf, id=4, 713.66624pt x 533.9
+95pt>
 File: lmm_tables_files/figure-latex/unnamed-chunk-7-1.pdf Graphic file (type pd
 f)
 <use lmm_tables_files/figure-latex/unnamed-chunk-7-1.pdf>
 Package pdftex.def Info: lmm_tables_files/figure-latex/unnamed-chunk-7-1.pdf  u
 sed on input line 87.
-(pdftex.def)             Requested size: 628.12364pt x 469.76572pt.
+(pdftex.def)             Requested size: 627.83221pt x 469.77039pt.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2 <./lmm_tables_files/fig
@@ -676,10 +676,10 @@ hare/texmf/fonts/enc/dvips/lm/lm-rm.enc}</usr/share/texmf/fonts/type1/public/lm
 /lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf
 /fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy1
 0.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb>
-Output written on lmm_tables.pdf (5 pages, 97916 bytes).
+Output written on lmm_tables.pdf (5 pages, 98018 bytes).
 PDF statistics:
- 73 PDF objects out of 1000 (max. 8388607)
- 57 compressed objects within 1 object stream
+ 74 PDF objects out of 1000 (max. 8388607)
+ 58 compressed objects within 1 object stream
  10 named destinations out of 1000 (max. 500000)
  6150 words of extra memory for PDF output out of 10000 (max. 10000000)
 
