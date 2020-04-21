@@ -146,7 +146,8 @@ rbind(MuMIn::r.squaredGLMM(final_mods$ABG) %>% as.data.frame,
 ```{r fig.width = 10, fig.height=7.5}
 row1<-ggarrange(p4a, p4b, p4c, nrow=1, labels = "auto")
 row2<-ggarrange(p4d, p4e, nrow=1, widths=c(2,1), labels = c("d","e"))
-ggarrange(row1, row2, nrow=2)
+ggarrange(row1, row2, nrow=2) +
+  ggsave("figure_4.png", height = 8, width =10)
 ```
 
 ```{r results='asis'}
