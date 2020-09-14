@@ -1,6 +1,6 @@
 #Script for data exploration for the NSF fire invasives carbon project
 #Dr. R. Chelsea Nagy
-#created July 26, 2018
+#created July 26, 2018; last updated on December 11, 2018 with all data to date
 
 library(tidyverse)
 
