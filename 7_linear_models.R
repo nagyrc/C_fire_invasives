@@ -1,5 +1,5 @@
 #Linear models to explain C storage
-#Dr. R. Chelsea Nagy
+#Dr. R. Chelsea Nagy and Adam Mahood
 #created March 15, 2019
 
 #load multiple libraries 
