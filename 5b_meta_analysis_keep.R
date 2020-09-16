@@ -11,12 +11,10 @@ setwd("data/")
 citation("MCMCglmm")
 citation("metafor")
 
-## get full dataset from github (includes all cases and studies)
-#dq2 <- read.csv("Meta_analysis_sheet_manual.csv", header = T)
 dq2 <- read.csv("/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawspmeanscat.csv", header = T)
 head(dq2)
 tail(dq2)
-summary(dq2) # there are some missing variance values from ind points
+summary(dq2) 
 
 
 
@@ -28,11 +26,6 @@ summary(dq2) # there are some missing variance values from ind points
 
 # Computing observation-level SD
 #converting se and ci into sd
-#for us, "control" will probably be the sagecheat sites
-#Not necessary, we already have SD calculated
-
-#dq2$SD_control[dq2$var_statistic == "SE"] <- dq2$varsage[dq2$var_statistic == "SE"]*sqrt(dq2$nsage[dq2$var_statistic == "SE"])
-#dq2$SD_control[dq2$var_statistic == "CI"] <- (sqrt(dq2$nsage[dq2$var_statistic == "CI"]))*(((dq2$meansage[dq2$var_statistic == "CI"] + dq2$varsage[dq2$var_statistic == "CI"])- dq2$meansage[dq2$var_statistic == "CI"])/1.96)
 
 #will need to calculate sd for all three veg categories
 head(dq2)
@@ -42,7 +35,6 @@ dq2$sdcheat <- sqrt(dq2$varcheat)
 
 
 # Computing the pooled standard deviations for the Hedges' index
-#this is the equation in the book
 #at this point we have three groups - cheat (invaded, burned), sagecheat (invaded, unburned), and sage (uninvaded, unburned)
 
 dq2$SD_hedge_cheat_v_sage <- sqrt((dq2$sdsage^2*(dq2$nsage-1)+dq2$sdcheat^2*(dq2$ncheat-1))/(dq2$nsage+dq2$ncheat-2))
@@ -117,25 +109,11 @@ orgsoil3 <- subset(dq2, pool == "orgsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat
 #non informative uniform priors
 prior <- list(R = list(V = 1e-10, nu = -1), G = list(G1 = list(V = 1e-10, nu = -1)))
 
-# run random effects model, three chains
-# we will get an error because we don't have replication with our study ID. this is OK
-#make nitt smaller- 10,000 when we start to help run faster
-#fit= dq2
 
-#removed depth_cat; not equal representation across depths
+#depth category is not included; not equal representation across depths
 m1a_inv <- MCMCglmm(g_cheat_v_sage ~  1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil, pr = T, saveX = T, saveZ = T)
-
-#got this message when I added in just cheatfire, in addition to depth_cat
-#Warning message:
-#In MCMCglmm(g_cheat_v_sage ~ depth_cat + cheatfire, random = ~Article_ID,  :
-              #some fixed effects are not estimable and have been removed. Use singular.ok=TRUE to sample these effects, but use an informative prior!
-
-#this is without depth as a fixed effect
-#m1a_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
-                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
-                    #data = orgsoil, pr = T, saveX = T, saveZ = T)
 
 m1b_inv <- MCMCglmm(g_cheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil$var_d_cheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
@@ -149,7 +127,7 @@ summary(m1a_inv)
 summary(m1b_inv)
 summary(m1c_inv)
 
-#these are having trouble running; tried removing depth_cat; still won't run
+#may need to run these multiple times
 m2a_inv <- MCMCglmm(g_sagecheat_v_sage ~ 1, random = ~ Article_ID, mev = orgsoil2$var_d_sagecheat_v_sage,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil2, pr = T, saveX = T, saveZ = T)
@@ -168,7 +146,7 @@ summary(m2a_inv)
 summary(m2b_inv)
 summary(m2c_inv)
 
-#ok to leave Article_ID in here as random effect; removed depth_cat
+#ok to leave Article_ID in here as random effect
 m3a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ depth_cat, random = ~ Article_ID, mev = orgsoil3$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = orgsoil3, pr = T, saveX = T, saveZ = T)
@@ -190,24 +168,6 @@ summary(m3c_inv)
 ###
 ###
 #effect of cheat vs. sage
-#NOTE that if we want to include a fixed effect then gInv~ would have a variable listed
-
-
-#nitro_inv <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"gc_factornitrogen"][[1]]
-#drought_inv <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"gc_factordrought"][[1]]
-#temp_inv <- m2_inv[,"(Intercept)"][[1]] ###similar to my deep
-
-#deepSOC <-m1a_inv[,"(Intercept)"][[1]] 
-#catshallowSOC <- m1a_inv[,"(Intercept)"][[1]] + m1a_inv[,"depth_catshallow"][[1]]
-#catmidSOC <- m1a_inv[,"(Intercept)"][[1]] + m1a_inv[,"depth_catmid"][[1]]
-
-#deepSOC <-m1b_inv[,"(Intercept)"][[1]] 
-#catshallowSOC <- m1b_inv[,"(Intercept)"][[1]] + m1b_inv[,"depth_catshallow"][[1]]
-#catmidSOC <- m1b_inv[,"(Intercept)"][[1]] + m1b_inv[,"depth_catmid"][[1]]
-
-#deepSOC <-m1c_inv[,"(Intercept)"][[1]] 
-#catshallowSOC <- m1c_inv[,"(Intercept)"][[1]] + m1c_inv[,"depth_catshallow"][[1]]
-#catmidSOC <- m1c_inv[,"(Intercept)"][[1]] + m1c_inv[,"depth_catmid"][[1]]
 
 # combine 3 chains into 1 mcmc object; cheat_v_sage
 m1_inv <- mcmc.list(m1a_inv[[1]], m1b_inv[[1]], m1c_inv[[1]])
@@ -215,66 +175,28 @@ m1_inv
 
 summary(m1_inv)
 
-#deepSOC <- m1_inv[,"(Intercept)"][[1]] 
-#catshallowSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catshallow"][[1]]
-#catmidSOC <- m1_inv[,"(Intercept)"][[1]] + m1_inv[,"depth_catmid"][[1]]
-
-#modobj1 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-#deepSOC <- m1_inv[,"(Intercept)"][[2]] 
-#catshallowSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catshallow"][[2]]
-#catmidSOC <- m1_inv[,"(Intercept)"][[2]] + m1_inv[,"depth_catmid"][[2]]
-
-#modobj2<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-#deepSOC <-m1_inv[,"(Intercept)"][[3]] 
-#catshallowSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catshallow"][[3]]
-#catmidSOC <- m1_inv[,"(Intercept)"][[3]] + m1_inv[,"depth_catmid"][[3]]
-
-#modobj3<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-#modobj <- mcmc.list(modobj1, modobj2, modobj3)
-#modobj
-
-#this has the numbers for Table 3
-#summary(modobj)
-
 
 
 #THIS IS HOW WE CHECK THE MODEL#
 
-#new1_inv <- mcmc(cbind(temp_inv, nitro_inv, drought_inv))
 summary(m1_inv)
 
 # diagnostics to ensure good model behavior
 m1inv_overall <- MCMCsummary(m1_inv, params = c("(Intercept)", "depth_catshallow", "depth_catmid"), n.eff = T)
 m1inv_overall
 
-#we want this density plot to look relatively smooth
-#if not smooth, increase burnin and increase number of iterations
+#we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m1_inv, params = c("(Intercept)", "depth_catshallow", "depth_catmid"), pdf = F, ind = T)
 
-#autocorr.plot(m1_inv) #all
-#this will tell us whether our thinning variable is okay
-#if many tall bars, increase thinning
+#this will tell us whether our thinning variable is okay; if many tall bars, increase thinning
 autocorr.plot(m1_inv[, c("(Intercept)", "depth_catshallow", "depth_catmid")]) 
 
 #assess convergence
-#Trace plot. we want all the parameter estimates to be similar and horizontal
-#up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")]) 
-#Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
-#Insufficient iterations to produce Gelman-Rubin plot
 
-#we want the posteriors to converge on 1
-#if they dont, up burnin and interations
 gelman.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
 
-#dont worry about this one for now if gelman diagram looks good
 geweke.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
-
-
-#If everything looks good here, then the intercept value is the effect
 
 
 
@@ -287,58 +209,24 @@ geweke.diag(m1_inv[ , c("(Intercept)", "depth_catshallow", "depth_catmid")])
 m2_inv = mcmc.list(m2a_inv[[1]], m2b_inv[[1]], m2c_inv[[1]])
 summary(m2_inv)
 
-#deepSOC <- m2_inv[,"(Intercept)"][[1]] 
-#catshallowSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catshallow"][[1]]
-#catmidSOC <- m2_inv[,"(Intercept)"][[1]] + m2_inv[,"depth_catmid"][[1]]
-
-#modobj4 <- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-#deepSOC <- m2_inv[,"(Intercept)"][[2]] 
-#catshallowSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catshallow"][[2]]
-#catmidSOC <- m2_inv[,"(Intercept)"][[2]] + m2_inv[,"depth_catmid"][[2]]
-
-#modobj5<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-#deepSOC <-m2_inv[,"(Intercept)"][[3]] 
-#catshallowSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catshallow"][[3]]
-#catmidSOC <- m2_inv[,"(Intercept)"][[3]] + m2_inv[,"depth_catmid"][[3]]
-
-#modobj6<- mcmc(cbind(deepSOC, catshallowSOC, catmidSOC))
-
-#modobjj <- mcmc.list(modobj4, modobj5, modobj6)
-#modobjj
-
-#this has the numbers for Table 3
-#summary(modobjj)
 
 
 
-#THIS IS HOW WE CHECK THE MODEL#
+#CHECK THE MODEL#
 # diagnostics to ensure good model behavior
 m2inv_overall <- MCMCsummary(m2_inv, params = "(Intercept)", n.eff = T)
 m2inv_overall
 
-#we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m2_inv, params = "(Intercept)", pdf = F, ind = T)
 
-#autocorr.plot(m1_inv) #all
-#this will tell us whether our thinning variable is okay
-#if many tall bars, increase thinning
 autocorr.plot(m2_inv[, "(Intercept)"]) 
 
 #assess convergence
-#Trace plot. we want all the parameter estimates to be similar and horizontal; up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m2_inv[ , "(Intercept)"]) 
-#Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
-#Insufficient iterations to produce Gelman-Rubin plot
 
-#we want the posteriors to converge on 1; if they dont, up burnin and interations
 gelman.diag(m2_inv[ , "(Intercept)"])
 
-#dont worry about this one for now if gelman diagram looks good
 geweke.diag(m2_inv[ , "(Intercept)"])
-
-#If everything looks good here, then the intercept value is the effect
 
 
 
@@ -349,7 +237,7 @@ geweke.diag(m2_inv[ , "(Intercept)"])
 m3_inv = mcmc.list(m3a_inv[[1]], m3b_inv[[1]], m3c_inv[[1]])
 summary(m3_inv)
 
-#if using depth categories, do this instead
+#for depth categories
 deepSOC <- m3_inv[,"(Intercept)"][[1]] 
 catshallowSOC <- m3_inv[,"(Intercept)"][[1]] + m3_inv[,"depth_catshallow"][[1]]
 catmidSOC <- m3_inv[,"(Intercept)"][[1]] + m3_inv[,"depth_catmid"][[1]]
@@ -376,32 +264,21 @@ summary(modobjjj)
 
 
 
-#THIS IS HOW WE CHECK THE MODEL#
+#CHECK THE MODEL#
 # diagnostics to ensure good model behavior
 m3inv_overall <- MCMCsummary(m3_inv, params = "(Intercept)", n.eff = T)
 m3inv_overall
 
-#we want this density plot to look relatively smooth; if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m3_inv, params = "(Intercept)", pdf = F, ind = T)
 
-#autocorr.plot(m1_inv) #all
-#this will tell us whether our thinning variable is okay
-#if many tall bars, increase thinning
 autocorr.plot(m3_inv[, "(Intercept)"]) 
 
 #assess convergence
-#Trace plot. we want all the parameter estimates to be similar and horizontal; up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m3_inv[ , "(Intercept)"]) 
-#Error in gelman.preplot(x, bin.width = bin.width, max.bins = max.bins,  : 
-#Insufficient iterations to produce Gelman-Rubin plot
 
-#we want the posteriors to converge on 1; if they dont, up burnin and interations
 gelman.diag(m3_inv[ , "(Intercept)"])
 
-#dont worry about this one for now if gelman diagram looks good
 geweke.diag(m3_inv[ , "(Intercept)"])
-
-#If everything looks good here, then the intercept value is the effect
 
 
 
@@ -411,7 +288,7 @@ totsoil <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sagecheat)
 #totsoil2 <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
 #totsoil3 <- subset(dq2, pool == "totsoilC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #0
 
-#only 1 level of depth_cat factor; so don't use depth_cat here
+#only 1 level of depth category factor; so don't use depth category here
 m4a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = totsoil$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
                     data = totsoil, pr = T, saveX = T, saveZ = T)
@@ -433,36 +310,24 @@ summary(m4c_inv)
 m4_inv = mcmc.list(m4a_inv[[1]], m4b_inv[[1]], m4c_inv[[1]])
 summary(m4_inv)
 
-#THIS IS HOW WE CHECK THE MODEL#
+#CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
 m4inv_overall <- MCMCsummary(m4_inv, params = "(Intercept)", n.eff = T)
 m4inv_overall
 
-#we want this density plot to look relatively smooth
-#if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m4_inv, params = "(Intercept)", pdf = F, ind = T)
 
-#autocorr.plot(m1_inv) #all
-#this will tell us whether our thinning variable is okay
-#if many tall bars, increase thinning
 autocorr.plot(m4_inv[, "(Intercept)"]) 
 
 #assess convergence
-#Trace plot. we want all the parameter estimates to be similar and horizontal
-#up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m4_inv[ , "(Intercept)"]) 
 
-
-#we want the posteriors to converge on 1
-#if they dont, up burnin and interations
 gelman.diag(m4_inv[ , "(Intercept)"])
 
-#dont worry about this one for now if gelman diagram looks good
 geweke.diag(m4_inv[ , "(Intercept)"])
 
 
-#If everything looks good here, then the intercept value is the effect
 
 ####################################################################
 #AGB
@@ -470,7 +335,7 @@ agb <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_cheat_v_sagecheat)) #3
 #agb2 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_cheat_v_sage)) #0
 #agb3 <- subset(dq2, pool == "AGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
 
-#use cheatfire here instead of depth_cat since AGB; get rid of cheatfire
+#did not use fire info or depth category for AGB 
 m5a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, random = ~ Article_ID, mev = agb$var_d_cheat_v_sagecheat,
                     prior = prior, nitt = 100000, burnin = 10000, thin = 1000, verbose = T,
                     data = agb, pr = T, saveX = T, saveZ = T)
@@ -492,37 +357,23 @@ summary(m5c_inv)
 m5_inv = mcmc.list(m5a_inv[[1]], m5b_inv[[1]], m5c_inv[[1]])
 summary(m5_inv)
 
-#THIS IS HOW WE CHECK THE MODEL#
+#CHECK THE MODEL#
 
 # diagnostics to ensure good model behavior
 m5inv_overall <- MCMCsummary(m5_inv, params = "(Intercept)", n.eff = T)
 m5inv_overall
 
-
-#we want this density plot to look relatively smooth
-#if not smooth, increase burnin and increase number of iterations
 MCMCtrace(m5_inv, params = "(Intercept)", pdf = F, ind = T)
 
-#autocorr.plot(m1_inv) #all
-#this will tell us whether our thinning variable is okay
-#if many tall bars, increase thinning
 autocorr.plot(m5_inv[, "(Intercept)"]) 
 
 #assess convergence
-#Trace plot. we want all the parameter estimates to be similar and horizontal
-#up the burnin and iterations if they are headed in an up or down direction
 gelman.plot(m5_inv[ , "(Intercept)"]) 
 
-
-#we want the posteriors to converge on 1
-#if they dont, up burnin and interations
 gelman.diag(m5_inv[ , "(Intercept)"])
 
-#dont worry about this one for now if gelman diagram looks good
 geweke.diag(m5_inv[ , "(Intercept)"])
 
-
-#If everything looks good here, then the intercept value is the effect
 
 
 ####################################################################
@@ -535,59 +386,6 @@ geweke.diag(m5_inv[ , "(Intercept)"])
 #bgb3 <- subset(dq2, pool == "BGBC_g_m2" & !is.na(var_d_sagecheat_v_sage)) #1
 
 
-#use cheatfire here instead of depth_cat since AGB; won't run with Article ID in there
-#removing cheatfire since not significant
-#m6a_inv <- MCMCglmm(g_cheat_v_sagecheat ~ 1, mev = bgb$var_d_cheat_v_sagecheat,
-                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
-                    #data = bgb, pr = T, saveX = T, saveZ = T)
-
-#m6b_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
-                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
-                    #data = bgb, pr = T, saveX = T, saveZ = T)
-
-#m6c_inv <- MCMCglmm(g_cheat_v_sagecheat ~  1, mev = bgb$var_d_cheat_v_sagecheat,
-                    #prior = prior, nitt = 100000, burnin = 10000, thin = 1, verbose = T,
-                    #data = bgb, pr = T, saveX = T, saveZ = T)
-
-#summary(m6a_inv)
-#summary(m6b_inv)
-#summary(m6c_inv)
-
-#effect of cheat vs. sagecheat
-# combine 3 chains into 1 mcmc object
-#m6_inv = mcmc.list(m6a_inv[[1]], m6b_inv[[1]], m6c_inv[[1]])
-#summary(m6_inv)
-
-#THIS IS HOW WE CHECK THE MODEL#
-
-# diagnostics to ensure good model behavior
-#m6inv_overall <- MCMCsummary(m6_inv, params = "(Intercept)", n.eff = T)
-#m6inv_overall
-
-#we want this density plot to look relatively smooth
-#if not smooth, increase burnin and increase number of iterations
-#MCMCtrace(m6_inv, params = "(Intercept)", pdf = F, ind = T)
-
-#autocorr.plot(m1_inv) #all
-#this will tell us whether our thinning variable is okay
-#if many tall bars, increase thinning
-#autocorr.plot(m6_inv[, "(Intercept)"]) 
-
-#assess convergence
-#Trace plot. we want all the parameter estimates to be similar and horizontal
-#up the burnin and iterations if they are headed in an up or down direction
-#gelman.plot(m6_inv[ , "(Intercept)"]) 
-
-
-#we want the posteriors to converge on 1
-#if they dont, up burnin and interations
-#gelman.diag(m6_inv[ , "(Intercept)"])
-
-#dont worry about this one for now if gelman diagram looks good
-#geweke.diag(m6_inv[ , "(Intercept)"])
-
-
-#If everything looks good here, then the intercept value is the effect
 
 ####################################################################
 #litter
