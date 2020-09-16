@@ -30,6 +30,25 @@ smeans <- unique(studymeans$study)
 #write.csv(sum99, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/pool_means.csv")
 
 
+
+#leaving salt desert in for now
+#split into two dataframes of raws and means
+#rawstdids <- unique(rawsonlynofire$Study_ID)
+
+#rawsonly <- siwf %>%
+#filter(Study_ID %in% rawstdids) 
+
+#write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+
+#meanstdids <- unique(meansonlynofire$Study_ID)
+
+#meansonly <- siwf %>%
+#filter(Study_ID %in% meanstdids) 
+
+#unique(siwf$Article_ID)
+
+#write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
+
 ############################
 
 ##################################################################################
