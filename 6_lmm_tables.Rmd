@@ -10,7 +10,7 @@ library(kableExtra)
 
 ```{r data_prep, include=FALSE}
 #Linear models to explain C storage ============================================
-#Dr. R. Chelsea Nagy
+#Adam Mahood and Dr. R. Chelsea Nagy
 #created March 15, 2019
 
 #load multiple libraries 
