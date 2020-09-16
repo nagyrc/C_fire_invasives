@@ -380,11 +380,6 @@ totsoilmeans010$veg <- plyr::revalue(totsoilmeans010$veg,
                                        "sagecheat" = "invaded sagebrush"))
 
 
-colours <- c("native sagebrush" = "seagreen4", 
-             "invaded sagebrush" = "yellowgreen",
-             "cheatgrass" = "gold")
-
-
 #Fig. 2d
 f2d<-ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) + 
   geom_bar(position=position_dodge(), stat="identity") +
@@ -448,7 +443,7 @@ rawmeans$pool2 <- ifelse(rawmeans$pool == "AGBC_g_m2", "AGB", ifelse(rawmeans$po
 rawmeans
 rawmeans$veg <- plyr::revalue(rawmeans$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
-colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
+
 
 # For Fig. 2a
 f2a<- ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) + 
@@ -468,75 +463,6 @@ ggarrange(f2a, f2b, f2c, f2d, nrow = 2, ncol=2, common.legend = TRUE,
   ggsave("figure_2.pdf", width = 8, height = 8)
 
 
-
-#analysis with fire=============================================================
-
-unique(siwf$yr_samp)
-unique(siwf$masterlyb)
-
-is.numeric(siwf$yr_samp)
-is.numeric(siwf$masterlyb)
-
-
-cheatfire <- siwf %>%
-  filter(veg == "cheatgrass")
-
-sagecheatfire <- siwf %>%
-  filter(veg == "sagecheat")
-
-sagefire <- siwf %>%
-  filter(veg == "sagebrush")
-
-unique(cheatfire$timesincefire)
-range(cheatfire$timesincefire, na.rm = TRUE)
-#1, 67
-range(sagecheatfire$timesincefire, na.rm = TRUE)
-#1, 67
-range(sagefire$timesincefire, na.rm = TRUE)
-#3, 66
-
-#ggplot(data = siwf) +
-  #geom_point(aes(x = timesincefire, y = pool_value)) +
-  #facet_wrap(~pool)
-
-recentburn <- siwf %>%
-  filter(timesincefire < 20) %>%
-  filter(veg != 'salt_desert')
-#only 695 observations
-
-recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
-
-
-recentburn$veg <- plyr::revalue(recentburn$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
-
-colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgreen", "cheatgrass" = "gold")
-#springgreen4 alternative for native sagebrush
-
-recentburn$pool2 <- ifelse(recentburn$pool == "AGBC_g_m2", "AGB", ifelse(recentburn$pool == "BGBC_g_m2", "BGB", ifelse(recentburn$pool == "litterC_g_m2", "litter", ifelse(recentburn$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
-
-
-
-#Fig. 4 ========================================================================
-f4<- ggplot(data = recentburn, aes(x = timesincefire, y = log(pool_value+1), color = veg)) +
-  geom_point() + 
-  facet_wrap(~pool2, scales = "free_y") +
-  xlab("Time since fire (years)") +
-  ylab("Carbon content (gC m-2)") +
-  theme_bw()+
-  theme(axis.text.x = element_text(size = 12), 
-        axis.text.y = element_text(size = 12), 
-        axis.title.x = element_text(size = 12),
-        axis.title.y = element_text(size = 12), 
-        legend.text=element_text(size=12), 
-        legend.title=element_text(size=12), 
-        strip.text.x = element_text(size = 12)) +
-  geom_smooth(method = "lm", se=TRUE, show.legend = F) + 
-  theme(legend.position=c(1,0),
-        legend.justification = c(1,0)) +
-  scale_color_manual(values = colours,
-                     name = "Vegetation Type") +
-  xlim(0,20) +
-  ggsave("figure_4.png", width = 10, height = 6)
 
 
 
