@@ -21,7 +21,7 @@ unique(numstudies$Study_ID)
 
 
 
-############################
+# pool means by vegetation type ================================================================
 #summary of raw data only with means counted as individual points
 
 #For Table 1, AGB, BGB, and litter only
@@ -85,7 +85,41 @@ unique(salty$study)
 ########################
 
 
-#subset data into pools for analysis
+
+# pool means across all vegetation types ================================================================
+mean1 <- siwf %>%
+  filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
+  filter(veg != "salt_desert") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
+mean1$geometry <- NULL
+
+surfmean1 <- siwf %>%
+  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
+  filter(veg != "salt_desert") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
+surfmean1$geometry <- NULL
+
+tenmean1 <- siwf %>%
+  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
+  filter(veg != "salt_desert") %>%
+  group_by(pool) %>%
+  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
+  mutate(se = sqrt(var)/sqrt(n)) %>%
+  ungroup()
+
+tenmean1$geometry <- NULL
+
+
+# subsetting and reordering data for plotting ================================================================
+#subset data into pools 
 AGBCraw <- subset.data.frame(siwf, pool == "AGBC_g_m2")
 BGBCraw <- subset.data.frame(siwf, pool == "BGBC_g_m2")
 litterCraw <- subset.data.frame(siwf, pool == "litterC_g_m2")
@@ -97,8 +131,6 @@ orgsoilCraw <- subset.data.frame(siwf, pool == "orgsoilC_g_m2")
 totsoilCraw <- subset.data.frame(siwf, pool == "totsoilC_g_m2")
 
 
-
-##################################################################################
 #for deeper subsets (> 20 cm deep)
 deep1 <- siwf %>%
   filter(pool == "orgsoilC_g_m2" | pool == "totsoilC_g_m2") %>%
@@ -137,9 +169,7 @@ summary(deep2$Cpercm)
 
 
 
-################################################################
-
-
+##############################
 
 #rename and reorder veg and color by veg
 neworder2 <- c("sagebrush","sagecheat","cheatgrass")
@@ -189,41 +219,17 @@ orgsoilmeans1020 <- tens %>%
 totsoilmeans010 <- surfacemeans %>%
   filter(pool == "totsoilC_g_m2") %>%
   mutate(depth = "0-10 cm") 
-#totsoilmeans1020 <- tens2 %>%
-  #filter(pool == "totsoilC_g_m2")
 
 
-################################################################
-
-
-siwf$pool2 <- ifelse(siwf$pool == "AGBC_g_m2", "AGB", ifelse(siwf$pool == "BGBC_g_m2", "BGB", ifelse(siwf$pool == "litterC_g_m2", "litter", ifelse(siwf$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
-
-# Histogram for each pol-veg combo to look at distributions
-#reorder veg for plotting
-#neworder2 <- c("sagebrush","sagecheat","cheatgrass")
-
-#siwf2 <- arrange(transform(siwf, veg=factor(veg, levels = neworder2)),veg) %>%
-  #filter(veg != 'salt_desert')
-
-#change veg names
-#siwf2$veg <- plyr::revalue(siwf2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
-
-
-################################################################
-
-
-
-
-
-
+#create depth categories
 orgsoilC2 <- orgsoilCraw %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
 totsoilC2 <- totsoilCraw %>%
   mutate(depth = ifelse(bottomdepth_cm <= 10, "shallow", ifelse(bottomdepth_cm >10 & bottomdepth_cm <= 20, "mid", "deep")))
 
-#reorder veg for plotting
 
+#reorder veg for plotting
 AGBC2 <- arrange(transform(AGBCraw, veg=factor(veg, levels = neworder2)),veg) %>%
   filter(veg != 'salt_desert')
 
@@ -233,7 +239,7 @@ BGBC2 <- arrange(transform(BGBCraw, veg=factor(veg, levels = neworder2)),veg) %>
 litterC2 <- arrange(transform(litterCraw, veg=factor(veg, levels = neworder2)),veg) %>%
   filter(veg != 'salt_desert')
 
-
+#rename vegetation types
 AGBC2$veg <- plyr::revalue(AGBC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 BGBC2$veg <- plyr::revalue(BGBC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 litterC2$veg <- plyr::revalue(litterC2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
@@ -243,7 +249,7 @@ litterC2$veg <- plyr::revalue(litterC2$veg, c("sagebrush" = "native sagebrush", 
 
 
 
-# figure S1 individual plots================================================================
+# Plotting for Figure S1 ================================================================
 #Fig. S1a
 fS1a<- ggplot(AGBC2, aes(x = pool_value)) + 
   geom_histogram(bins = 40) + 
@@ -366,12 +372,6 @@ ggarrange(fS1a,fS1b,fS1c,fS1d,fS1e, ncol=3, nrow=2,legend = "none", labels = "au
 orgsoilmeans010$veg <- factor(orgsoilmeans010$veg,
                               levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
-#ggplot(orgsoilmeans010, aes(x=pool, y=meanpv, fill=veg)) + 
-  #geom_bar(position=position_dodge(), stat="identity") +
-  #geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se), width=.2, position=position_dodge(.9)) +
-  #labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 0-10 cm")
-
-
 totsoilmeans010 <- add_row(totsoilmeans010, pool = "totsoilC_g_m2", veg = "sagebrush")
 totsoilmeans010$veg <- factor(totsoilmeans010$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
@@ -396,11 +396,6 @@ f2d<-ggplot(totsoilmeans010, aes(x=veg, y=meanpv, fill=veg)) +
                    labels = c('native\nsagebrush', 'invaded\nsagebrush', 'cheatgrass'))
 
 f2d
-#ggplot(orgsoilmeans1020, aes(x=pool, y=meanpv, fill=veg)) + 
-  #geom_bar(position=position_dodge(), stat="identity") +
-  #geom_errorbar(aes(ymin=meanpv-se, ymax=meanpv+se), width=.2, position=position_dodge(.9)) +
-  #labs(x = "vegetation type", y = "organic soil carbon content (gC m-2): 10-20 cm", fill = "vegetation") +
-  #theme(axis.text.x = element_text(size = 12), axis.text.y = element_text(size = 12), axis.title.x = element_text(size = 12), axis.title.y = element_text(size = 12), legend.text=element_text(size=12), legend.title=element_text(size=12))
 
 #Fig. 2c
 f2c<-ggplot(orgzzo, aes(x = bottom_depth, y = meanpvpercm, fill = veg)) +
@@ -455,7 +450,7 @@ f2a<- ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) +
   theme(axis.text.x = element_text(size = 14), axis.text.y = element_text(size = 14), axis.title.x = element_text(size = 14), axis.title.y = element_text(size = 14), legend.text=element_text(size=14), legend.title=element_text(size=14)) +
   scale_fill_manual(values = colours)
 
-# fig 2 all together============================================================
+# Fig 2 all together============================================================
 
 ggarrange(f2a, f2b, f2c, f2d, nrow = 2, ncol=2, common.legend = TRUE, 
           labels ="auto",label.x =0.9) +
@@ -468,36 +463,7 @@ ggarrange(f2a, f2b, f2c, f2d, nrow = 2, ncol=2, common.legend = TRUE,
 
 
 
-#pool means across all vegetation types
-mean1 <- siwf %>%
-  filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
-  filter(veg != "salt_desert") %>%
-  group_by(pool) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n)) %>%
-  ungroup()
 
-mean1$geometry <- NULL
-
-surfmean1 <- siwf %>%
-  filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
-  filter(veg != "salt_desert") %>%
-  group_by(pool) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n)) %>%
-  ungroup()
-
-surfmean1$geometry <- NULL
-
-tenmean1 <- siwf %>%
-  filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
-  filter(veg != "salt_desert") %>%
-  group_by(pool) %>%
-  dplyr::summarise(meanpv = mean(pool_value), n = n(), var = var(pool_value)) %>%
-  mutate(se = sqrt(var)/sqrt(n)) %>%
-  ungroup()
-
-tenmean1$geometry <- NULL
 
 
 
