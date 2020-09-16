@@ -188,6 +188,18 @@ f4<- ggplot(data = recentburn, aes(x = timesincefire, y = log(pool_value+1), col
 
 
 
+# Histogram for each pol-veg combo to look at distributions
+#reorder veg for plotting
+#neworder2 <- c("sagebrush","sagecheat","cheatgrass")
+
+#siwf2 <- arrange(transform(siwf, veg=factor(veg, levels = neworder2)),veg) %>%
+#filter(veg != 'salt_desert')
+
+#change veg names
+#siwf2$veg <- plyr::revalue(siwf2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
+
+
+
 
 
 
