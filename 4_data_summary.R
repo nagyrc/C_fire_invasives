@@ -18,8 +18,8 @@ unique(siwf$masterlyb)
 
 summary(siwf$pool_value)
 
-studymeans <- as.data.frame(read_csv("study_means.csv"))
-smeans <- unique(studymeans$study)
+#studymeans <- as.data.frame(read_csv("study_means.csv"))
+#smeans <- unique(studymeans$study)
 
 numstudies <- siwf %>%
   filter(veg != 'salt_desert')
@@ -39,12 +39,12 @@ unique(numstudies$Study_ID)
 
 #leaving salt desert in for now
 #split into two dataframes of raws and means
-rawstdids <- unique(rawsonlynofire$Study_ID)
+#rawstdids <- unique(rawsonlynofire$Study_ID)
 
-rawsonly <- siwf %>%
-  filter(Study_ID %in% rawstdids) 
+#rawsonly <- siwf %>%
+  #filter(Study_ID %in% rawstdids) 
 
-write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
+#write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
 
 #meanstdids <- unique(meansonlynofire$Study_ID)
 
@@ -55,7 +55,7 @@ write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/raws
 
 #write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
-#summary of raws only
+#summary of raw data only with means counted as individual points
 #AGB, BGB, and litter only
 #For Table 1
 rawmeans <- siwf %>%
