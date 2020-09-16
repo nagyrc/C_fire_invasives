@@ -5,6 +5,7 @@ classoption: landscape
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(kableExtra)
 ```
 
 ```{r data_prep, include=FALSE}
@@ -13,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 #created March 15, 2019
 
 #load multiple libraries 
-x <- c("tidyverse", "sf", "ggplot2", "doBy", "lme4", "lmerTest", "stargazer","ggpubr")
+x <- c("tidyverse", "sf","scales", "ggplot2", "doBy", "lme4", "lmerTest", "stargazer","ggpubr")
 lapply(x, library, character.only = TRUE, verbose = FALSE)
 theme_set(theme_classic())
 
@@ -66,11 +67,11 @@ final_mods$tot <- lmer(log(`Soil Total C`) ~ timesincefire * veg* bottomdepth_cm
 p4a<-ggplot(AGBC3, aes(y=pool_value, fill=veg, x=firecat)) + 
   geom_boxplot() +
   ylab(expression(Above~Ground~Biomass~C~(g~m^-2)))+
+  xlab("Time Since Fire (Years)") +
   scale_y_log10(labels = scales::label_number_si())+
   scale_fill_manual(values = colours,
                      name = "Vegetation Type")+
-  theme(legend.position = "none",
-        axis.title.x = element_blank())
+  theme(legend.position = "none")
 ```
 
 ```{r}
@@ -81,8 +82,8 @@ p4b<-ggplot(BGBC3, aes(y=pool_value, x=timesincefire)) +
   scale_color_manual(values = colours,
                      name = "Vegetation Type")+
   ylab(expression(Below~Ground~Biomass~C~(g~m^-2)))+
-  theme(legend.position = "none",
-        axis.title.x = element_blank())
+  xlab("Time Since Fire (Years)") +
+  theme(legend.position = "none")
 
 ```
 
@@ -93,8 +94,8 @@ p4c<-ggplot(litterC3, aes(y=`Litter C`, x=timesincefire)) +
   scale_color_manual(values = colours,
                      name = "Vegetation Type")+
   ylab(expression(Litter~C~(g~m^-2))) +
-  theme(legend.position = "none",
-        axis.title.x = element_blank())
+  xlab("Time Since Fire (Years)") +
+  theme(legend.position = "none")
 ```
 
 ```{r fig.width=9}
@@ -133,35 +134,75 @@ rbind(MuMIn::r.squaredGLMM(final_mods$ABG) %>% as.data.frame,
       MuMIn::r.squaredGLMM(final_mods$litter)%>% as.data.frame,
       MuMIn::r.squaredGLMM(final_mods$org_s)%>% as.data.frame,
       MuMIn::r.squaredGLMM(final_mods$tot)%>% as.data.frame) %>%
-  cbind(.,data.frame(model = c("Above-ground biomass C",
-                                "Below-ground biomass C",
-                                "Litter Carbon", "Soil organic C",
-                                "Soil total C"))) %>%
+  cbind(.,data.frame(model = c("Aboveground Biomass C ~ Invasion Stage * Time Since Fire + (1 | Article ID)",
+                                "Belowground Biomass C ~ Time Since Fire + (Time Since Fire | Article ID)",
+                                "Litter Carbon ~ Time Since Fire + (1 | Article ID)", 
+                                "Soil Organic C ~ Time Since Fire * Invasion Stage * Soil Depth + (1 | Article ID)",
+                                "Soil Total C ~ Time Since Fire * Invasion Stage * Soil Depth +      (1 | Article ID)"))) %>%
   dplyr::select(model, R2m, R2c) %>%
-  stargazer(summary=F, header=F, 
-            title = "Marginal and Conditional pseudo R2 values for linear mixed models",
-            rownames = FALSE)
+  mutate(R2m = round(R2m,2),
+         R2c = round(R2c,2)) %>%
+  kable(booktabs=T, 
+        caption = "Marginal and Conditional pseudo R2 values for linear mixed models") %>%
+  kableExtra::footnote(c("R2m: Marginal R-squared", "R2c: Conditional R-squared"))
+  # stargazer(summary=F, header=F, 
+  #           title = "Marginal and Conditional pseudo R2 values for linear mixed models",
+  #           rownames = FALSE)
 ```
 
 ```{r fig.width = 10, fig.height=7.5}
-row1<-ggarrange(p4a, p4b, p4c, nrow=1, labels = "auto")
-row2<-ggarrange(p4d, p4e, nrow=1, widths=c(2,1), labels = c("d","e"))
+row1<-ggarrange(p4e, p4b, p4c, nrow=1, labels = "auto", label.x = .2)
+row2<-ggarrange(p4d, p4a, nrow=1, widths=c(2,1), labels = c("d","e"),
+                label.x = c(.1,.2), label.y= c(.9, 1))
 ggarrange(row1, row2, nrow=2) +
-  ggsave("figure_4.png", height = 8, width =10)
+  ggsave("figure_4.png", height = 8, width =10) +
+  ggsave("figure_4.pdf", height = 8, width =10)
 ```
 
 ```{r results='asis'}
 for(i in 1:length(final_mods)) class(final_mods[[i]]) <- "lmerMod"
-stargazer(final_mods[c(1:3)], header=F,column.sep.width = "1pt", single.row = T, 
-          title = "Linear mixed model results.")
+# stargazer(final_mods[c(1:3)], header=F,column.sep.width = "1pt", single.row = T, 
+#           title = "Linear mixed model results.")
+
+lut_vars <-c("veg" = "Vegetation Type",
+             "firecat" = "Time Since Fire",
+             "veg:firecat" = "Vegetation Type x Time Since Fire",
+             "timesincefire" = "Time Since Fire",
+             "soil_depth" = "Soil Depth",
+             "firecat:veg" = "Time Since Fire x Vegetation Type",
+             "firecat:soil_depth" = "Time Since Fire x Soil Depth",
+             "veg:soil_depth" = "Vegetation Type x Soil Depth",
+             "firecat:veg:soil_depth" =   "Time Since Fire x Soil Depth",
+             "bottomdepth_cm" = "Soil Depth",
+             "timesincefire:veg"  = "Time Since Fire x Vegetation Type",
+             "timesincefire:bottomdepth_cm" = "Time Since Fire x Soil Depth",
+             "veg:bottomdepth_cm" = "Vegetation Type x Soil Depth",
+             "timesincefire:veg:bottomdepth_cm"="Time Since Fire x Vegetation Type x Soil Depth")
+
+aovs<- rbind(
+final_mods[[1]] %>% car::Anova()%>% round(4) %>% as_tibble(rownames = "Variable") %>% mutate(var = "Aboveground Biomass C"),
+final_mods[[2]] %>% car::Anova()%>% round(4) %>% as_tibble(rownames = "Variable") %>% mutate(var = "Belowground Biomass C"),
+final_mods[[3]] %>% car::Anova()%>% round(4) %>% as_tibble(rownames = "Variable") %>% mutate(var = "Litter C"),
+final_mods[[4]] %>% car::Anova()%>% round(4) %>% as_tibble(rownames = "Variable") %>% mutate(var = "Soil Organic C"),
+final_mods[[5]] %>% car::Anova()%>% round(4) %>% as_tibble(rownames = "Variable") %>% mutate(var = "Soil Total C")
+) %>%
+  mutate(Variable=lut_vars[Variable])
+
+
+aovs %>%
+  mutate(`p-value` = ifelse(`Pr(>Chisq)` < 0.05, str_c(`Pr(>Chisq)`, " *"), `Pr(>Chisq)`))%>%
+  dplyr::select(-`Pr(>Chisq)`, -var) %>%
+  kable(booktabs=T, caption = "Linear mixed model results. Significance calculated using type II Wald Chi-squared tests") %>%
+  kableExtra::group_rows(index = table(aovs$var))
+  
 ```
 
 ```{r results='asis'}
-stargazer(final_mods[c(4)], header=F,column.sep.width = "1pt", single.row = T, 
-          title = "Linear mixed model results.")
+# stargazer(final_mods[c(4)], header=F,column.sep.width = "1pt", single.row = T, 
+#           title = "Linear mixed model results.")
 ```
 
 ```{r results='asis'}
-stargazer(final_mods[c(5)], header=F,column.sep.width = "1pt", single.row = T, 
-          title = "Linear mixed model results.")
+# stargazer(final_mods[c(5)], header=F,column.sep.width = "1pt", single.row = T, 
+#           title = "Linear mixed model results.")
 ```
