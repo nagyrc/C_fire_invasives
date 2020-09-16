@@ -1,4 +1,4 @@
-#Script for data wrangling for the NSF fire invasives carbon project
+#Script for cleaning and compiling raw data for the cheatgrass carbon project
 #Dr. R. Chelsea Nagy
 #created May 11, 2018
 
@@ -13,8 +13,9 @@ library(dplyr)
 setwd("data/")
 
 
-#Jones data# burns were prescibed burns; do not need to append burn data since prescribed
-#does not currently include the pre and post burn data (Jones_burn.csv)
+#bring in all indivdual datasets and clean
+
+###Jones data
 Jones_soil <- as.data.frame(read_csv("Jones_soil.csv"))
 Jones_veg_only <- as.data.frame(read_csv("Jones_veg_only.csv"))
 Jones_litter_only <- as.data.frame(read_csv("Jones_litter_only.csv"))
@@ -27,7 +28,6 @@ head(Jones_litter_only)
 Jones_veg_litter <- merge(Jones_veg_only, Jones_litter_only, 
                           by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"))
 
-#rm(Jones_vls)
 #merge veg_litter and soil dataframes
 Jones_vls <- merge(Jones_veg_litter, Jones_soil, 
                           by = c("Barrel","Site","Litter_trt","Burn_trt","Rep","Year"), all = TRUE)
@@ -57,7 +57,6 @@ Jones_vls2b <- rbind(Jones_vls2a,Jones2010)
 Jones_vls2c <- rbind(Jones_vls2b,Jones2011)
 Jones_vls2 <- rbind(Jones_vls2c,Jones2012)
 
-#unique(Jones_vls$Burn_trt)
 #add fields that will be common across studies
 Jones_vls2$study <- "Jones et al. 2015"
 
@@ -95,10 +94,10 @@ head(kpJones)
 
 
 ###
-#Weber data# need to append burn info (one lat/long only)
+#Weber data
 Weber <- as.data.frame(read_csv("Weber.csv"))
 head(Weber)
-#lat and long data are messed up
+#replace lat and long data; did not read in properly 
 Weber$lat <- 42.853
 Weber$long <- -112.402
 #add fields that will be common across studies
@@ -115,7 +114,7 @@ colnames(Weber)[colnames(Weber) == 'Sample'] <- 'sample'
 Weber$thick <- Weber$bottomdepth_cm - Weber$topdepth_cm
 
 #apply mean BD to calculate soil carbon content
-#max soil depth is 8 cm so use mean for 0-10 cm
+#max soil depth is 8 cm so used the mean for 0-10 cm
 Weber$BD_g_cm3 <- 1.422
 Weber$orgsoilC_g_m2 <- Weber$BD_g_cm3*Weber$`orgsoil%C`*Weber$thick*100
 Weber$yr_samp <- 2011
@@ -129,7 +128,7 @@ head(kpWeber)
 
 
 ###
-#Blank data# need to append burn info for diff sites
+#Blank data
 Blankall <- as.data.frame(read_csv("Blank&Norton.csv"))
 unique(Blankall$Site)
 
@@ -184,18 +183,14 @@ Nortonpre <- as.data.frame(read_csv("Norton_updated.csv"))
 
 head(Nortonpre)
 #add fields that will be common across studies
-#unique(Norton$Trt)
+
 Nortonpre$study <- "Norton et al. 2004"
 
 Norton <- Nortonpre %>%
   filter(!Site == "MW")
 
-#Norton$veg <- ifelse(Norton$Site == 'N', 'sagebrush','sagecheat')
 Norton$Month_sampled <- "July-September"
 Norton$yr_samp <- 2001
-#Norton$lat <- Norton$latitude
-#Norton$long <- Norton$longitude
-#unique(Norton$lat)
 
 colnames(Norton)[colnames(Norton) == 'Site'] <- 'site'
 colnames(Norton)[colnames(Norton) == 'Trt'] <- 'treatment'
@@ -214,26 +209,19 @@ head(Norton)
 kpNorton <- Norton[,c("site","treatment","topdepth_cm","bottomdepth_cm","thick","BD_g_cm3","orgsoil%C","orgsoilC_g_m2","BD_estimated","lat","long","study","veg", "Month_sampled", "yr_samp")]
 head(kpNorton)
 
-#Norton$check <- Norton$`soil%C` * Norton$thick * Norton$BD_g_cm3 * 100
-Norton
-
 kpNorton$pr_burned <- c("no")
 kpNorton$seeded <- c("no")
 
 
 
 ###
-#Stark data# need to append burn info for 1 site
-#the study states that the veg here has not burned
+#Stark data
 Stark <- as.data.frame(read_csv("Stark.csv"))
 
 #add fields that will be common across studies
 Stark$study <- "Stark et al. 2015"
 unique(Stark$VegType)
 
-#fumigated sagebrush were fumigated and buldozed...too different from other studies??
-#however, I believe cheatgrass was fumigated too (24 yrs ago)
-#Stark2 <- Stark[which(Stark$VegType != "fum sage"),]
 Stark$veg <- ifelse(Stark$VegType == 'undist sage', 'sagecheat',
                      ifelse(Stark$VegType == 'fum sage','sagebrush','cheatgrass'))
 
@@ -242,6 +230,7 @@ Stark$veg <- ifelse(Stark$VegType == 'undist sage', 'sagecheat',
 Stark$BD_g_cm3 <- ifelse(Stark$`Top depth` == 0, 1.36,
                         ifelse(Stark$`Top depth` == 10, 1.35,
                                ifelse(Stark$`Top depth` == 20, 1.455, 1.57)))
+
 Stark$`BD estimated` <- c("no")
 
 Stark$soil_percC <- Stark$`org C (g C/kg)` / 10
@@ -271,34 +260,7 @@ head(kpStark)
 
 
 ###
-#Davies data# 
-#prescribed burn was in 1993
-#no other burn from 1936-2007 besides prescribed burn
-#Davies <- as.data.frame(read_csv("Davies.csv"))
-#Davies$veg <- c("cheatgrass")
-#Davies$pr_burned <- ifelse(Davies$Treatment == 'ungrazed/unburned', 'no','yes')
-
-#Davies$lat <- c("43.48333333")
-#Davies$long <- c("-119.71666667")
-#Davies$study <- "Davies et al. 2009"
-
-#colnames(Davies)[colnames(Davies) == 'Treatment'] <- 'treatment'
-#colnames(Davies)[colnames(Davies) == 'Year'] <- 'yr_samp'
-
-#Davies$biomass_g_m2 <- Davies$`Cheatgrass biomass (kg/ha)`/10
-#Davies$seeded <- c("no")
-
-
-#head(Davies)
-
-#kpDavies <- Davies[,c("treatment","block","yr_samp","veg","pr_burned","lat","long","study","biomass_g_m2","seeded")]
-#head(kpDavies)
-
-
-
-
-###
-#Bradley data# have info on burn history in paper 
+#Bradley data
 Bradley_soil <- as.data.frame(read_csv("Bradley_soil.csv"))
 Bradley_AGB <- as.data.frame(read_csv("Bradley_AGB.csv"))
 head(Bradley_soil)
@@ -315,7 +277,6 @@ Bradley_AGB$pr_burned <- c("no")
 Bradley_AGB$yr_samp <- c(2004)
 Bradley_AGB$seeded <- c("no")
 
-#Bradley_soil2 <- Bradley_soil[which(Bradley_soil$Site != "Rye"),]
 Bradley_soil$veg <- ifelse(Bradley_soil$Site == 'Rye' & Bradley_soil$burned == 'no', 'salt_desert',
                           ifelse(Bradley_soil$burned == 'yes','cheatgrass', 'sagecheat'))
 Bradley_soil$study <- c("Bradley et al. 2006")
@@ -392,8 +353,6 @@ head(kpNorton2008)
 
 ###
 #Mahood data
-#need info on veg categories and burned/unburned and bottom depth sampled
-#make sure Jones data is not repeated from publication
 Mahood1 <- as.data.frame(read_csv("Mahood1_updated.csv"))
 head(Mahood1)
 
@@ -404,7 +363,7 @@ Mahoodll <- as.data.frame(read_csv("Mahood_ff_plot_locations.csv"))
 Mahood1ll <- left_join(Mahood1, Mahoodll, by = "plot")
 
 head(Mahood1ll)
-#decide on threshold for "cheatgrass dominance"
+
 #use mean of this data for cheatgrass %C; see below
 summary(Mahood1ll$cheatgrass_cover)
 #min cheat % cover = 0.333; max cheat % cover = 57.22
@@ -412,21 +371,17 @@ summary(Mahood1ll$cheatgrass_cover)
 Mahood1ll$study <- c("Mahood et al. unpub1")
 Mahood1ll$seeded <- c("no")
 Mahood1ll$pr_burned <- c("no")
-#check this year with Adam
 Mahood1ll$yr_samp <- 2017
-#Mahood1ll$burned <- ifelse(Mahood1ll$burn_status == 'burned', 'yes','no')
 Mahood1ll$topdepth_cm <- 0
 Mahood1ll$bottomdepth_cm <- 10
 Mahood1ll$thick <- Mahood1ll$bottomdepth_cm - Mahood1ll$topdepth_cm
 
-#check this with Adam
-#Mahood1ll$veg <- ifelse(Mahood1ll$native_shrub_cover > 0, 'sagecheat','cheatgrass')
 Mahood1ll$BD_estimated <- c("no")
 
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'Elevation'] <- 'elevation'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_TC_pct'] <- 'totsoil%C'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_bulk_density'] <- 'BD_g_cm3'
-#these calculations are not correct- he didn't multiply by the depth
+
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'soil_carbon_gm2'] <- 'do_not_use'
 colnames(Mahood1ll)[colnames(Mahood1ll) == 'Site'] <- 'site'
 
@@ -460,9 +415,7 @@ Mahood2$study <- c("Mahood et al. unpub2")
 
 colnames(Mahood2)[colnames(Mahood2) == 'Plot_TP'] <- 'sample'
 colnames(Mahood2)[colnames(Mahood2) == 'Plot'] <- 'plot'
-#colnames(Mahood2)[colnames(Mahood2) == 'SOIL_OM_pct'] <- 'soil%OM'
 colnames(Mahood2)[colnames(Mahood2) == 'Litter_TC_pct'] <- 'litter%C'
-
 
 #bring in other file for BD of each site
 MahoodBD <- as.data.frame(read_csv("MahoodBD.csv"))
@@ -473,7 +426,6 @@ Mahood2BD <- left_join(Mahood2, MahoodBD, by = c("Transect","Site_number"))
 colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site_number'] <- 'site'
 colnames(Mahood2BD)[colnames(Mahood2BD) == 'Transect'] <- 'transect'
 colnames(Mahood2BD)[colnames(Mahood2BD) == 'Site type'] <- 'site_type'
-#colnames(Mahood2BD)[colnames(Mahood2BD) == 'bulkDensity.g.cm3.'] <- 'BD_g_cm3'
 
 #bring in other file for BD, lat, long of each site
 Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
@@ -481,12 +433,6 @@ Mahood2ll <- as.data.frame(read_csv("Mahood2ll.csv"))
 #join lat, long data
 Mahood2BDll <- left_join(Mahood2BD, Mahood2ll, by = "Plot_TP")
 
-#Mahood2BDll$topdepth_cm <- 0
-#Mahood2BDll$bottomdepth_cm <- 10
-#Mahood2BDll$thick <- Mahood2BDll$bottomdepth_cm - Mahood2BDll$topdepth_cm
-
-#the conversion factor below is from the lab that did the testing (converting %OM to %totC)
-#Mahood2BDll$orgsoilC_g_m2 <- Mahood2BDll$`soil%OM`*Mahood2BDll$BD_g_cm3*Mahood2BDll$thick*100/1.724
 Mahood2BDll$seeded <- c("no")
 Mahood2BDll$pr_burned <- c("no")
 Mahood2BDll$BD_estimated <- c("no")
@@ -494,7 +440,6 @@ Mahood2BDll$BD_estimated <- c("no")
 colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'latitude'] <- 'lat'
 colnames(Mahood2BDll)[colnames(Mahood2BDll) == 'longitude'] <- 'long'
 
-#check this year with Adam
 Mahood2BDll$yr_samp <- 2017
 
 head(Mahood2BDll)
@@ -510,15 +455,11 @@ write.csv(kpMahood2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/kpM
 
 
 ###
-#Rau data# need soil depths
-#need burn info for lat/longs
-#check with Ben on treatments
+#Rau data and Goergon data
 Rau_inv <- as.data.frame(read_csv("Rau_invaded_akaGoergon2011_updated.csv"))
 Rau_inv$study <- c("Goergen et al. 2011")
 #Goergen et al. 2011 says 0-90 cm
-#check this depth with Ben
 
-#check this year with Ben
 Rau_inv$yr_samp <- 2008
 Rau_inv$topdepth_cm <- 0
 Rau_inv$bottomdepth_cm <- 90
@@ -533,7 +474,6 @@ unique(Rau_inv$Site)
 Rau_sage <- as.data.frame(read_csv("Rau_sagesteppe_updated.csv"))
 Rau_sage$study <- c("Rau et al. 2011")
 
-#check this year with Ben
 Rau_sage$yr_samp <- 2011
 Rau_sage$topdepth_cm <- 0
 Rau_sage$bottomdepth_cm <- 90
@@ -546,21 +486,14 @@ unique(Rau_sage$Treatment)
 
 head(Rau_sage)
 
-#check with Ben...what are the CP and FP treatments???
+#regarding treatments
 #CP and FP have a herbicide applied...don't use these
 #CO and FI are control and fire/burn...use these
-#should FI have a different study_id???
 Rau_sage2 <- Rau_sage[which(Rau_sage$Treatment == "CO" | Rau_sage$Treatment == "FI"),]
 unique(Rau_sage2$Treatment)
 
-#get rid of Site_old in Rau_inv
-#Rau_inv <- subset(Rau_inv, select = -c(Site_old))
-
 Rau <- rbind(Rau_inv, Rau_sage2)
 
-#add veg category
-#check with Ben and then update this with other treatments???
-#Rau$veg <- ifelse(Rau$Annual_grass > 2, 'sagecheat','sagebrush')
 Rau$BD_estimated <- c("no")
 Rau$pr_burned <- c("no")
 
@@ -684,8 +617,6 @@ sage$spec <- c("Sa")
 
 Norton2012merge <- rbind(sage, cheat)
 
-#colnames(Norton2012merge)[colnames(Norton2012merge) == 'soil%C'] <- 'orgsoil%C'
-
 #apply mean BD for 0-10 cm 
 Norton2012merge$BD_g_cm3 <- 1.422
 Norton2012merge$orgsoilC_g_m2 <- Norton2012merge$BD_g_cm3*Norton2012merge$`orgsoil%C`*Norton2012merge$thick*100
@@ -720,6 +651,7 @@ Anderson_sub$biomass_g_m2 <- Anderson_sub$gHerb + Anderson_sub$gDShrb + Anderson
 Anderson_sub$yr_samp <- c(2013)
  
 Anderson_sub$gDShrb
+
 #bring in species occupancy data
 Anderson_occ <- as.data.frame(read_csv("Anderson_occ.csv"))
 head(Anderson_occ)
@@ -730,10 +662,6 @@ occ <- Anderson_occ[,c("PointID","CellName","Year","ARTR2_occ","BRTE_occ")]
 occ
 unique(occ$ARTR2_occ)
 unique(occ$BRTE_occ)
-
-#check3 <- subset.data.frame(occ, ARTR2_occ == 1)
-#check3b <- subset.data.frame(occ, BRTE_occ == 1)
-#only cheatgrass left in control treatments
 
 head(Anderson_sub)
 head(occ)
@@ -778,7 +706,7 @@ head(kpAnderson)
 #make all conversions from aboveground biomass g/m2 to aboveground biomass carbon gC/m2
 
 #make cheatgrass %C an object to use later
-cheat_percC <- mean(Mahood2$Bromus_TC_pct, na.rm = TRUE)
+cheat_percC <- mean(Mahood2$Bromus_TC_pct, na.rm = TRUE) #from Mahood data
 
 ###
 
@@ -813,6 +741,9 @@ saltBGBpercC3060 <- 0.322 #from West 1972 (average across all years)
 saltBGBpercC6090 <- 0.2836 #from West 1972 (average across all years)
   
 sagecheatBGBpercC010 <- (sageBGBpercC010+cheatBGBpercC010)/2
+
+
+
 ###########################################
 rbind.all.columns <- function(x, y) {
   
@@ -845,17 +776,10 @@ bind13 <- rbind.all.columns(bind12, kpAnderson)
 names(bind13)
 
 ###########################################
-#only need to run the code below one time; then turn off
-#get unique lat/longs for Emily to extract burn data
-#unique(df[c("yad", "per")])
-#lllist <- unique(alldata[c("lat","long")])
-
-#write.csv(lllist, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/uniquelatlong.csv")
-
 
 
 ###
-#add new datasets
+#add new datasets (these were found later as a product of extended search)
 
 #Bansal data
 Bansal <- as.data.frame(read_csv("Bansal_data.csv"))
@@ -938,10 +862,6 @@ bind15 <- rbind.all.columns(bind14, kpPorensky)
 ###bring in individual data points (means that are lacking SE or n)
 ind_points <- as.data.frame(read_csv("ind_points.csv"))
 
-#repeat rows n times where n is specified
-
-#ind_points$ntimes <- as.numeric(ind_points$n_sampled)
-#cp <- as.data.frame(lapply(ind_points, rep, ind_points$ntimes))
 cp <- ind_points
 
 #correct names of %C soils columns
@@ -950,13 +870,6 @@ colnames(cp)[colnames(cp) == 'totsoil.C'] <- 'totsoil%C'
 colnames(cp)[colnames(cp) == 'orgsoil.C_SE'] <- 'orgsoil%C_SE'
 colnames(cp)[colnames(cp) == 'totsoil.C_SE'] <- 'totsoil%C_SE'
 
-cp$uniqvar <- 1:nrow(cp)
-#cp <- ind_points[rep(seq_len(nrow(ind_points)), ind_points$ntimes),]
-#n.times <- ind_points$n_sampled
-#cp <- ind_points[rep(seq_len(nrow(ind_points)), n.times),]
-#cp <- rep (ind_points[,], times = ind_points$n_sampled)
-#cp <- ind_points[rep(seq(nrow(ind_points)), ind_points$n_sampled),]
-#cp <- rep(ind_points, ind_points$n_sampled)
 
 #do conversions of biomass or %C to carbon content
 #AGB
@@ -988,8 +901,6 @@ cp$litterC_g_m2_SE <- ifelse(cp$study == 'Rickard 1985b' & cp$veg == 'cheatgrass
                                  ifelse(cp$study == 'Bjerregaard et al. 1984' & cp$veg == 'salt_desert', cp$litter_g_m2_SE * saltlitterpercC, cp$litterC_g_m2_SE)))
 
 #applying avg BDs to studies that are missing BD
-#cp$BD_g_cm3 <- ifelse(cp$study == 'Saetre and Stark 2005' & cp$bottomdepth_cm == 10, BD010, cp$BD_g_cm3)
-
 #apply mean BDs from the closest depth to studymeans data (may not be exact depth match)
 BD010 <- 1.422
 BD1020 <- 1.35
@@ -1018,20 +929,17 @@ cp$orgsoilC_g_m2_SE <- cp$`orgsoil%C_SE` * cp$BD_g_cm3 *cp$thick *100
 
 bind16 <- rbind.all.columns(bind15, cp)
 
-#write.csv(bind16, file = "rawsonlypre.csv")
 
 
 
 
 ###########################################
 #bring in study means
-#setwd("/Users/rana7082/Dropbox/C_fire_invasives_R/data/")
 studymeans <- as.data.frame(read_csv("study_means.csv"))
 
 studymeans$thick <- studymeans$bottomdepth_cm - studymeans$topdepth_cm
 is.numeric(studymeans$thick)
 
-#need to write this section of code to do the following...
 #if AGB or litter biomass is biomass only, not carbon, then use mean values from above to calculate...
 studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Davies et al. 2009'| studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$AGB_g_m2 * cheat_percC/100,
                                ifelse(studymeans$study == 'Pearson 1965'  & studymeans$veg == 'sagebrush', studymeans$AGB_g_m2 * sagepercC, 
@@ -1047,6 +955,7 @@ studymeans$BGBC_g_m2 <- ifelse(studymeans$study == 'Witwicki et al. 2013' & stud
                                ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2 * sageBGBpercC1030, 
                                       ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2 * sagecheatBGBpercC010, studymeans$BGBC_g_m2)))
 
+#BGB SE here
 studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'cheatgrass', studymeans$BGB_g_m2_SE * cheatBGBpercC010,
                                   ifelse(studymeans$study == 'Pearson 1965' | studymeans$study == 'Rickard 1985a' & studymeans$veg == 'sagebrush', studymeans$BGB_g_m2_SE * sageBGBpercC1030, 
                                          ifelse(studymeans$study == 'Witwicki et al. 2013' & studymeans$veg == 'sagecheat', studymeans$BGB_g_m2_SE * sagecheatBGBpercC010, studymeans$BGBC_g_m2_SE)))
@@ -1057,25 +966,26 @@ studymeans$BGBC_g_m2_SE <- ifelse(studymeans$study == 'Witwicki et al. 2013' & s
 
 
 
-
+#total soil C
 studymeans$totsoilC_g_m2 <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C` * BD020 *studymeans$thick *100, 
                                     ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C` * BD010 *studymeans$thick *100, 
                                            ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C` * BD020 *studymeans$thick *100,
                                                   ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C` * BD1020 *studymeans$thick *100, 
                                                          ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C` * BD90 *studymeans$thick *100, studymeans$totsoilC_g_m2)))))
-
+#total soil C SE
 studymeans$totsoilC_g_m2_SE <- ifelse (studymeans$study == 'Johnson et al. 2011', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100, 
                                        ifelse(studymeans$study == 'Bechtold and Inouye 2007', studymeans$`totsoil%C_SE` * BD010 *studymeans$thick *100, 
                                               ifelse(studymeans$study == 'Davies et al. 2007', studymeans$`totsoil%C_SE` * BD020 *studymeans$thick *100,
                                                      ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`totsoil%C_SE` * BD1020 *studymeans$thick *100, 
                                                             ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`totsoil%C_SE` * BD90 *studymeans$thick *100, studymeans$totsoilC_g_m2_SE)))))
 
-
+#organic soil C
 studymeans$orgsoilC_g_m2 <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C` * BD010 *studymeans$thick *100, 
                                    ifelse(studymeans$study == 'Gasch et al. 2016', studymeans$`orgsoil%C` * studymeans$BD_g_cm3 *studymeans$thick *100, 
                                           ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C` * BD1020 *studymeans$thick *100, 
                                                  ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 95, studymeans$`orgsoil%C` * BD90 *studymeans$thick *100, studymeans$orgsoilC_g_m2))))
 
+#organic soil C SE
 studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Acker 1992', studymeans$`orgsoil%C_SE` * BD010 *studymeans$thick *100, 
                                       ifelse(studymeans$study == 'Gasch et al. 2016', studymeans$`orgsoil%C_SE` * studymeans$BD_g_cm3 *studymeans$thick *100, 
                                              ifelse(studymeans$study == 'Sorensen et al. 2013' & studymeans$topdepth_cm == 10, studymeans$`orgsoil%C_SE` * BD1020 *studymeans$thick *100, 
@@ -1083,21 +993,8 @@ studymeans$orgsoilC_g_m2_SE <- ifelse(studymeans$study == 'Acker 1992', studymea
 
 
 
-###
-#Diamond and Bjerregaard studies had C data in addition to biomass data
-#studymeans$AGBC_g_m2 <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984', studymeans$AGBC_g_m2, studymeans$AGB_g_m2 * cheat_percC / 100)
-#studymeans$AGBC_g_m2_SE <- ifelse(studymeans$study == 'Diamond et al. 2012' | studymeans$study == 'Bjerregaard et al. 1984' ,studymeans$AGBC_g_m2_SE, studymeans$AGB_g_m2_SE * cheat_percC / 100)
-
-#update these numbers below now that more studies have been added
-#studymeans$litterC_g_m2 <- studymeans$litter_g_m2 * cheatlitterpercC
-#studymeans$litterC_g_m2_SE <- studymeans$litter_g_m2_SE * cheatlitterpercC
-###
-
 head(studymeans)
-studymeans
 
-
-#bind13 = read_csv("bind13.csv")
 bind17 <- rbind.all.columns(bind16, studymeans)
 
 
@@ -1107,15 +1004,12 @@ str(bind17)
 bind17$litterC_g_m2 <- as.numeric(bind17$litterC_g_m2)
 bind17$bottomdepth_cm <- as.numeric(bind17$bottomdepth_cm)
 bind17$elevation <- as.numeric(bind17$elevation)
-#bind17$cheat_cover <- as.numeric(bind17$cheat_cover)
 bind17$BGB_g_m2 <- as.numeric(bind17$BGB_g_m2)
 bind17$BGB_g_m2_SE <- as.numeric(bind17$BGB_g_m2_SE)
 bind17$litter_g_m2 <- as.numeric(bind17$litter_g_m2)
 bind17$litter_g_m2_SE <- as.numeric(bind17$litter_g_m2_SE)
 bind17$n_sampled <- as.numeric(bind17$n_sampled)
 bind17$totsoilC_g_m2_SE <- as.numeric(bind17$totsoilC_g_m2_SE)
-
-#bind17$X1 <- as.factor(rownames(bind17))
 
 
 unique(bind17$yr_samp)
@@ -1135,7 +1029,6 @@ bind17$X1 <- as.factor(rownames(bind17))
 unique(bind17$n_sampled)
 
 #if n_sampled = NA, make it a 1
-#bind17$n_sampled <- ifelse(bind17$n_sampled != NA, bind17$n_sampled, 1)
 bind17[["n_sampled"]][is.na(bind17[["n_sampled"]])] <- 1
 
 summary(bind17$n_sampled)
