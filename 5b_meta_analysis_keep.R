@@ -308,6 +308,8 @@ summary(m4c_inv)
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m4_inv = mcmc.list(m4a_inv[[1]], m4b_inv[[1]], m4c_inv[[1]])
+
+#this has the numbers for Table S5
 summary(m4_inv)
 
 #CHECK THE MODEL#
@@ -355,6 +357,8 @@ summary(m5c_inv)
 #effect of cheat vs. sagecheat
 # combine 3 chains into 1 mcmc object
 m5_inv = mcmc.list(m5a_inv[[1]], m5b_inv[[1]], m5c_inv[[1]])
+
+#this has the numbers for Table S5
 summary(m5_inv)
 
 #CHECK THE MODEL#
