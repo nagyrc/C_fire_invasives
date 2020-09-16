@@ -629,7 +629,7 @@ orgsoilC2$veg <- plyr::revalue(orgsoilC2$veg, c("sagebrush" = "native sagebrush"
 #Fig. 2d
 f2d<-ggplot(orgsoilC2, aes(x = pool_value)) + 
   geom_histogram(bins = 30) + 
-  facet_grid(vars(veg), vars(depth), drop = FALSE) + 
+  facet_grid( vars(depth),vars(veg), drop = FALSE) + 
   xlab("organic soil C (gC m-2)") + 
   theme_bw() + 
   theme(#panel.border = element_blank(), 
@@ -659,7 +659,7 @@ totsoilC2$veg <- plyr::revalue(totsoilC2$veg, c("sagebrush" = "native sagebrush"
 #Fig. 2e
 f2e<-ggplot(totsoilC2, aes(x = pool_value)) + 
   geom_histogram(bins = 40) + 
-  facet_grid(vars(veg),vars(depth), drop = FALSE) + 
+  facet_grid(vars(depth),vars(veg), drop = FALSE) + 
   xlab("total soil C (gC m-2)") + 
   theme_bw() + 
   theme(axis.title.y = element_blank(),
@@ -678,7 +678,8 @@ f2e<-ggplot(totsoilC2, aes(x = pool_value)) +
 # figure 2 all together ========================================================
 
 ggarrange(f2a,f2b,f2c,f2d,f2e, ncol=3, nrow=2,legend = "none", labels = "auto") +
-  ggsave("figure_2.png", height=10, width=15.5)
+  ggsave("figure_2.png", height=10, width=17)+
+  ggsave("figure_2.pdf", height=10, width=17)
 
 # colors same as figure 3, switch axes for d,e
 
@@ -783,7 +784,8 @@ f3a<- ggplot(rawmeans, aes(x = pool2, y = meanpv, fill = veg)) +
 
 ggarrange(f3a, f3b, f3c, f3d, nrow = 2, ncol=2, common.legend = TRUE, 
           labels ="auto",label.x =0.9) +
-  ggsave("figure_3.png", width = 8, height = 8)
+  ggsave("figure_3.png", width = 8, height = 8) +
+  ggsave("figure_3.pdf", width = 8, height = 8)
 
 #analysis with fire=============================================================
 
