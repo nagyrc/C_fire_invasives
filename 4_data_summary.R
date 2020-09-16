@@ -202,12 +202,11 @@ siwf$pool2 <- ifelse(siwf$pool == "AGBC_g_m2", "AGB", ifelse(siwf$pool == "BGBC_
 #reorder veg for plotting
 #neworder2 <- c("sagebrush","sagecheat","cheatgrass")
 
-siwf2 <- arrange(transform(siwf, veg=factor(veg, levels = neworder2)),veg) %>%
-  filter(veg != 'salt_desert')
+#siwf2 <- arrange(transform(siwf, veg=factor(veg, levels = neworder2)),veg) %>%
+  #filter(veg != 'salt_desert')
 
 #change veg names
-siwf2$veg <- plyr::revalue(siwf2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
-
+#siwf2$veg <- plyr::revalue(siwf2$veg, c("sagebrush" = "native sagebrush", "sagecheat" = "invaded sagebrush"))
 
 
 ################################################################
@@ -258,6 +257,7 @@ fS1a<- ggplot(AGBC2, aes(x = pool_value)) +
   theme(strip.text.x = element_text(size = 12))
 
 fS1a
+
 #Fig. S1b
 fS1b<-ggplot(BGBC2, aes(x = pool_value)) + 
   geom_histogram(bins = 30) + 
@@ -467,14 +467,12 @@ ggarrange(f2a, f2b, f2c, f2d, nrow = 2, ncol=2, common.legend = TRUE,
   ggsave("figure_2.png", width = 8, height = 8) +
   ggsave("figure_2.pdf", width = 8, height = 8)
 
+
+
 #analysis with fire=============================================================
 
 unique(siwf$yr_samp)
 unique(siwf$masterlyb)
-
-#replace NAs with 1950
-#joiny2$masterlyb <- joiny2$masterlyb %>%
-  #replace_na(1950)
 
 is.numeric(siwf$yr_samp)
 is.numeric(siwf$masterlyb)
@@ -497,15 +495,15 @@ range(sagecheatfire$timesincefire, na.rm = TRUE)
 range(sagefire$timesincefire, na.rm = TRUE)
 #3, 66
 
-ggplot(data = siwf) +
-  geom_point(aes(x = timesincefire, y = pool_value)) +
-  facet_wrap(~pool)
+#ggplot(data = siwf) +
+  #geom_point(aes(x = timesincefire, y = pool_value)) +
+  #facet_wrap(~pool)
 
 recentburn <- siwf %>%
   filter(timesincefire < 20) %>%
   filter(veg != 'salt_desert')
-#only 684 observations of 1667
-#need to check and make sure fire info came in with simraw dataunique(recentburn$veg)
+#only 695 observations
+
 recentburn$veg <- factor(recentburn$veg,levels = c("sagebrush", "sagecheat", "cheatgrass"))
 
 
@@ -515,6 +513,7 @@ colours <- c("native sagebrush" = "seagreen4", "invaded sagebrush" = "yellowgree
 #springgreen4 alternative for native sagebrush
 
 recentburn$pool2 <- ifelse(recentburn$pool == "AGBC_g_m2", "AGB", ifelse(recentburn$pool == "BGBC_g_m2", "BGB", ifelse(recentburn$pool == "litterC_g_m2", "litter", ifelse(recentburn$pool == "totsoilC_g_m2", "total soil", "organic soil"))))
+
 
 
 #Fig. 4 ========================================================================
@@ -543,7 +542,7 @@ f4<- ggplot(data = recentburn, aes(x = timesincefire, y = log(pool_value+1), col
 
 
 
-#GROUP MEANS  
+#pool means across all vegetation types
 mean1 <- siwf %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
   filter(veg != "salt_desert") %>%
