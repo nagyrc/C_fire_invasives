@@ -155,8 +155,8 @@ row1<-ggarrange(p4e, p4b, p4c, nrow=1, labels = "auto", label.x = .2)
 row2<-ggarrange(p4d, p4a, nrow=1, widths=c(2,1), labels = c("d","e"),
                 label.x = c(.1,.2), label.y= c(.9, 1))
 ggarrange(row1, row2, nrow=2) +
-  ggsave("figure_4.png", height = 8, width =10) +
-  ggsave("figure_4.pdf", height = 8, width =10)
+  ggsave("figure_3.png", height = 8, width =10) +
+  ggsave("figure_3.pdf", height = 8, width =10)
 ```
 
 ```{r results='asis'}
