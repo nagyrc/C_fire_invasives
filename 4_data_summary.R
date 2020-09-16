@@ -10,54 +10,21 @@ lapply(x, library, character.only = TRUE, verbose = FALSE)
 
 setwd("data/")
 
-#bring in studyid or siwf dataframe
-studyid <- as.data.frame(read_csv("studyid.csv"))
+#bring in siwf dataframe
 siwf <- as.data.frame(read_csv("siwf.csv"))
-
-unique(siwf$masterlyb)
-
-summary(siwf$pool_value)
-
-#studymeans <- as.data.frame(read_csv("study_means.csv"))
-#smeans <- unique(studymeans$study)
 
 numstudies <- siwf %>%
   filter(veg != 'salt_desert')
 
 unique(numstudies$Study_ID)
-############################
-#to get a count of mean values vs. raw data
-#checkwithveg2 <- dplyr::count(studyid, pool, Study_ID, veg)
-#write.csv(checkwithveg2, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/checkwithveg2.csv")
-
-#unique(studyid$veg)
-#sum99 <- summarySE(data = studyid, measurevar = "pool_value", groupvars = c("pool", "veg"))
-#write.csv(sum99, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/pool_means.csv")
 
 
-############################
 
-#leaving salt desert in for now
-#split into two dataframes of raws and means
-#rawstdids <- unique(rawsonlynofire$Study_ID)
 
-#rawsonly <- siwf %>%
-  #filter(Study_ID %in% rawstdids) 
-
-#write.csv(rawsonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/rawsonly.csv")
-
-#meanstdids <- unique(meansonlynofire$Study_ID)
-
-#meansonly <- siwf %>%
-  #filter(Study_ID %in% meanstdids) 
-
-#unique(siwf$Article_ID)
-
-#write.csv(meansonly, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/data/meansonly.csv")
 ############################
 #summary of raw data only with means counted as individual points
-#AGB, BGB, and litter only
-#For Table 1
+
+#For Table 1, AGB, BGB, and litter only
 rawmeans <- siwf %>%
   filter(pool == "AGBC_g_m2" | pool == "BGBC_g_m2" | pool == "litterC_g_m2") %>%
   group_by(pool, veg) %>%
@@ -69,15 +36,10 @@ rawmeans <- siwf %>%
 st_geometry(rawmeans) = NULL
 write.csv(rawmeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/rawmeans.csv")
 
-#checksagelitter <- rawsonly %>%
-  #filter(pool == "litterC_g_m2" & veg == 'sagebrush')
-#only 1 value, repeated 72 times
 
 
 
-
-
-#for 0-10 cm only
+#For Table 1, for 0-10 cm only, SOC, TC
 surfacemeans <- siwf %>%
   filter(topdepth_cm == 0 & bottomdepth_cm == 10) %>%
   group_by(pool, veg) %>%
@@ -91,7 +53,7 @@ st_geometry(surfacemeans) = NULL
 write.csv(surfacemeans, file = "/Users/rana7082/Dropbox/C_fire_invasives_R/results/surfacemeans.csv")
 
 
-#for 10-20 cm only
+#For Table 1, for 10-20 cm only, SOC
 tens <- siwf %>%
   filter(topdepth_cm == 10 & bottomdepth_cm == 20) %>%
   group_by(pool, veg) %>%
