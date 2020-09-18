@@ -199,7 +199,7 @@ aovs %>%
 
 ```{r results='asis'}
 stargazer(final_mods[c(1)], header=F,column.sep.width = "1pt", single.row = T,
-          title = "Linear mixed model results.")#,
+          title = "Table 2a: Linear mixed model results.")#,
           # rownames = c("Invaded Sagebrush",
           #              "Cheatgrass",
           #              "Time Since Fire (5-20)",
@@ -215,7 +215,7 @@ stargazer(final_mods[c(1)], header=F,column.sep.width = "1pt", single.row = T,
 
 ```{r results='asis'}
 stargazer(final_mods[c(2,3)], header=F,column.sep.width = "1pt", single.row = T,
-          title = "Linear mixed model results.")#,
+          title = "Table 2a: Linear mixed model results.")#,
           # rownames = c("Invaded Sagebrush",
           #              "Cheatgrass",
           #              "Time Since Fire (5-20)",
@@ -231,10 +231,10 @@ stargazer(final_mods[c(2,3)], header=F,column.sep.width = "1pt", single.row = T,
 
 ```{r results='asis'}
 stargazer(final_mods[c(4)], header=F,column.sep.width = "1pt", single.row = T,
-          title = "Linear mixed model results.")
+          title = "Table 2b: Linear mixed model results.")
 ```
 
 ```{r results='asis'}
 stargazer(final_mods[c(5)], header=F,column.sep.width = "1pt", single.row = T,
-          title = "Linear mixed model results.")
+          title = "Table 2c: Linear mixed model results.")
 ```
