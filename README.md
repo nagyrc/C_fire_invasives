@@ -27,3 +27,6 @@ The following files are used to clean, compile, and analyze the data and prepare
 
 6b_ANOVAs : performs the non-parametric Kruskal Wallis tests for pool-vegetation combinations
 
+####################
+Contact info for Dr. Nagy: nagyrc@gmail.com; chelsea.nagy@colorado.edu Earth Lab, University of Colorado, Boulder
+
