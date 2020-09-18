@@ -25,5 +25,5 @@ The following files are used to clean, compile, and analyze the data and prepare
 
 6_lmm_tables.Rmd : performs the linear mixed modeling; creates Figure 3 and Table 2
 
-6b_ANOVAs : performs the ANOVAs and non-parametric Kruskal Wallis tests for pool-vegetation combinations
+6b_ANOVAs : performs the non-parametric Kruskal Wallis tests for pool-vegetation combinations
 
