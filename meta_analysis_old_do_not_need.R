@@ -1,5 +1,5 @@
 #meta-analysis
-#Dr. R. Chelsea Nagy
+#Dr. Jenica Allen and Dr. R. Chelsea Nagy
 #created February 20, 2019
 
 #load multiple libraries 
@@ -28,7 +28,7 @@ summary(dq2) # there are some missing variance values from ind points
 
 # Computing observation-level SD
 #converting se and ci into sd
-#for us "control" will probably be the sagecheat sites
+#for us, "control" will probably be the sagecheat sites
 #Not necessary, we already have SD calculated
 
 #dq2$SD_control[dq2$var_statistic == "SE"] <- dq2$varsage[dq2$var_statistic == "SE"]*sqrt(dq2$nsage[dq2$var_statistic == "SE"])

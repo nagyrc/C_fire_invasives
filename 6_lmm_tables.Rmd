@@ -10,8 +10,8 @@ library(kableExtra)
 
 ```{r data_prep, include=FALSE}
 #Linear models to explain C storage ============================================
-#Dr. R. Chelsea Nagy
-#created March 15, 2019
+#Adam Mahood and Dr. R. Chelsea Nagy
+#updated September 2020
 
 #load multiple libraries 
 x <- c("tidyverse", "sf","scales", "ggplot2", "doBy", "lme4", "lmerTest", "stargazer","ggpubr")
@@ -66,7 +66,7 @@ final_mods$tot <- lmer(log(`Soil Total C`) ~ timesincefire * veg* bottomdepth_cm
 ```{r}
 p4a<-ggplot(AGBC3, aes(y=pool_value, fill=veg, x=firecat)) + 
   geom_boxplot() +
-  ylab(expression(Above~Ground~Biomass~C~(g~m^-2)))+
+  ylab(expression(Aboveground~Biomass~C~(g~m^-2)))+
   xlab("Time Since Fire (Years)") +
   scale_y_log10(labels = scales::label_number_si())+
   scale_fill_manual(values = colours,
@@ -81,7 +81,7 @@ p4b<-ggplot(BGBC3, aes(y=pool_value, x=timesincefire)) +
   scale_y_log10(labels = scales::label_number_si())+
   scale_color_manual(values = colours,
                      name = "Vegetation Type")+
-  ylab(expression(Below~Ground~Biomass~C~(g~m^-2)))+
+  ylab(expression(Belowground~Biomass~C~(g~m^-2)))+
   xlab("Time Since Fire (Years)") +
   theme(legend.position = "none")
 
@@ -121,7 +121,7 @@ p4e<-totsoilC3 %>%
   geom_smooth(method="lm") +
   geom_point() +
   scale_y_log10(labels = scales::label_number_si())+
-  ylab(expression(Soil~Total~C~(g~m^-2)))+
+  ylab(expression(Total~Soil~C~(g~m^-2)))+
   xlab("Time Since Fire (Years)") +
   scale_color_manual(values = colours,
                      name = "Vegetation Type") +
@@ -155,8 +155,8 @@ row1<-ggarrange(p4e, p4b, p4c, nrow=1, labels = "auto", label.x = .2)
 row2<-ggarrange(p4d, p4a, nrow=1, widths=c(2,1), labels = c("d","e"),
                 label.x = c(.1,.2), label.y= c(.9, 1))
 ggarrange(row1, row2, nrow=2) +
-  ggsave("figure_4.png", height = 8, width =10) +
-  ggsave("figure_4.pdf", height = 8, width =10)
+  ggsave("figure_3.png", height = 8, width =10) +
+  ggsave("figure_3.pdf", height = 8, width =10)
 ```
 
 ```{r results='asis'}
